@@ -1,4 +1,4 @@
-![image info](./style/Gale-Shapley-Implementation.png)
+<img src=./style/Gale-Shapley-Implementation.png width="800">
 
 ## **Introduction**
 
