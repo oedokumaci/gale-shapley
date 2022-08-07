@@ -20,7 +20,7 @@
 # %%
 import random
 from person import Person
-from gs_algorithm import gs_algorithm
+from gs_algorithm import gs_algorithm, gs_algorithm_threaded
 
 
 # %% [markdown]
@@ -46,8 +46,10 @@ def randomize_preferences(person):
 
 
 # %%
+NUMBER_OF_PERSONS = 500
+
 Person.delete_persons()
-make_persons(15)
+make_persons(NUMBER_OF_PERSONS)
 for k, v in Person.persons.items():
     for person in v:
         randomize_preferences(person)
@@ -57,8 +59,13 @@ for k, v in Person.persons.items():
 
 # %%
 # %%time
+# %%capture 
+# capture will silence the output
 
 if __name__ == '__main__':
-    gs_algorithm(Person)
+    if NUMBER_OF_PERSONS < 1000:
+        gs_algorithm(Person)
+    else:
+        gs_algorithm_threaded(Person)
 
 # %%
