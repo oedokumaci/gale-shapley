@@ -1,20 +1,22 @@
 # Gale-Shapley Algorithm
 
 def gs_algorithm(Person):
-    print('----- Running Gale-Shapley Algorithm -----')
-    proposers = Person.persons[Person.proposer_side]
+    print('******************** Running Gale-Shapley Algorithm ********************')
+    proposers = Person.persons[Person.proposing_side]
     responders = Person.persons[proposers[0].get_opposite_gender()]
     round_number = 1
-    while any(proposer.is_single() for proposer in proposers):
-        print(f'--- Round {round_number} ---')
-        print('--- Proposing...')
+    while any(proposer.is_single for proposer in proposers):
+        print(f'********** Round {round_number} **********')
+        print('--------- Proposals ---------')
         for proposer in proposers:
-            if proposer.is_single():
+            if proposer.is_single:
                 proposer.propose(proposer.next)
-        print('--- Responding...')
+        print('--------- Responses ---------')
         for responder in responders:
             responder.respond_to_proposals()
+        if round_number % 5 == 0:
+            Person.print_matches()
         round_number += 1
-    print('----- Run Complete -----')
-    Person.print_matches()
+    print('******************** Run Complete ********************')
+    Person.print_matches(final=True)
     

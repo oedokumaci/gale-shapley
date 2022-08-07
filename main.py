@@ -39,7 +39,7 @@ def make_persons(n):
 # %%
 def randomize_preferences(person):
     opposite_gender_persons = Person.persons[person.get_opposite_gender()]
-    person.set_preference(tuple(random.sample(opposite_gender_persons, len(opposite_gender_persons))))
+    person.set_preferences(tuple(random.sample(opposite_gender_persons, len(opposite_gender_persons))))
 
 # %% [markdown]
 # # INITIALIZE PERSONS
@@ -47,12 +47,10 @@ def randomize_preferences(person):
 
 # %%
 Person.delete_persons()
-make_persons(20)
+make_persons(15)
 for k, v in Person.persons.items():
     for person in v:
         randomize_preferences(person)
-        # person.print_preferences()
-
 
 # %% [markdown]
 # # RUN ALGORITHM

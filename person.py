@@ -2,21 +2,23 @@ import variable_names
 import exceptions
 
 class Person():
+    
+    # class attributes
     genders = variable_names.GENDER_NAMES
     persons = {g:[] for g in genders}
-    proposer_side = genders[0]
+    proposing_side = genders[0]
     
-    def __init__(self, name, gender, preference=()):
+    def __init__(self, name, gender, preferences=()):
         """Constructor method for Person class.
 
         Args:
             name (str): Name of the person.
             gender (any): Gender of the person.
-            preference (tuple, optional): Preference input for person, lower indices are more preferred. Defaults to ().
+            preferences (tuple, optional): preferences input for person, lower indices are more preferred. Defaults to ().
 
         Raises:
             TypeError: If name is not a string.
-            exceptions.GenderError: If gender name is not in the GENDER_NAMES tuple from variable_names.py.
+            exceptions.GenderError: If gender name is not in the GENDER_NAMES tuple from variable_names.
         """
         try:
             self.name = name.lower()
@@ -28,9 +30,10 @@ class Person():
         else:
             raise exceptions.GenderError(gender, Person.genders)
 
+        self.preferences = preferences
+        
         self.match = self
-        self.next = self
-        self.set_preference(preference)
+        self.next = None
         self.proposals = {}
                 
         Person.persons[self.gender].append(self)
@@ -44,41 +47,51 @@ class Person():
         """Repr method for Person class.
 
         Returns:
-            str: Name and gender of the person. If you want to print preferences, use print_preferences method.
+            str: Name and gender of the person. If you want to print preferencess, use print_preferencess method.
         """
-        return f'Name: {self.name} | Gender: {self.gender}'
+        return f'Name: {self.name}, Gender: {self.gender}'
     
-    def print_preferences(self):
-        """Prints the preferences of the person.
+    def print_preferencess(self):
+        """Prints the preferencess of the person.
         """
-        print(f'{self.name} has the following preferences:')
-        for person, rank in self.preference.items():
+        print(f'{self.name} has the following preferencess:')
+        for person, rank in self.preferences_with_ranks_dict.items():
             print(f'{rank}. {person.name}')
+    
+    @property
+    def preferences_with_ranks_dict(self):
+        """Getter method for preferences with ranks dictionary.
 
-    def set_preference(self, preference):
-        """Setter method for preference attribute.
+        Returns:
+            dict: Preferences with ranks dictionary.
+        """
+        return {person:self.preferences.index(person) for person in self.preferences}
+
+    def set_preferences(self, preferences):
+        """Setter method for preferences attribute.
 
         Args:
-            preference (tuple): Preference input for person, lower indices are more preferred.
+            preferences (tuple): preferences input for person, lower indices are more preferred.
         """
-        if isinstance(preference, tuple):
-            if all(isinstance(person, Person) for person in preference):
-                if all(self.gender != person.gender for person in preference):
-                    if len(set(preference)) == len(preference):
-                        self.preference = {person:preference.index(person)+1 for person in preference}
+        if isinstance(preferences, tuple):
+            if all(isinstance(person, Person) for person in preferences):
+                if all(self.gender != person.gender for person in preferences):
+                    if len(set(preferences)) == len(preferences):
+                        self.preferences = preferences
                         try:
-                            self.next = preference[0]
+                            self.next = self.preferences[0]
                         except IndexError:
                             self.next = self
                     else:
-                        raise ValueError('Preference input should not contain duplicate Person objects')
+                        raise ValueError('preferences input should not contain duplicate Person objects')
                 else:
-                    raise ValueError('Preference input can only contain Person objects from the opposite gender')
+                    raise ValueError('preferences input can only contain Person objects from the opposite gender')
             else:
-                raise TypeError('Preference input should contain Person objects')
+                raise TypeError('preferences input should contain Person objects')
         else:
-            raise TypeError(f'Preference input should be a tuple. Got {type(preference)} instead')
+            raise TypeError(f'preferences input should be a tuple. Got {type(preferences)} instead')
 
+    @property
     def is_single(self):
         """Checks if the person is single.
 
@@ -107,18 +120,18 @@ class Person():
             to_propose (Person): Person to propose to.
         """
         print(f'{self.name} is proposing to {to_propose.name}')
-        to_propose.proposals[self] = to_propose.preference[self]
-        next_to_propose_rank = self.preference[to_propose] + 1
+        to_propose.proposals[self] = to_propose.preferences_with_ranks_dict[self]
+        next_to_propose_rank = self.preferences_with_ranks_dict[to_propose] + 1
         try:
-            self.next = list(self.preference.keys())[list(self.preference.values()).index(next_to_propose_rank)]
+            self.next = list(self.preferences_with_ranks_dict.keys())[list(self.preferences_with_ranks_dict.values()).index(next_to_propose_rank)]
         except ValueError:
             self.next = self
     
     def engage(self, proposer):
         """Engages the person with the proposer."""
-        print(f'{self.name} is engaged to {proposer.name}')
         self.set_match(proposer)
         proposer.set_match(self)
+        print(f'{self.name} is engaged to {proposer.name}')
     
     def get_most_preferred(self, proposals):
         """Returns the most preferred person from an input proposals dictionary.
@@ -138,14 +151,17 @@ class Person():
         Makes the current match single if current match changes.
         """ 
         if len(self.proposals) > 0:
-            print(f'{self.name} is responding to proposals')
+            print(f'{self.name} is responding to proposal{"s" if len(self.proposals) > 1 else ""} from {", ".join(list(map(lambda x: x.name,self.proposals.keys())))}')
             to_accept = self.get_most_preferred(self.proposals)
-            if self.is_single():
+            if self.is_single:
                 self.engage(to_accept)
             else:
-                if self.preference[to_accept] < self.preference[self.match]:
+                if self.preferences_with_ranks_dict[to_accept] < self.preferences_with_ranks_dict[self.match]:
                     self.match.make_single()
+                    print(f'{self.name} breaks the engagement with {self.match.name}')
                     self.engage(to_accept)
+                else:
+                    print(f'{self.name} is not interested in {to_accept.name}')
             self.proposals = {}
             
     def get_opposite_gender(self):
@@ -161,12 +177,29 @@ class Person():
     def delete_persons(cls):
         """Class method to delete all persons in the persons dictionary.
         """
-        cls.persons = {g:[] for g in cls.genders}
-        
+        if any(len(cls.persons[g]) for g in cls.genders) != 0:
+            print('Deleting all persons')
+            cls.persons = {g:[] for g in cls.genders}
+        else:
+            print('No persons to delete')
+            
     @classmethod
-    def print_matches(cls):
+    def print_matches(cls, final=False):
         """Class method to print all matches in the persons dictionary.
         """
-        for person in cls.persons[cls.proposer_side]:
-            print(f'{person.name} ------: {person.match.name}')
+        if final:
+            print(f'********** PRINTING {cls.proposing_side.upper()} OPTIMAL MATCH **********')
+        else:
+            print('***** PRINTING CURRENT PROPOSER ENGAGEMENTS *****')
+        for person in cls.persons[cls.proposing_side]:
+            if person.is_single:
+                print(f'{person.name} is not engaged')
+            else:
+                print(f'{person.name} <----------> {person.match.name}')
+            
+    @classmethod
+    def set_proposing_side(cls, side):
+        """Class method to set the proposing side.
+        """
+        cls.proposing_side = side
             
