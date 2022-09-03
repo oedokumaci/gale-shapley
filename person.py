@@ -28,7 +28,7 @@ class Person():
         if gender in Person.genders:
             self.gender = gender
         else:
-            raise exceptions.GenderError(gender, Person.genders)
+            raise exceptions.GenderError(Person.genders)
 
         self.preferences = preferences
         

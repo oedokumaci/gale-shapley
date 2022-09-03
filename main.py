@@ -19,8 +19,23 @@
 
 # %%
 import random
+import yaml
+
+import exceptions
 from person import Person
 from gs_algorithm import gs_algorithm, gs_algorithm_threaded
+
+# %%
+# load config yaml
+with open('config/config.yaml') as config_yaml:
+    config = yaml.safe_load(config_yaml)
+config
+
+# %%
+GENDER_NAMES = config['GENDER_NAMES']
+
+if len(GENDER_NAMES) != 2:
+    raise exceptions.TwoSidedMatchingError(GENDER_NAMES)
 
 
 # %% [markdown]
