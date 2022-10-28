@@ -5,7 +5,10 @@ description = "A Python implementation of the celebrated Gale-Shapley Algorithm.
 authors = [
     {name = "oedokumaci", email = "oral.ersoy.dokumaci@gmail.com"},
 ]
-dependencies = []
+dependencies = [
+    "pyyaml>=6.0",
+    "gale-shapley>=0.1.0",
+]
 requires-python = ">=3.8"
 readme = "README.md"
 license = {text = "MIT"}
