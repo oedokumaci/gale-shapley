@@ -8,7 +8,7 @@ repos:
     rev: 5.0.4
     hooks:
       - id: flake8
-        args: ['--max-line-length=88', '--select=C,E,F,W,B,B950', '--extend-ignore=E203,E501'] # to be compatible with black, see https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
+        args: ['--max-line-length=88', '--select=C,E,F,W,B', '--extend-ignore=E203,E501,W503'] # no select B950 for now and added W503 since it is incompatible with PEP8, rest is to be compatible with black, see https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
         additional_dependencies:
           - flake8-bugbear
 
