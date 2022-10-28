@@ -1,0 +1,17 @@
+[project]
+name = "gale-shapley"
+version = "0.1.0"
+description = "A Python implementation of the celebrated Gale-Shapley Algorithm."
+authors = [
+    {name = "oedokumaci", email = "oral.ersoy.dokumaci@gmail.com"},
+]
+dependencies = []
+requires-python = ">=3.8"
+readme = "README.md"
+license = {text = "MIT"}
+
+[tool.pdm]
+
+[build-system]
+requires = ["pdm-pep517>=1.0.0"]
+build-backend = "pdm.pep517.api"
