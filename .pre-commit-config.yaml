@@ -8,7 +8,7 @@ repos:
     rev: 5.0.4
     hooks:
       - id: flake8
-        args: [--max-line-length=88, --select="C,E,F,W,B,B950", --extend-ignore="E203,E501"] # to be compatible with black, see https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
+        args: ['--max-line-length=88', '--select="C,E,F,W,B,B950"', '--extend-ignore="E203,E501"'] # to be compatible with black, see https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
         additional_dependencies:
           - flake8-bugbear
 
@@ -16,7 +16,7 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
-        args: [--multi-line=3 ,--profile=black] # to be compatible with black
+        args: ['--multi-line=3' ,'--profile=black'] # to be compatible with black
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.3.0
@@ -36,7 +36,7 @@ repos:
     rev: 2.1.5 # any PDM release exposing the hook should work
     hooks:
       - id: pdm-export
-        args: ["-o", "requirements.txt", "--without-hashes"]
+        args: ['-o', 'requirements.txt', '--without-hashes']
         files: ^pdm.lock$
 
   # - repo: https://github.com/pre-commit/mirrors-mypy
