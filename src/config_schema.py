@@ -1,12 +1,9 @@
 import os.path
-from typing import (  # need for Python<3.9, # List imported from exceptions.py below
-    Dict,
-    Tuple,
-)
+from typing import Dict, List, Tuple  # need for Python<3.9
 
 import yaml
 
-from exceptions import ConfigError, List, SideNameError, TwoSidedMatchingError
+from exceptions import ConfigError, SideNameError, TwoSidedMatchingError
 
 
 def _parse_proposer_and_responder(
