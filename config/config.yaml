@@ -1,1 +1,3 @@
-GENDER_NAMES: ['man', 'woman']
+SIDE_NAMES: ['man', 'woman']
+PROPOSER: 'man'
+RESPONDER: 'woman'
