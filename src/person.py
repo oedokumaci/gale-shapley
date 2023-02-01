@@ -1,17 +1,9 @@
 """Person class module."""
 from __future__ import annotations
 
-import yaml
+from config_schema import PROPOSER, RESPONDER
 
-from exceptions import TwoSidedMatchingError
-
-with open("../config/config.yaml") as config_yaml:
-    config = yaml.safe_load(config_yaml)
-
-GENDER_NAMES = config["GENDER_NAMES"]
-
-if len(GENDER_NAMES) != 2:
-    raise TwoSidedMatchingError(GENDER_NAMES)
+GENDER_NAMES = [PROPOSER, RESPONDER]
 
 
 class Person:
