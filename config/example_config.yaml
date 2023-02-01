@@ -1,3 +1,1 @@
-SIDE_NAMES: [man, woman] # SIDE_NAMES is case sensitive
-PROPOSER: man # PROPOSER is case sensitive
-RESPONDER: woman # RESPONDER is case sensitive
+proposer_and_responder: [man, woman] # first entry is proposer, second is responder

@@ -1,3 +1,1 @@
-SIDE_NAMES: ['man', 'woman']
-PROPOSER: 'man'
-RESPONDER: 'woman'
+proposer_and_responder: [man, woman] # first entry is proposer, second is responder
