@@ -2,7 +2,7 @@
 
 <img src=./style/Gale-Shapley-Implementation.png width="800">
 
-This is a Python implementation of the celebrated Gale-Shapley (also known as the Deferred Acceptance) Algorithm.
+This is a Python implementation of the celebrated Gale-Shapley (a.k.a. the Deferred Acceptance) Algorithm.
 
 Time complexity is O(n^2), space complexity is O(n).
 
