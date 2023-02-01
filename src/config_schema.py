@@ -41,11 +41,8 @@ def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
     return proposer, responder
 
 
-if __name__ == "__main__":
-    path_to_config_yaml = os.path.join(
-        os.path.dirname(__file__), "../config/config.yaml"
-    )
-    with open(path_to_config_yaml) as config_yaml:
-        config = yaml.safe_load(config_yaml)
-    PROPOSER, RESPONDER = _parse_proposer_and_responder(config)
-    print(f"Proposer: {PROPOSER}, Responder: {RESPONDER}")
+path_to_config_yaml = os.path.join(os.path.dirname(__file__), "../config/config.yaml")
+with open(path_to_config_yaml) as config_yaml:
+    config = yaml.safe_load(config_yaml)
+PROPOSER, RESPONDER = _parse_proposer_and_responder(config)
+print(f"Proposer: {PROPOSER}, Responder: {RESPONDER}")
