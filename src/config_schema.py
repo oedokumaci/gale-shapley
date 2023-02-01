@@ -7,6 +7,18 @@ from exceptions import ConfigError, TwoSidedMatchingError
 
 
 def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
+    """Parse the proposer and responder from the config.yaml file.
+
+    Args:
+        config (dict): loaded config.yaml file
+
+    Raises:
+        ConfigError
+        TwoSidedMatchingError
+
+    Returns:
+        tuple[str, str]: proposer and responder
+    """
     print("Parsing proposer and responder from config.yaml...")
     try:
         proposer_and_responder = config["proposer_and_responder"]
