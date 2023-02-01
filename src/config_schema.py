@@ -1,5 +1,5 @@
+"""This module contains the schema for the config.yaml file."""
 import os.path
-from typing import Dict, List, Tuple  # need for Python<3.9
 
 import yaml
 
@@ -7,8 +7,8 @@ from exceptions import ConfigError, SideNameError, TwoSidedMatchingError
 
 
 def _parse_proposer_and_responder(
-    side: str, config: Dict, side_names: List
-) -> Tuple[str, str]:
+    side: str, config: dict, side_names: list
+) -> tuple[str, str]:
     if side == "PROPOSER":
         proposer = config[side]
         if proposer not in side_names:

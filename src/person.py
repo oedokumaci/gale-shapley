@@ -1,10 +1,9 @@
+"""Person class module."""
 from __future__ import annotations
-
-from typing import Tuple
 
 import yaml
 
-import exceptions
+from exceptions import TwoSidedMatchingError
 
 with open("../config/config.yaml") as config_yaml:
     config = yaml.safe_load(config_yaml)
@@ -12,17 +11,18 @@ with open("../config/config.yaml") as config_yaml:
 GENDER_NAMES = config["GENDER_NAMES"]
 
 if len(GENDER_NAMES) != 2:
-    raise exceptions.TwoSidedMatchingError(GENDER_NAMES)
+    raise TwoSidedMatchingError(GENDER_NAMES)
 
 
 class Person:
+    """Person class."""
 
     # class attributes
     genders = GENDER_NAMES
     persons = {g: [] for g in genders}
     proposing_side = genders[0]
 
-    def __init__(self, name: str, gender: str, preferences: Tuple = ()) -> None:
+    def __init__(self, name: str, gender: str, preferences: tuple = ()) -> None:
         """Constructor method for Person class.
 
         Args:
@@ -32,17 +32,14 @@ class Person:
 
         Raises:
             TypeError: If name is not a string.
-            exceptions.GenderError: If gender name is not in the GENDER_NAMES tuple from variable_names. # noqa: B950
+            GenderError: If gender name is not in the GENDER_NAMES tuple from variable_names. # noqa: B950
         """
         try:
             self.name = name.lower()
         except AttributeError as e:
             raise TypeError(f"Name should be a string. Got {type(name)} instead") from e
 
-        if gender in Person.genders:
-            self.gender = gender
-        else:
-            raise exceptions.GenderError(Person.genders)
+        self.gender = gender
 
         self.preferences = preferences
 
@@ -79,7 +76,7 @@ class Person:
         """
         return {person: self.preferences.index(person) for person in self.preferences}
 
-    def set_preferences(self, preferences: Tuple) -> None:
+    def set_preferences(self, preferences: tuple) -> None:
         """Setter method for preferences attribute.
 
         Args:
