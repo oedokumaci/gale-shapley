@@ -13,7 +13,7 @@ repos:
           - flake8-bugbear
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.10.1
+    rev: 5.12.0 # need 5.12.0 to fix RuntimeError: The Poetry configuration is invalid
     hooks:
       - id: isort
         args: ['--multi-line=3' ,'--profile=black'] # to be compatible with black
