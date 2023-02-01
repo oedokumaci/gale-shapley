@@ -4,7 +4,7 @@
 
 This is a Python implementation of the celebrated Gale-Shapley Algorithm also known as the Deferred Acceptance Algorithm.
 
-The time complexity is O(n^2) and the space complexity is O(n).
+The time complexity of the algorithm is O(n^2) and the space complexity is O(n).
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
@@ -19,7 +19,13 @@ This project is `pdm-managed`, which is compatible with [PEP 582] and [PEP 621].
 pdm --pep582 >> ~/.bash_profile
 ```
 
-Then `git clone` the project and run `pdm sync` in the project folder. You should also run `pre-commit install` to install hooks to your local `.git`.
+Then `git clone` the project and run `pdm sync` in the project directory.
+
+The project also uses pre-commit hooks. You can `pip install pre-commit` and then run
+```bash
+pre-commit install
+```
+in the project directory to install hooks to your local `.git`.
 
 [pep 582]: https://www.python.org/dev/peps/pep-0582
 [pep 621]: https://www.python.org/dev/peps/pep-0621
