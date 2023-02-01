@@ -1,4 +1,4 @@
-"""This module contains the schema for the config.yaml file."""
+"""This module contains the schema for the config.yaml file and parses it when imported."""
 import os.path
 
 import yaml
