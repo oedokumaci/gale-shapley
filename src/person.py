@@ -1,7 +1,7 @@
 """Person class module."""
 from __future__ import annotations
 
-from config_schema import PROPOSER, RESPONDER
+from config_parser import PROPOSER, RESPONDER
 
 GENDER_NAMES = [PROPOSER, RESPONDER]
 
