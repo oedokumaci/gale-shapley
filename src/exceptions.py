@@ -12,7 +12,7 @@ class ConfigError(GSException):
 class TwoSidedMatchingError(ConfigError):
     """Exception class for when there are not exactly two sides to be matched."""
     def __init__(self, side_names: list[str]) -> None:
-        self.message = f"There are {len(side_names)} sides to be matched. There should be exactly two"
+        self.message = f"Config input has {len(side_names)} sides to be matched. There should be exactly two"
         super().__init__(self.message)
 
 
