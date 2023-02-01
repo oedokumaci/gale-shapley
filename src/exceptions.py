@@ -15,12 +15,3 @@ class TwoSidedMatchingError(ConfigError):
     def __init__(self, side_names: list[str]) -> None:
         self.message = f"Config.yaml has {len(side_names)} side(s) to be matched. There should be exactly two"
         super().__init__(self.message)
-
-
-class SideNameError(ConfigError):
-    """Exception class for when a side name is not in SIDE_NAMES."""
-
-    def __init__(self, side: str, side_names: list[str]) -> None:
-        side_names_in_quotes = [f"'{g}'" for g in side_names]
-        self.message = f'{side} should be {" or ".join(side_names_in_quotes)}'
-        super().__init__(self.message)
