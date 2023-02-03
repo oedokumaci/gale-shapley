@@ -57,11 +57,20 @@ class Algorithm:
         for person in self.proposers + self.responders:
             person.print_preferences()
 
-    def run(self) -> None:
-        """Runs the algorithm and prints desired information."""
-        self.print_all_preferences()
+    def run(
+        self, print_all_preferences: bool = False, report_matches: bool = True
+    ) -> None:
+        """Runs the algorithm and prints desired information.
+
+        Args:
+            print_all_preferences (bool, optional): prints individual preferences before running, defaults to False
+            report_matches (bool, optional): reports final matching, defaults to True
+        """
+        if print_all_preferences:
+            self.print_all_preferences()
         while not self.terminate():
             self.proposers_propose()
             self.responders_respond()
             self.round += 1
-        self.report_matches()
+        if report_matches:
+            self.report_matches()
