@@ -1,4 +1,5 @@
 """Proposer and Responder module (subclasses of Person)."""
+
 from __future__ import annotations
 
 from typing import Union

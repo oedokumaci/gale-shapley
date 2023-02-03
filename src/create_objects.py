@@ -1,4 +1,5 @@
 """This module creates the objects for the algorithm."""
+
 import random
 
 from config_parser import (
