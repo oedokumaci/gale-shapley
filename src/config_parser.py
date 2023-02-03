@@ -30,15 +30,13 @@ def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
         raise ConfigError(
             "proposer_and_responder should be specified as a list in config.yaml, see example_config.yaml for an example"
         )
-    if len(proposer_and_responder) != 2:
-        raise TwoSidedMatchingError(proposer_and_responder)
+    if len(set(proposer_and_responder)) != 2:
+        raise TwoSidedMatchingError(set(proposer_and_responder))
     proposer, responder = proposer_and_responder
     if not isinstance(proposer, str):
         raise ConfigError(f"Proposer should be a string, {proposer} is not a string")
     if not isinstance(responder, str):
         raise ConfigError(f"Responder should be a string, {responder} is not a string")
-    if proposer == responder:
-        raise TwoSidedMatchingError(proposer_and_responder)
     print("Parsing complete.")
     return proposer, responder
 
