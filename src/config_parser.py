@@ -37,6 +37,8 @@ def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
         raise ConfigError(f"Proposer should be a string, {proposer} is not a string")
     if not isinstance(responder, str):
         raise ConfigError(f"Responder should be a string, {responder} is not a string")
+    if proposer == responder:
+        raise TwoSidedMatchingError(proposer_and_responder)
     print("Parsing complete.")
     return proposer, responder
 
