@@ -41,8 +41,40 @@ def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
     return proposer, responder
 
 
+def _parse_number_of_proposers_and_responders(config: dict) -> tuple[int, int]:
+    print("Parsing number of proposers and responders from config.yaml...")
+    try:
+        number_of_proposers = config["number_of_proposers"]
+    except (KeyError, TypeError):
+        raise ConfigError(
+            "number_of_proposers is not specified properly in config.yaml, see example_config.yaml for an example"
+        )
+    if not isinstance(number_of_proposers, int):
+        raise ConfigError(
+            "number_of_proposers should be specified as an integer in config.yaml, see example_config.yaml for an example"
+        )
+    try:
+        number_of_responders = config["number_of_responders"]
+    except (KeyError, TypeError):
+        raise ConfigError(
+            "number_of_responders is not specified properly in config.yaml, see example_config.yaml for an example"
+        )
+    if not isinstance(number_of_responders, int):
+        raise ConfigError(
+            "number_of_responders should be specified as an integer in config.yaml, see example_config.yaml for an example"
+        )
+    print("Parsing complete.")
+    return number_of_proposers, number_of_responders
+
+
 path_to_config_yaml = os.path.join(os.path.dirname(__file__), "../config/config.yaml")
 with open(path_to_config_yaml) as config_yaml:
     config = yaml.safe_load(config_yaml)
 PROPOSER, RESPONDER = _parse_proposer_and_responder(config)
 print(f"Proposer: {PROPOSER}, Responder: {RESPONDER}")
+NUMBER_OF_PROPOSERS, NUMBER_OF_RESPONDERS = _parse_number_of_proposers_and_responders(
+    config
+)
+print(
+    f"Number of proposers: {NUMBER_OF_PROPOSERS}, Number of responders: {NUMBER_OF_RESPONDERS}"
+)
