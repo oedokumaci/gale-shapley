@@ -12,12 +12,13 @@ class Algorithm:
         """Constructor for Algorithm class.
 
         Args:
-            proposers (list[Proposer]): list of proposers, preferences should be already set
-            responders (list[Responder]): list of responders, preferences should be already set
+            proposers (list[Proposer]): list of proposers
+            responders (list[Responder]): list of responders
         """
 
         self.proposers = proposers
         self.responders = responders
+        self.round: int = 0
 
     @property
     def unmatched_proposers(self) -> list[Proposer]:
@@ -47,6 +48,7 @@ class Algorithm:
 
     def report_matches(self) -> None:
         """Prints all matches, does not print unmatched responders."""
+        print(f"Algorithm terminated after {self.round} rounds.")
         for proposer in self.proposers:
             print(f"{proposer.name} is matched to {proposer.match.name}")
 
@@ -61,4 +63,5 @@ class Algorithm:
         while not self.terminate():
             self.proposers_propose()
             self.responders_respond()
+            self.round += 1
         self.report_matches()
