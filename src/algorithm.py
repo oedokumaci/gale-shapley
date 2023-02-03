@@ -6,7 +6,7 @@ from proposer_responder import Proposer, Responder
 class Algorithm:
     """Algorithm class. Uses __slots__ instead of __dict__ for memory efficiency."""
 
-    __slots__ = ("proposers", "responders")
+    __slots__ = ("proposers", "responders", "round")
 
     def __init__(self, proposers: list[Proposer], responders: list[Responder]) -> None:
         """Constructor for Algorithm class.
