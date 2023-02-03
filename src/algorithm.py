@@ -13,12 +13,18 @@ class Algorithm:
     def unmatched_proposers(self) -> list[Proposer]:
         return [proposer for proposer in self.proposers if not proposer.is_matched]
 
+    @property
+    def awaiting_to_respond_responders(self) -> list[Responder]:
+        return [
+            responder for responder in self.responders if responder.awaiting_to_respond
+        ]
+
     def proposers_propose(self) -> None:
         for proposer in self.unmatched_proposers:
             proposer.propose()
 
     def responders_respond(self) -> None:
-        for responder in self.responders:
+        for responder in self.awaiting_to_respond_responders:
             responder.respond()
 
     def terminate(self) -> bool:

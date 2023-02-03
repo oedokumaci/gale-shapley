@@ -48,6 +48,10 @@ class Responder(Person):
         self.current_proposals: Union[list(Proposer), None] = None
 
     @property
+    def awaiting_to_respond(self) -> bool:
+        return self.current_proposals is not None
+
+    @property
     def acceptable_proposals(self) -> list[Proposer]:
         return [
             proposer
@@ -61,20 +65,19 @@ class Responder(Person):
         return min(proposals_and_current_match, key=self.preferences.index)
 
     def respond(self) -> None:
-        if self.current_proposals:
-            if self.acceptable_proposals:
-                if self.is_matched:
-                    new_match = self._most_preferred(
-                        self.acceptable_proposals + [self.match]
-                    )
-                    if new_match != self.match:
-                        self.match.is_matched = False
-                        self.match = new_match
-                        self.match.match = self
-                        # print(f"{self.name} is engaged to {self.match.name}")
-                else:
-                    new_match = self._most_preferred(self.acceptable_proposals)
+        if self.acceptable_proposals:
+            if self.is_matched:
+                new_match = self._most_preferred(
+                    self.acceptable_proposals + [self.match]
+                )
+                if new_match != self.match:
+                    self.match.is_matched = False
                     self.match = new_match
                     self.match.match = self
                     # print(f"{self.name} is engaged to {self.match.name}")
+            else:
+                new_match = self._most_preferred(self.acceptable_proposals)
+                self.match = new_match
+                self.match.match = self
+                # print(f"{self.name} is engaged to {self.match.name}")
         self.current_proposals = None
