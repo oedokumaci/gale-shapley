@@ -55,7 +55,13 @@ class Algorithm:
         """Prints all matches, does not print unmatched responders."""
         print(f"Algorithm terminated after {self.round} rounds.")
         for proposer in self.proposers:
-            print(f"{proposer.name} is matched to {proposer.match.name}")
+            if proposer.name == proposer.match.name:
+                print(f"{proposer.name} is matched to self.")
+            else:
+                print(f"{proposer.name} is matched to {proposer.match.name}")
+        for responder in self.responders:
+            if responder.match is None:
+                print(f"{responder.name} is matched to self.")
 
     def print_all_preferences(self, compact: bool = True) -> None:
         """Prints the preferences of all proposers and responders.
