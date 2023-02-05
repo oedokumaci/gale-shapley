@@ -4,7 +4,7 @@ from proposer_responder import Proposer, Responder
 
 
 class Algorithm:
-    """Algorithm class. Uses __slots__ instead of __dict__ for memory efficiency."""
+    """Algorithm class. Uses __slots__ instead of the default __dict__ for memory efficiency."""
 
     __slots__ = ("proposers", "responders", "round")
 
@@ -60,7 +60,7 @@ class Algorithm:
             else:
                 print(f"{proposer.name} is matched to {proposer.match.name}")
         for responder in self.responders:
-            if responder.match is None:
+            if not responder.is_matched:
                 print(f"{responder.name} is matched to self.")
 
     def print_all_preferences(self, compact: bool = True) -> None:
