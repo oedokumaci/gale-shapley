@@ -22,7 +22,7 @@ class Person:
         return f"Name: {self.name}, Side: {self.side}, Match: {self.match}"
 
     def is_acceptable(self, person: Person) -> bool:
-        """Checks if person is acceptable to self.
+        """Checks if person is acceptable to self. Implementation wise, self is not acceptable.
 
         Args:
             person (Person)
@@ -36,7 +36,9 @@ class Person:
         """Prints the preferences of the person, * indicates acceptable."""
         print(f"{self.name} has the following preferences, * indicates acceptable:")
         for i, person in enumerate(self.preferences):
-            print(f"{i + 1}. {person.name} {'*' if self.is_acceptable(person) else ''}")
+            print(
+                f"{i + 1}. {person.name} {'*' if self.is_acceptable(person) or self == person else ''}"
+            )
 
     @property
     def is_matched(self) -> bool:
