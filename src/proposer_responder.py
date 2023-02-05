@@ -28,9 +28,7 @@ class Proposer(Person):
             list[Responder]: list of acceptable responders
         """
         return [
-            responder
-            for responder in self.preferences
-            if self._is_acceptable(responder)
+            responder for responder in self.preferences if self.is_acceptable(responder)
         ]
 
     @property
@@ -97,7 +95,7 @@ class Responder(Person):
         return [
             proposer
             for proposer in self.current_proposals
-            if self._is_acceptable(proposer)
+            if self.is_acceptable(proposer)
         ]
 
     def _most_preferred(
