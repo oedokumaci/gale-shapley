@@ -21,6 +21,11 @@ class Algorithm:
         self.round: int = 0
 
     @property
+    def persons(self) -> list[Proposer, Responder]:
+        """Returns all proposers and responders."""
+        return self.proposers + self.responders
+
+    @property
     def unmatched_proposers(self) -> list[Proposer]:
         """Returns unmatched proposers, excludes self matches."""
         return [proposer for proposer in self.proposers if not proposer.is_matched]
@@ -52,10 +57,49 @@ class Algorithm:
         for proposer in self.proposers:
             print(f"{proposer.name} is matched to {proposer.match.name}")
 
-    def print_all_preferences(self) -> None:
-        """Prints the preferences of all proposers and responders."""
-        for person in self.proposers + self.responders:
-            person.print_preferences()
+    def print_all_preferences(self, compact: bool = True) -> None:
+        """Prints the preferences of all proposers and responders.
+
+        Args:
+            compact (bool, optional): If True prints all in one table. Defaults to True.
+        """
+        if compact:
+            print("Preferences for everyone, only acceptables are shown:")
+            header = [p.name for p in self.persons]
+            first_column = [
+                i + 1 for i in range(max(len(self.proposers), len(self.responders)) + 1)
+            ]
+            data = []
+            for i in range(len(self.proposers)):
+                data.append(
+                    [
+                        prop.preferences[i].name
+                        if prop.is_acceptable(prop.preferences[i])
+                        or prop == prop.preferences[i]
+                        else ""
+                        for prop in self.proposers
+                    ]
+                )
+            for i in range(len(self.responders)):
+                data.append(
+                    [
+                        resp.preferences[i].name
+                        if resp.is_acceptable(resp.preferences[i])
+                        or resp == resp.preferences[i]
+                        else ""
+                        for resp in self.responders
+                    ]
+                )
+            format_row = "{:>12}" * (
+                len(header) + 1
+            )  # doing with f-strings could be a pain
+            print(format_row.format("", *header))
+            print(format_row.format("", *["-" * len(h) for h in header]))
+            for pref, row in zip(first_column, data):
+                print(format_row.format(pref, *row))
+        else:
+            for person in self.persons:
+                person.print_preferences()
 
     def run(
         self, print_all_preferences: bool = False, report_matches: bool = True
