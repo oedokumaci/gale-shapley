@@ -24,7 +24,7 @@ class Simulator:
         self.number_of_simulations: int = 100
         self.results: Union[list[Algorithm], None] = None
 
-    def create_objects(self) -> tuple[list[Proposer], list[Responder]]:
+    def create_objects(self) -> None:
         """Creates the objects for the algorithm.
 
         Returns:
@@ -58,7 +58,7 @@ class Simulator:
             random.shuffle(select_from)
             responder.preferences = tuple(select_from)
 
-        return proposers, responders
+        self.proposers, self.responders = proposers, responders
 
     def run(
         self, print_all_preferences: bool = False, report_matches: bool = True
@@ -66,7 +66,7 @@ class Simulator:
         """Runs the algorithm."""
         self.results = []
         for _ in range(self.number_of_simulations):
-            self.proposers, self.responders = self.create_objects()
+            self.create_objects()
             algorithm = Algorithm(self.proposers, self.responders)
             algorithm.run(print_all_preferences, report_matches)
             self.results.append(algorithm)
