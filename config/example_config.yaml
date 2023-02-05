@@ -1,4 +1,4 @@
 proposer_and_responder: [man, woman] # first entry is proposer, second is responder
 preferences: random
-number_of_proposers: 4 
-number_of_responders: 4
+number_of_proposers: 5 
+number_of_responders: 7

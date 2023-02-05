@@ -80,8 +80,11 @@ class Algorithm:
                 data.append(
                     [
                         person.preferences[i].name
-                        if person.is_acceptable(person.preferences[i])
-                        or person.preferences[i] == person
+                        if i < len(person.preferences)
+                        and (
+                            person.is_acceptable(person.preferences[i])
+                            or person.preferences[i] == person
+                        )
                         else ""
                         for person in self.persons
                     ]
