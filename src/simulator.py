@@ -61,7 +61,7 @@ class Simulator:
         self.proposers, self.responders = proposers, responders
 
     def run(
-        self, print_all_preferences: bool = False, report_matches: bool = True
+        self, print_all_preferences: bool = True, report_matches: bool = True
     ) -> None:
         """Runs the algorithm."""
         self.results = []

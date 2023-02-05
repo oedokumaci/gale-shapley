@@ -64,30 +64,20 @@ class Algorithm:
             compact (bool, optional): If True prints all in one table. Defaults to True.
         """
         if compact:
-            print("Preferences for everyone, only acceptables are shown:")
+            print("Printing preferences in compact format, only showing acceptables:")
             header = [p.name for p in self.persons]
             first_column = [
                 i + 1 for i in range(max(len(self.proposers), len(self.responders)) + 1)
             ]
             data = []
-            for i in range(len(self.proposers)):
+            for i in range(len(first_column)):
                 data.append(
                     [
-                        prop.preferences[i].name
-                        if prop.is_acceptable(prop.preferences[i])
-                        or prop == prop.preferences[i]
+                        person.preferences[i].name
+                        if person.is_acceptable(person.preferences[i])
+                        or person.preferences[i] == person
                         else ""
-                        for prop in self.proposers
-                    ]
-                )
-            for i in range(len(self.responders)):
-                data.append(
-                    [
-                        resp.preferences[i].name
-                        if resp.is_acceptable(resp.preferences[i])
-                        or resp == resp.preferences[i]
-                        else ""
-                        for resp in self.responders
+                        for person in self.persons
                     ]
                 )
             format_row = "{:>12}" * (
@@ -102,7 +92,7 @@ class Algorithm:
                 person.print_preferences()
 
     def run(
-        self, print_all_preferences: bool = False, report_matches: bool = True
+        self, print_all_preferences: bool = True, report_matches: bool = True
     ) -> None:
         """Runs the algorithm and prints desired information.
 
