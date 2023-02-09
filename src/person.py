@@ -6,6 +6,8 @@ from typing import Union
 
 
 class Person:
+    """Person class. Represents a side in the matching environment. This class is also the base class for Proposer and Responder."""
+
     def __init__(self, name: str, side: str) -> None:
         """Constructor for Person class.
 
