@@ -90,3 +90,10 @@ NUMBER_OF_PROPOSERS, NUMBER_OF_RESPONDERS = _parse_number_of_proposers_and_respo
 print(
     f"Number of proposers: {NUMBER_OF_PROPOSERS}, Number of responders: {NUMBER_OF_RESPONDERS}"
 )
+
+parsed_config = [
+    PROPOSER_SIDE_NAME,
+    RESPONDER_SIDE_NAME,
+    NUMBER_OF_PROPOSERS,
+    NUMBER_OF_RESPONDERS,
+]

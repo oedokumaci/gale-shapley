@@ -14,24 +14,13 @@
 #     name: python3
 # ---
 
-from config_parser import (
-    NUMBER_OF_PROPOSERS,
-    NUMBER_OF_RESPONDERS,
-    PROPOSER_SIDE_NAME,
-    RESPONDER_SIDE_NAME,
-)
-
 # %%
+from config_parser import parsed_config
 from simulator import Simulator
 
 # %%
 if __name__ == "__main__":
-    sim = Simulator(
-        PROPOSER_SIDE_NAME,
-        RESPONDER_SIDE_NAME,
-        NUMBER_OF_PROPOSERS,
-        NUMBER_OF_RESPONDERS,
-    )
+    sim = Simulator(*parsed_config)
     sim.number_of_simulations = 10
     sim.run()
     for i, algorithm in enumerate(sim.results):
