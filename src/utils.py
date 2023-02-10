@@ -16,7 +16,9 @@ def timer_decorator(func: Callable) -> Callable:
         t1 = time()
         result = func(*args, **kwargs)
         t2 = time()
-        print(f"Method {func.__name__!r} took {t2 - t1:.4f} seconds to execute")
+        print(
+            f"Method {func.__name__!r} of module {func.__module__!r} executed in {t2 - t1:.4f} seconds."
+        )
         return result
 
     return wrapper_function
