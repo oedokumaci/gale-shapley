@@ -17,6 +17,14 @@ class Simulator:
         num_proposers: int,
         num_responders: int,
     ) -> None:
+        """Constructor for Simulator class.
+
+        Args:
+            proposer_name (str): parsed from config file
+            responder_name (str): parsed from config file
+            num_proposers (int): parsed from config file
+            num_responders (int): parsed from config file
+        """
         self.proposer_name = proposer_name
         self.responder_name = responder_name
         self.num_proposers = num_proposers
@@ -41,7 +49,7 @@ class Simulator:
                 Responder(f"{self.responder_name[0]}_{i+1}", self.responder_name)
                 for i in range(self.num_responders)
             ]
-        else:
+        else:  # use full names if first letter is the same
             proposers = [
                 Proposer(f"{self.proposer_name}_{i+1}", self.proposer_name)
                 for i in range(self.num_proposers)
@@ -60,12 +68,17 @@ class Simulator:
             random.shuffle(select_from)
             responder.preferences = tuple(select_from)
 
-        proposers, responders
+        return proposers, responders
 
     def run(
         self, print_all_preferences: bool = True, report_matches: bool = True
     ) -> None:
-        """Simulates the algorithm desired number of times."""
+        """Simulates the algorithm desired number of times.
+
+        Args:
+            print_all_preferences (bool, optional): Defaults to True
+            report_matches (bool, optional): Defaults to True
+        """
         self.results = []
         for _ in range(self.number_of_simulations):
             self.proposers, self.responders = self.create_objects()
