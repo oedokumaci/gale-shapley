@@ -10,6 +10,11 @@ LOG_PATH = os.path.join(os.path.dirname(__file__), "../logs/")
 
 
 def init_logger(file_name: str) -> None:
+    """Initialize the logger.
+
+    Args:
+        file_name (str): the name of the log file
+    """
     log_file_path = os.path.join(LOG_PATH, file_name)
     if os.path.exists(log_file_path):
         os.remove(log_file_path)
