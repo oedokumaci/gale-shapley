@@ -21,9 +21,9 @@ from simulator import Simulator
 # %%
 if __name__ == "__main__":
     sim = Simulator(*parsed_config)
-    sim.number_of_simulations = 10
-    sim.run()
-    for i, algorithm in enumerate(sim.results):
-        print(f"Simulation {i+1} took {algorithm.round} rounds")
+    sim.number_of_simulations = 1000
+    sim.simulate()
+    # for i, algorithm in enumerate(sim.results):
+    #     print(f"Simulation {i+1} took {algorithm.round} rounds")
 
 # %%
