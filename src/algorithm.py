@@ -1,6 +1,7 @@
 """Algorithm module."""
 
 from proposer_responder import Proposer, Responder
+from utils import timer_decorator
 
 
 class Algorithm:
@@ -58,7 +59,7 @@ class Algorithm:
                 f"{proposer.name} is matched to {'self' if proposer.name == proposer.match.name else proposer.match.name}."
             )
         for responder in self.responders:
-            if not responder.is_matched:
+            if responder.match == responder:
                 print(f"{responder.name} is matched to self.")
 
     def print_all_preferences(self, compact: bool = True) -> None:
@@ -96,6 +97,7 @@ class Algorithm:
             for person in self.persons:
                 person.print_preferences()
 
+    @timer_decorator
     def run(
         self, print_all_preferences: bool = True, report_matches: bool = True
     ) -> None:
@@ -107,9 +109,13 @@ class Algorithm:
         """
         if print_all_preferences:
             self.print_all_preferences()
+        print("Running algorithm...")
         while not self.terminate():
             self.proposers_propose()
             self.responders_respond()
             self.round += 1
+        for responder in self.responders:
+            if not responder.is_matched:
+                responder.match = responder
         if report_matches:
             self.report_matches()
