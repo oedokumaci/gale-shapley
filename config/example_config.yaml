@@ -2,3 +2,4 @@ proposer_and_responder: [man, woman] # first entry is proposer, second is respon
 preference_type: random
 number_of_proposers: 5 
 number_of_responders: 7
+log_file: logs.log

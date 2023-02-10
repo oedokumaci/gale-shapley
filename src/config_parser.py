@@ -5,6 +5,7 @@ import os.path
 import yaml
 
 from exceptions import ConfigError, TwoSidedMatchingError
+from utils import init_logger, logging
 
 PREFERENCE_TYPES = ["random"]
 
@@ -22,7 +23,7 @@ def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
     Returns:
         tuple[str, str]: parsed proposer and responder
     """
-    print("Parsing proposer and responder from config.yaml...")
+    logging.info("Parsing proposer and responder from config.yaml...")
 
     try:
         proposer_and_responder = config["proposer_and_responder"]
@@ -44,7 +45,7 @@ def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
     if not isinstance(responder, str):
         raise ConfigError(f"Responder should be a string, {responder} is not a string")
 
-    print("Parsing complete.")
+    logging.info("Parsing complete.")
     return proposer, responder
 
 
@@ -60,7 +61,7 @@ def _parse_number_of_proposers_and_responders(config: dict) -> tuple[int, int]:
     Returns:
         tuple[int, int]: parsed number of proposers and responders
     """
-    print("Parsing number of proposers and responders from config.yaml...")
+    logging.info("Parsing number of proposers and responders from config.yaml...")
 
     try:
         number_of_proposers = config["number_of_proposers"]
@@ -84,7 +85,7 @@ def _parse_number_of_proposers_and_responders(config: dict) -> tuple[int, int]:
             "number_of_responders should be specified as an integer in config.yaml, see example_config.yaml for an example"
         )
 
-    print("Parsing complete.")
+    logging.info("Parsing complete.")
     return number_of_proposers, number_of_responders
 
 
@@ -100,7 +101,7 @@ def _parse_preference_type(config: dict) -> str:
     Returns:
         str: parsed preference type
     """
-    print("Parsing preference type from config.yaml...")
+    logging.info("Parsing preference type from config.yaml...")
 
     try:
         preference_type = config["preference_type"]
@@ -117,26 +118,58 @@ def _parse_preference_type(config: dict) -> str:
             f"preference_type should be one of {*PREFERENCE_TYPES,}, {preference_type} is not one of them"
         )
 
-    print("Parsing complete.")
+    logging.info("Parsing complete.")
     return preference_type
+
+
+def _parse_log_file(config: dict) -> str:
+    """Parses the log file from the config.yaml file.
+
+    Args:
+        config (dict): loaded config.yaml file
+
+    Raises:
+        ConfigError:
+
+    Returns:
+        str: parsed log file
+    """
+    print("Parsing log file from config.yaml...")
+
+    try:
+        log_file = config["log_file"]
+    except (KeyError, TypeError):
+        raise ConfigError(
+            "log_file is not specified properly in config.yaml, see example_config.yaml for an example"
+        )
+    if not isinstance(log_file, str):
+        raise ConfigError(
+            "log_file should be specified as a string in config.yaml, see example_config.yaml for an example"
+        )
+
+    print("Parsing complete.")
+    return log_file
 
 
 path_to_config_yaml = os.path.join(os.path.dirname(__file__), "../config/config.yaml")
 with open(path_to_config_yaml) as config_yaml:
     config = yaml.safe_load(config_yaml)
 
+LOG_FILE = _parse_log_file(config)
+init_logger(LOG_FILE)
+
 PROPOSER_SIDE_NAME, RESPONDER_SIDE_NAME = _parse_proposer_and_responder(config)
-print(f"Proposer: {PROPOSER_SIDE_NAME}, Responder: {RESPONDER_SIDE_NAME}")
+logging.info(f"Proposer: {PROPOSER_SIDE_NAME}, Responder: {RESPONDER_SIDE_NAME}")
 
 NUMBER_OF_PROPOSERS, NUMBER_OF_RESPONDERS = _parse_number_of_proposers_and_responders(
     config
 )
-print(
+logging.info(
     f"Number of proposers: {NUMBER_OF_PROPOSERS}, Number of responders: {NUMBER_OF_RESPONDERS}"
 )
 
 PREFERENCE_TYPE = _parse_preference_type(config)
-print(f"Preference type: {PREFERENCE_TYPE}")
+logging.info(f"Preference type: {PREFERENCE_TYPE}")
 
 parsed_config = [
     PROPOSER_SIDE_NAME,

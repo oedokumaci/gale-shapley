@@ -5,7 +5,7 @@ from typing import Union
 
 from algorithm import Algorithm
 from proposer_responder import Proposer, Responder
-from utils import timer_decorator
+from utils import logging, timer_decorator
 
 
 class Simulator:
@@ -123,12 +123,13 @@ class Simulator:
         self.results = []
         offset = len(str(self.number_of_simulations))
         for i in range(self.number_of_simulations):
-            print(f"{'*':*>30} Simulation {str(i+1):>{offset}} {'*':*>30}")
+            logging.info("")
+            logging.info(f"{'*':*>30} Simulation {str(i+1):>{offset}} {'*':*>30}")
             self.proposers, self.responders = self.create_objects()
             algorithm = Algorithm(self.proposers, self.responders)
             algorithm.run(print_all_preferences, report_matches)
             if self.is_stable():
-                print("Matching is stable.")
+                logging.info("Matching is stable.")
             else:
-                print("Matching is not stable.")
+                logging.info("Matching is not stable.")
             self.results.append(algorithm)

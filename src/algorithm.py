@@ -1,7 +1,7 @@
 """Algorithm module."""
 
 from proposer_responder import Proposer, Responder
-from utils import timer_decorator
+from utils import logging, timer_decorator
 
 
 class Algorithm:
@@ -53,14 +53,14 @@ class Algorithm:
 
     def report_matches(self) -> None:
         """Prints all matches, does not print unmatched responders."""
-        print(f"Algorithm terminated after {self.round} rounds.")
+        logging.info(f"Algorithm terminated after {self.round} rounds.")
         for proposer in self.proposers:
-            print(
+            logging.info(
                 f"{proposer.name} is matched to {'self' if proposer.name == proposer.match.name else proposer.match.name}."
             )
         for responder in self.responders:
             if responder.match == responder:
-                print(f"{responder.name} is matched to self.")
+                logging.info(f"{responder.name} is matched to self.")
 
     def print_all_preferences(self, compact: bool = True) -> None:
         """Prints the preferences of all proposers and responders.
@@ -69,7 +69,9 @@ class Algorithm:
             compact (bool, optional): If True prints all in one table. Defaults to True.
         """
         if compact:
-            print("Printing preferences in compact format, only showing acceptables:")
+            logging.info(
+                "Printing preferences in compact format, only showing acceptables:"
+            )
             header = [p.name for p in self.persons]
             first_column = [
                 f"{i + 1}."
@@ -89,10 +91,10 @@ class Algorithm:
             format_row = "{:>5}" * (
                 len(header) + 1
             )  # doing with f-strings could be a pain
-            print(format_row.format("", *header))
-            print(format_row.format("", *["-" * len(h) for h in header]))
+            logging.info(format_row.format("", *header))
+            logging.info(format_row.format("", *["-" * len(h) for h in header]))
             for pref, row in zip(first_column, data):
-                print(format_row.format(pref, *row))
+                logging.info(format_row.format(pref, *row))
         else:
             for person in self.persons:
                 person.print_preferences()
@@ -109,7 +111,7 @@ class Algorithm:
         """
         if print_all_preferences:
             self.print_all_preferences()
-        print("Running algorithm...")
+        logging.info("Running algorithm...")
         while not self.terminate():
             self.proposers_propose()
             self.responders_respond()
