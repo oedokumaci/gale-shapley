@@ -110,7 +110,8 @@ class Simulator:
             return False
         return True
 
-    def run(
+    @timer_decorator
+    def simulate(
         self, print_all_preferences: bool = True, report_matches: bool = True
     ) -> None:
         """Simulates the algorithm desired number of times.
