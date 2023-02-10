@@ -54,10 +54,9 @@ class Algorithm:
         """Prints all matches, does not print unmatched responders."""
         print(f"Algorithm terminated after {self.round} rounds.")
         for proposer in self.proposers:
-            if proposer.name == proposer.match.name:
-                print(f"{proposer.name} is matched to self.")
-            else:
-                print(f"{proposer.name} is matched to {proposer.match.name}")
+            print(
+                f"{proposer.name} is matched to {'self' if proposer.name == proposer.match.name else proposer.match.name}."
+            )
         for responder in self.responders:
             if not responder.is_matched:
                 print(f"{responder.name} is matched to self.")
@@ -72,7 +71,8 @@ class Algorithm:
             print("Printing preferences in compact format, only showing acceptables:")
             header = [p.name for p in self.persons]
             first_column = [
-                i + 1 for i in range(max(len(self.proposers), len(self.responders)) + 1)
+                f"{i + 1}."
+                for i in range(max(len(self.proposers), len(self.responders)) + 1)
             ]
             data = []
             for i in range(len(first_column)):
@@ -80,15 +80,12 @@ class Algorithm:
                     [
                         person.preferences[i].name
                         if i < len(person.preferences)
-                        and (
-                            person.is_acceptable(person.preferences[i])
-                            or person.preferences[i] == person
-                        )
+                        and person.is_acceptable(person.preferences[i])
                         else ""
                         for person in self.persons
                     ]
                 )
-            format_row = "{:>12}" * (
+            format_row = "{:>5}" * (
                 len(header) + 1
             )  # doing with f-strings could be a pain
             print(format_row.format("", *header))

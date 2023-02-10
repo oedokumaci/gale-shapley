@@ -24,23 +24,21 @@ class Person:
         return f"Name: {self.name}, Side: {self.side}, Match: {self.match}"
 
     def is_acceptable(self, person: Person) -> bool:
-        """Checks if person is acceptable to self. Implementation wise, self is not acceptable.
+        """Checks if person is acceptable to self. Self is acceptable.
 
         Args:
             person (Person)
 
         Returns:
-            bool: Returns True if person is acceptable to self, self is not acceptable.
+            bool: Returns True if person is acceptable to self, False otherwise
         """
-        return self.preferences.index(person) < self.preferences.index(self)
+        return self.preferences.index(person) <= self.preferences.index(self)
 
     def print_preferences(self) -> None:
         """Prints the preferences of the person, * indicates acceptable."""
         print(f"{self.name} has the following preferences, * indicates acceptable:")
         for i, person in enumerate(self.preferences):
-            print(
-                f"{i + 1}. {person.name} {'*' if self.is_acceptable(person) or self == person else ''}"
-            )
+            print(f"{i + 1}. {person.name} {'*' if self.is_acceptable(person) else ''}")
 
     @property
     def is_matched(self) -> bool:

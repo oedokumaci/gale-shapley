@@ -41,16 +41,14 @@ class Proposer(Person):
         try:
             if self.last_proposal is None:
                 return self.acceptable_to_propose[0]
-            elif self.last_proposal != self:
-                return self.acceptable_to_propose[
-                    self.acceptable_to_propose.index(self.last_proposal) + 1
-                ]
-            return self
+            return self.acceptable_to_propose[
+                self.acceptable_to_propose.index(self.last_proposal) + 1
+            ]
         except IndexError:
             return self
 
     def propose(self) -> None:
-        """Proposes to the next acceptable responder. If no acceptable responders, sets match to self. Updates last_proposal."""
+        """Proposes to the next acceptable responder. If self is next, sets match to self. Updates last_proposal."""
         if self.next_proposal == self:
             self.match = self
         else:
@@ -110,20 +108,14 @@ class Responder(Person):
                 new_match = self._most_preferred(
                     self.acceptable_proposals + [self.match]
                 )
-                if (
-                    new_match != self.match
-                ):  # otherwise do nothing if new match is current match
-                    self.match.is_matched = (
-                        False  # unmatch current match, also unmatches if self matched
-                    )
+                if new_match != self.match:  # do nothing if new match is current match
+                    self.match.is_matched = False  # unmatch current match
                     self.match = new_match  # current match is set to new match
-                    self.match.match = self  # current match of the match is set to self
+                    new_match.match = self  # current match of the match is set to self
                     # print(f"{self.name} is engaged to {self.match.name}")
             else:  # if not matched
-                new_match = self._most_preferred(
-                    self.acceptable_proposals
-                )  # no need to add [self.match]
+                new_match = self._most_preferred(self.acceptable_proposals)
                 self.match = new_match
-                self.match.match = self
+                new_match.match = self
                 # print(f"{self.name} is engaged to {self.match.name}")
         self.current_proposals = None
