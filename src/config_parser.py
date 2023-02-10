@@ -6,6 +6,8 @@ import yaml
 
 from exceptions import ConfigError, TwoSidedMatchingError
 
+PREFERENCE_TYPES = ["random"]
+
 
 def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
     """Parses the proposer and responder from the config.yaml file.
@@ -86,6 +88,39 @@ def _parse_number_of_proposers_and_responders(config: dict) -> tuple[int, int]:
     return number_of_proposers, number_of_responders
 
 
+def _parse_preference_type(config: dict) -> str:
+    """Parses the preference type from the config.yaml file.
+
+    Args:
+        config (dict): loaded config.yaml file
+
+    Raises:
+        ConfigError:
+
+    Returns:
+        str: parsed preference type
+    """
+    print("Parsing preference type from config.yaml...")
+
+    try:
+        preference_type = config["preference_type"]
+    except (KeyError, TypeError):
+        raise ConfigError(
+            "preference_type is not specified properly in config.yaml, see example_config.yaml for an example"
+        )
+    if not isinstance(preference_type, str):
+        raise ConfigError(
+            "preference_type should be specified as a string in config.yaml, see example_config.yaml for an example"
+        )
+    if preference_type not in PREFERENCE_TYPES:
+        raise ConfigError(
+            f"preference_type should be one of {*PREFERENCE_TYPES,}, {preference_type} is not one of them"
+        )
+
+    print("Parsing complete.")
+    return preference_type
+
+
 path_to_config_yaml = os.path.join(os.path.dirname(__file__), "../config/config.yaml")
 with open(path_to_config_yaml) as config_yaml:
     config = yaml.safe_load(config_yaml)
@@ -100,9 +135,13 @@ print(
     f"Number of proposers: {NUMBER_OF_PROPOSERS}, Number of responders: {NUMBER_OF_RESPONDERS}"
 )
 
+PREFERENCE_TYPE = _parse_preference_type(config)
+print(f"Preference type: {PREFERENCE_TYPE}")
+
 parsed_config = [
     PROPOSER_SIDE_NAME,
     RESPONDER_SIDE_NAME,
     NUMBER_OF_PROPOSERS,
     NUMBER_OF_RESPONDERS,
+    PREFERENCE_TYPE,
 ]
