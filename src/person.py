@@ -23,6 +23,11 @@ class Person:
     def __repr__(self) -> str:
         return f"Name: {self.name}, Side: {self.side}, Match: {self.match}"
 
+    @property
+    def better_than_match(self) -> tuple[Person]:
+        """Returns a tuple of Persons that are preferred to the match."""
+        return self.preferences[: self.preferences.index(self.match)]
+
     def is_acceptable(self, person: Person) -> bool:
         """Checks if person is acceptable to self. Self is acceptable.
 
@@ -45,7 +50,7 @@ class Person:
         """Returns True if the person is matched to someone or self, False if match is None.
 
         Returns:
-            bool:
+            bool
         """
         return self.match is not None
 
