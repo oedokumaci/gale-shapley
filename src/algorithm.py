@@ -15,7 +15,6 @@ class Algorithm:
             proposers (list[Proposer]): list of proposers
             responders (list[Responder]): list of responders
         """
-
         self.proposers = proposers
         self.responders = responders
         self.round: int = 0
