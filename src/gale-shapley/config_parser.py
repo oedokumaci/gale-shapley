@@ -3,7 +3,6 @@
 import os.path
 
 import yaml
-
 from exceptions import ConfigError, TwoSidedMatchingError
 from utils import init_logger, logging
 
@@ -151,7 +150,9 @@ def _parse_log_file(config: dict) -> str:
     return log_file
 
 
-path_to_config_yaml = os.path.join(os.path.dirname(__file__), "../config/config.yaml")
+path_to_config_yaml = os.path.join(
+    os.path.dirname(__file__), "../../config/config.yaml"
+)
 with open(path_to_config_yaml) as config_yaml:
     config = yaml.safe_load(config_yaml)
 
