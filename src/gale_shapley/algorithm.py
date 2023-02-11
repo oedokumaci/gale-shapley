@@ -3,8 +3,8 @@
 import logging
 from typing import Union
 
-from proposer_responder import Proposer, Responder
-from utils import timer_decorator
+from gale_shapley.proposer_responder import Proposer, Responder
+from gale_shapley.utils import timer_decorator
 
 
 class Algorithm:

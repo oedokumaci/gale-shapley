@@ -4,9 +4,9 @@ import logging
 import random
 from typing import Union
 
-from algorithm import Algorithm
-from proposer_responder import Proposer, Responder
-from utils import timer_decorator
+from gale_shapley.algorithm import Algorithm
+from gale_shapley.proposer_responder import Proposer, Responder
+from gale_shapley.utils import timer_decorator
 
 
 class Simulator:
