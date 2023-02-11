@@ -24,12 +24,10 @@ def init_logger(file_name: str) -> None:
     log_formatter.datefmt = "%Y-%m-%d %H:%M:%S"
 
     log_handler = logging.FileHandler(log_file_path)
-    log_handler.suffix = "%Y%m%d"
     log_handler.setFormatter(log_formatter)
     log_handler.setLevel(logging.INFO)
 
     std_log_handler = logging.StreamHandler(sys.stdout)
-    std_log_handler.suffix = "%Y%m%d"
     std_log_handler.setFormatter(log_formatter)
     std_log_handler.setLevel(logging.DEBUG)
 
@@ -42,7 +40,7 @@ def init_logger(file_name: str) -> None:
     for key in logging.Logger.manager.loggerDict:
         logging.getLogger(key).setLevel(logging.ERROR)
 
-    logging.info(f"Logging file path: {os.path.abspath(log_file_path)}")
+    logging.info(f"Path to log file: {os.path.abspath(log_file_path)}")
     logging.info("")
 
 

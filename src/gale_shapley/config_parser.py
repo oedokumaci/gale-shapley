@@ -133,7 +133,9 @@ def _parse_log_file(config: dict) -> str:
     Returns:
         str: parsed log file
     """
-    print("Parsing log file from config.yaml...")
+    print(
+        "Parsing log file from config.yaml..."
+    )  # not logging because logging is not initialized yet
 
     try:
         log_file = config["log_file"]

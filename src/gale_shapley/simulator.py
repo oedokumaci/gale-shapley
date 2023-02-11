@@ -34,22 +34,25 @@ class Simulator:
         self.preference_type = preference_type
         self.proposers: Union[list[Proposer], None] = None
         self.responders: Union[list[Responder], None] = None
-        self.number_of_simulations: int = 100
         self.results: Union[list[Algorithm], None] = None
+        self.number_of_simulations: int = 100
 
     @property
-    def persons(self) -> list[Proposer, Responder]:
+    def persons(self) -> list[Union[Proposer, Responder]]:
         """Returns all proposers and responders."""
+        if self.proposers is None or self.responders is None:
+            raise ValueError("Proposers and responders are not created yet.")
         return self.proposers + self.responders
 
     @property
     def blocking_pairs(self) -> list[tuple[Proposer, Responder]]:
         """Returns all blocking pairs."""
         blocking = []
-        for proposer in self.proposers:
-            for responder in proposer.better_than_match:
-                if proposer in responder.better_than_match:
-                    blocking.append((proposer, responder))
+        if self.proposers is not None and self.responders is not None:
+            for proposer in self.proposers:  # looping one side is enough
+                for responder in proposer.better_than_match:
+                    if proposer in responder.better_than_match:
+                        blocking.append((proposer, responder))
         return blocking
 
     def create_objects(self) -> tuple[list[Proposer], list[Responder]]:
@@ -87,7 +90,7 @@ class Simulator:
                 random.shuffle(select_from)
                 responder.preferences = tuple(select_from)
 
-            return proposers, responders
+        return proposers, responders
 
     def is_individually_rational(self) -> bool:
         """Checks if matching is individually rational.
@@ -121,10 +124,10 @@ class Simulator:
             report_matches (bool, optional): Defaults to True
         """
         self.results = []
-        offset = len(str(self.number_of_simulations))
+        offset = len(str(self.number_of_simulations))  # for formatting print
         for i in range(self.number_of_simulations):
             logging.info("")
-            logging.info(f"{'*':*>30} Simulation {str(i+1):>{offset}} {'*':*>30}")
+            logging.info(f"{'*':*>30} SIMULATION {str(i+1):>{offset}} {'*':*>30}")
             self.proposers, self.responders = self.create_objects()
             algorithm = Algorithm(self.proposers, self.responders)
             algorithm.run(print_all_preferences, report_matches)

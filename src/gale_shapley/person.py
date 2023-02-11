@@ -17,16 +17,18 @@ class Person:
         """
         self.name = name
         self.side = side
-        self.preferences: Union[tuple[Person], None] = None
+        self.preferences: Union[tuple[Person, ...], None] = None
         self.match: Union[Person, None] = None
 
     def __repr__(self) -> str:
         return f"Name: {self.name}, Side: {self.side}, Match: {self.match}"
 
     @property
-    def better_than_match(self) -> tuple[Person]:
+    def better_than_match(self) -> tuple[Person, ...]:
         """Returns a tuple of Persons that are preferred to the match."""
-        return self.preferences[: self.preferences.index(self.match)]
+        if self.is_matched and self.preferences is not None:
+            return self.preferences[: self.preferences.index(self.match)]
+        return tuple()
 
     def is_acceptable(self, person: Person) -> bool:
         """Checks if person is acceptable to self. Self is acceptable.
@@ -37,13 +39,21 @@ class Person:
         Returns:
             bool: Returns True if person is acceptable to self, False otherwise
         """
-        return self.preferences.index(person) <= self.preferences.index(self)
+        if self.preferences is not None:
+            return self.preferences.index(person) <= self.preferences.index(self)
+        else:
+            raise ValueError("Preferences are not set yet.")
 
     def print_preferences(self) -> None:
         """Prints the preferences of the person, * indicates acceptable."""
-        print(f"{self.name} has the following preferences, * indicates acceptable:")
-        for i, person in enumerate(self.preferences):
-            print(f"{i + 1}. {person.name} {'*' if self.is_acceptable(person) else ''}")
+        if self.preferences is not None:
+            print(f"{self.name} has the following preferences, * indicates acceptable:")
+            for i, person in enumerate(self.preferences):
+                print(
+                    f"{i + 1}. {person.name} {'*' if self.is_acceptable(person) else ''}"
+                )
+        else:
+            print(f"Preferences for {self.name} are not set yet.")
 
     @property
     def is_matched(self) -> bool:

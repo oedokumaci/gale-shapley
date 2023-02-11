@@ -1,11 +1,13 @@
 """Algorithm module."""
 
+from typing import Union
+
 from proposer_responder import Proposer, Responder
 from utils import logging, timer_decorator
 
 
 class Algorithm:
-    """Algorithm class. Uses __slots__ instead of the default __dict__ for memory efficiency."""
+    """Gale-Shapley Algorithm class. Uses __slots__ instead of the default __dict__ for memory efficiency."""
 
     __slots__ = ("proposers", "responders", "round")
 
@@ -21,7 +23,7 @@ class Algorithm:
         self.round: int = 0
 
     @property
-    def persons(self) -> list[Proposer, Responder]:
+    def persons(self) -> list[Union[Proposer, Responder]]:
         """Returns all proposers and responders."""
         return self.proposers + self.responders
 
@@ -53,7 +55,6 @@ class Algorithm:
 
     def report_matches(self) -> None:
         """Prints all matches, does not print unmatched responders."""
-        logging.info(f"Algorithm terminated after {self.round} rounds.")
         for proposer in self.proposers:
             logging.info(
                 f"{proposer.name} is matched to {'self' if proposer.name == proposer.match.name else proposer.match.name}."
@@ -116,8 +117,9 @@ class Algorithm:
             self.proposers_propose()
             self.responders_respond()
             self.round += 1
-        for responder in self.responders:
+        for responder in self.responders:  # change None to self matches
             if not responder.is_matched:
                 responder.match = responder
+        logging.info(f"Algorithm terminated after {self.round} rounds.")
         if report_matches:
             self.report_matches()

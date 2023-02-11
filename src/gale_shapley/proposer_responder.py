@@ -52,9 +52,9 @@ class Proposer(Person):
         if self.next_proposal == self:
             self.match = self
         else:
-            try:
+            if self.next_proposal.current_proposals is not None:
                 self.next_proposal.current_proposals.append(self)
-            except AttributeError:
+            else:
                 self.next_proposal.current_proposals = [self]
         self.last_proposal = self.next_proposal
 
@@ -71,7 +71,7 @@ class Responder(Person):
         """
         super().__init__(name, side)
         self.current_proposals: Union[
-            list(Proposer), None
+            list[Proposer], None
         ] = None  # list of current proposals
 
     @property
@@ -90,14 +90,16 @@ class Responder(Person):
         Returns:
             list[Proposer]:
         """
-        return [
-            proposer
-            for proposer in self.current_proposals
-            if self.is_acceptable(proposer)
-        ]
+        if self.current_proposals is not None:
+            return [
+                proposer
+                for proposer in self.current_proposals
+                if self.is_acceptable(proposer)
+            ]
+        return []
 
     def _most_preferred(
-        self, proposals_and_current_match: list[Proposer, Responder]
+        self, proposals_and_current_match: list[Union[Proposer, Responder]]
     ) -> Proposer:  # returns most preferred of the list
         return min(proposals_and_current_match, key=self.preferences.index)
 
@@ -106,10 +108,14 @@ class Responder(Person):
         if self.acceptable_proposals:
             if self.is_matched:  # if already matched
                 new_match = self._most_preferred(
-                    self.acceptable_proposals + [self.match]
+                    self.acceptable_proposals + [self.match]  # type: ignore
                 )
-                if new_match != self.match:  # do nothing if new match is current match
-                    self.match.is_matched = False  # unmatch current match
+                if (
+                    new_match != self.match  # type: ignore
+                ):  # do nothing if new match is current match # type: ignore
+                    self.match.is_matched = (  # type: ignore
+                        False  # unmatch current match # type: ignore
+                    )
                     self.match = new_match  # current match is set to new match
                     new_match.match = self  # current match of the match is set to self
                     # print(f"{self.name} is engaged to {self.match.name}")
