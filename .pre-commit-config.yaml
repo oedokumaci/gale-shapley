@@ -43,8 +43,6 @@ repos:
     rev: v0.991
     hooks:
       - id: mypy
-        args: [src, --no-strict-optional, --ignore-missing-imports]
+        exclude: ^tests/
+        args: [src, --ignore-missing-imports]
         pass_filenames: false
-        additional_dependencies:
-          - types-requests
-          - types-certifi
