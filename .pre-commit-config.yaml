@@ -38,6 +38,8 @@ repos:
       - id: pdm-export
         args: ['-o', 'requirements.txt', '--without-hashes']
         files: ^pdm.lock$
+      - id: pdm-lock-check
+        files: ^pdm.toml$
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.991
