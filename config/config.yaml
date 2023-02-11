@@ -1,5 +1,5 @@
-proposer_and_responder: [man, woman] # first entry is proposer, second is responder
+proposer_and_responder: [man, woman]
 preference_type: random
-number_of_proposers: 5 
-number_of_responders: 7
+number_of_proposers: 12 
+number_of_responders: 12
 log_file: logs.log
