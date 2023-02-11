@@ -46,3 +46,5 @@ repos:
         exclude: ^tests/
         args: [src, --ignore-missing-imports]
         pass_filenames: false
+        additional_dependencies:
+          - types-PyYAML
