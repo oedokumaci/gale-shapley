@@ -15,9 +15,9 @@ mdurl==0.1.2
 msgpack==1.0.4
 nodeenv==1.7.0
 packaging==23.0
-pdm==2.4.2
+pdm==2.4.5
 platformdirs==2.5.2
-pre-commit==3.0.2
+pre-commit==3.0.4
 pygments==2.14.0
 pyproject-hooks==1.0.0
 python-dotenv==0.21.1

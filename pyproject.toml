@@ -15,8 +15,8 @@ license = {text = "MIT"}
 [tool.pdm]
 [tool.pdm.dev-dependencies]
 workflow = [
-    "pre-commit>=2.20.0",
-    "pdm>=2.4.2",
+    "pre-commit>=3.0.4",
+    "pdm>=2.4.5",
 ]
 
 [build-system]
