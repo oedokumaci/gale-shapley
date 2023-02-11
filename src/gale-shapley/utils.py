@@ -6,7 +6,7 @@ import sys
 from time import time
 from typing import Any, Callable
 
-LOG_PATH = os.path.join(os.path.dirname(__file__), "../logs/")
+LOG_PATH = os.path.join(os.path.dirname(__file__), "../../logs/")
 
 
 def init_logger(file_name: str) -> None:
