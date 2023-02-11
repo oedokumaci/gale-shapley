@@ -1,10 +1,11 @@
 """This module contains the schema for the config.yaml file and parses it when imported."""
 
+import logging
 import os.path
 
 import yaml
 from exceptions import ConfigError, TwoSidedMatchingError
-from utils import init_logger, logging
+from utils import init_logger
 
 PREFERENCE_TYPES = ["random"]
 

@@ -1,9 +1,10 @@
 """Algorithm module."""
 
+import logging
 from typing import Union
 
 from proposer_responder import Proposer, Responder
-from utils import logging, timer_decorator
+from utils import timer_decorator
 
 
 class Algorithm:

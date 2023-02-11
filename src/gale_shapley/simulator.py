@@ -1,11 +1,12 @@
 """Simulator module."""
 
+import logging
 import random
 from typing import Union
 
 from algorithm import Algorithm
 from proposer_responder import Proposer, Responder
-from utils import logging, timer_decorator
+from utils import timer_decorator
 
 
 class Simulator:
