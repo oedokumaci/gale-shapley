@@ -74,6 +74,8 @@ def _parse_number_of_proposers_and_responders(config: dict) -> tuple[int, int]:
         raise ConfigError(
             "number_of_proposers should be specified as an integer in config.yaml, see example_config.yaml for an example"
         )
+    if number_of_proposers <= 0:
+        raise ConfigError("number_of_proposers should be greater than 0")
 
     try:
         number_of_responders = config["number_of_responders"]
@@ -85,6 +87,8 @@ def _parse_number_of_proposers_and_responders(config: dict) -> tuple[int, int]:
         raise ConfigError(
             "number_of_responders should be specified as an integer in config.yaml, see example_config.yaml for an example"
         )
+    if number_of_responders <= 0:
+        raise ConfigError("number_of_responders should be greater than 0")
 
     logging.info("Parsing complete.")
     return number_of_proposers, number_of_responders
