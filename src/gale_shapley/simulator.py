@@ -5,7 +5,7 @@ import random
 from typing import Union
 
 from gale_shapley.algorithm import Algorithm
-from gale_shapley.proposer_responder import Proposer, Responder
+from gale_shapley.person import Proposer, Responder
 from gale_shapley.utils import timer_decorator
 
 
@@ -51,9 +51,21 @@ class Simulator:
         blocking = []
         if self.proposers is not None and self.responders is not None:
             for proposer in self.proposers:  # looping one side is enough
-                for responder in proposer.better_than_match:
-                    if proposer in responder.better_than_match:
-                        blocking.append((proposer, responder))
+                if proposer.preferences is not None and proposer.is_matched:
+                    better_than_match_of_proposer = proposer.preferences[
+                        : proposer.preferences.index(proposer.match)
+                    ]
+                    for responder in better_than_match_of_proposer:
+                        if isinstance(responder, Responder):  # need for type checking
+                            if not responder.is_matched:
+                                blocking.append((proposer, responder))
+                            else:
+                                if (
+                                    responder.preferences is not None
+                                    and responder.preferences.index(proposer)
+                                    < responder.preferences.index(responder.match)
+                                ):
+                                    blocking.append((proposer, responder))
         return blocking
 
     def create_objects(self) -> tuple[list[Proposer], list[Responder]]:
@@ -99,7 +111,13 @@ class Simulator:
         Returns:
             bool: True if individually rational, False otherwise
         """
-        return all(person.is_acceptable(person.match) for person in self.persons)
+        for person in self.persons:
+            if (
+                person.match is not None
+            ):  # that is, if person.is_matched but mypy does not know
+                if not person.is_acceptable(person.match):
+                    return False
+        return True
 
     @timer_decorator
     def is_stable(self) -> bool:

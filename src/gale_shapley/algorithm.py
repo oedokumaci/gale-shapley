@@ -3,7 +3,7 @@
 import logging
 from typing import Union
 
-from gale_shapley.proposer_responder import Proposer, Responder
+from gale_shapley.person import Proposer, Responder
 from gale_shapley.utils import timer_decorator
 
 
@@ -57,9 +57,10 @@ class Algorithm:
     def report_matches(self) -> None:
         """Prints all matches, does not print unmatched responders."""
         for proposer in self.proposers:
-            logging.info(
-                f"{proposer.name} is matched to {'self' if proposer.name == proposer.match.name else proposer.match.name}."
-            )
+            if proposer.match is not None:
+                logging.info(
+                    f"{proposer.name} is matched to {'self' if proposer.name == proposer.match.name else proposer.match.name}."
+                )
         for responder in self.responders:
             if responder.match == responder:
                 logging.info(f"{responder.name} is matched to self.")
@@ -84,7 +85,8 @@ class Algorithm:
                 data.append(
                     [
                         person.preferences[i].name
-                        if i < len(person.preferences)
+                        if person.preferences is not None
+                        and i < len(person.preferences)
                         and person.is_acceptable(person.preferences[i])
                         else ""
                         for person in self.persons

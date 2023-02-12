@@ -15,8 +15,8 @@
 # ---
 
 # %%
-from config_parser import parsed_config
-from simulator import Simulator
+from gale_shapley.config_parser import parsed_config
+from gale_shapley.simulator import Simulator
 
 # %%
 if __name__ == "__main__":

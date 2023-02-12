@@ -4,10 +4,11 @@ import logging
 import os.path
 
 import yaml
-from exceptions import ConfigError, TwoSidedMatchingError
-from utils import init_logger
 
-PREFERENCE_TYPES = ["random"]
+from gale_shapley.exceptions import ConfigError, TwoSidedMatchingError
+from gale_shapley.utils import init_logger
+
+PREFERENCE_TYPES: tuple[str] = ("random",)
 
 
 def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
@@ -153,7 +154,7 @@ def _parse_log_file(config: dict) -> str:
     return log_file
 
 
-path_to_config_yaml = os.path.join(
+path_to_config_yaml: str = os.path.join(
     os.path.dirname(__file__), "../../config/config.yaml"
 )
 with open(path_to_config_yaml) as config_yaml:
@@ -175,10 +176,10 @@ logging.info(
 PREFERENCE_TYPE = _parse_preference_type(config)
 logging.info(f"Preference type: {PREFERENCE_TYPE}")
 
-parsed_config = [
+parsed_config: tuple[str, str, int, int, str] = (
     PROPOSER_SIDE_NAME,
     RESPONDER_SIDE_NAME,
     NUMBER_OF_PROPOSERS,
     NUMBER_OF_RESPONDERS,
     PREFERENCE_TYPE,
-]
+)
