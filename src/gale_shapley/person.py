@@ -187,6 +187,7 @@ class Responder(Person):
     def respond(self) -> None:
         """Responds to proposals and updates current_proposals to None."""
         if self.acceptable_proposals:
+            new_match: Proposer
             if self.is_matched and isinstance(
                 self.match, Proposer
             ):  # if already matched to a proposer

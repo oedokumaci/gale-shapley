@@ -75,12 +75,12 @@ class Algorithm:
             logging.info(
                 "Printing preferences in compact format, only showing acceptables:"
             )
-            header = [p.name for p in self.persons]
-            first_column = [
+            header: list[str] = [p.name for p in self.persons]
+            first_column: list[str] = [
                 f"{i + 1}."
                 for i in range(max(len(self.proposers), len(self.responders)) + 1)
             ]
-            data = []
+            data: list[list[str]] = []
             for i in range(len(first_column)):
                 data.append(
                     [
@@ -92,7 +92,7 @@ class Algorithm:
                         for person in self.persons
                     ]
                 )
-            format_row = "{:>5}" * (
+            format_row: str = "{:>5}" * (
                 len(header) + 1
             )  # doing with f-strings could be a pain
             logging.info(format_row.format("", *header))

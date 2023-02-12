@@ -48,15 +48,19 @@ class Simulator:
     @property
     def blocking_pairs(self) -> list[tuple[Proposer, Responder]]:
         """Returns all blocking pairs."""
-        blocking = []
+        blocking: list[tuple[Proposer, Responder]] = []
         if self.proposers is not None and self.responders is not None:
             for proposer in self.proposers:  # looping one side is enough
                 if proposer.preferences is not None and proposer.is_matched:
-                    better_than_match_of_proposer = proposer.preferences[
+                    better_than_match_of_proposer: tuple[
+                        Union[Proposer, Responder], ...
+                    ] = proposer.preferences[
                         : proposer.preferences.index(proposer.match)
                     ]
                     for responder in better_than_match_of_proposer:
-                        if isinstance(responder, Responder):  # need for type checking
+                        if isinstance(
+                            responder, Responder
+                        ):  # need for type checking only
                             if not responder.is_matched:
                                 blocking.append((proposer, responder))
                             else:
@@ -75,6 +79,8 @@ class Simulator:
             tuple[list[Proposer], list[Responder]]: list of proposers and list of responders
         """
         if self.preference_type == "random":
+            proposers: list[Proposer]
+            responders: list[Responder]
             if self.proposer_name[0] != self.responder_name[0]:
                 proposers = [
                     Proposer(f"{self.proposer_name[0]}_{i+1}", self.proposer_name)
@@ -94,12 +100,13 @@ class Simulator:
                     for i in range(self.num_responders)
                 ]
 
+            select_from: list[Union[Proposer, Responder]]
             for proposer in proposers:
-                select_from = [proposer] + responders
+                select_from = responders + [proposer]
                 random.shuffle(select_from)
                 proposer.preferences = tuple(select_from)
             for responder in responders:
-                select_from = [responder] + proposers
+                select_from = proposers + [responder]
                 random.shuffle(select_from)
                 responder.preferences = tuple(select_from)
 
@@ -143,7 +150,7 @@ class Simulator:
             report_matches (bool, optional): Defaults to True
         """
         self.results = []
-        offset = len(str(self.number_of_simulations))  # for formatting print
+        offset: int = len(str(self.number_of_simulations))  # for formatting print
         for i in range(self.number_of_simulations):
             logging.info("")
             logging.info(f"{'*':*>30} SIMULATION {str(i+1):>{offset}} {'*':*>30}")
