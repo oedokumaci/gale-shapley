@@ -45,8 +45,7 @@ repos:
     rev: v0.991
     hooks:
       - id: mypy
-        exclude: ^tests/
-        args: [src, --ignore-missing-imports]
+        args: [--ignore-missing-imports]
         pass_filenames: false
         additional_dependencies:
           - types-PyYAML
