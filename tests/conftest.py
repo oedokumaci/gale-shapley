@@ -6,31 +6,31 @@ from gale_shapley.person import Proposer, Responder
 from gale_shapley.simulator import Simulator
 
 
-@pytest.fixture()
+@pytest.fixture
 def m_1() -> Proposer:
     """Pytest fixture for proposer m_1."""
     return Proposer("m_1", "man")
 
 
-@pytest.fixture()
+@pytest.fixture
 def m_2() -> Proposer:
     """Pytest fixture for proposer m_2."""
     return Proposer("m_2", "man")
 
 
-@pytest.fixture()
+@pytest.fixture
 def w_1() -> Responder:
     """Pytest fixture for responder w_1."""
     return Responder("w_1", "woman")
 
 
-@pytest.fixture()
+@pytest.fixture
 def w_2() -> Responder:
     """Pytest fixture for responder w_2."""
     return Responder("w_2", "woman")
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_deterministic_proposers_and_responders(
     m_1: Proposer, m_2: Proposer, w_1: Responder, w_2: Responder
 ) -> tuple[list[Proposer], list[Responder]]:
