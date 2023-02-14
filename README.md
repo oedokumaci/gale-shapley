@@ -38,9 +38,9 @@ In order to configure your IDE to support [PEP 582], you can follow the instruct
 
 &nbsp;
 
-The project also uses pre-commit hooks. You can `pip install pre-commit` and then run
+The project also uses pre-commit hooks. Because the project uses [PDM], you **do not** need to `pip install pre-commit`. Instead, run directly
 ```bash
-pre-commit install
+pdm run pre-commit install
 ```
 in the project directory to install hooks to your local `.git`.
 
