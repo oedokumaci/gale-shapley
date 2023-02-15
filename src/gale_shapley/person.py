@@ -3,7 +3,7 @@ Person class is also the base class for Proposer and Responder classes."""
 
 from __future__ import annotations
 
-from typing import Union
+from typing import Optional
 
 
 class Person:
@@ -18,17 +18,17 @@ class Person:
         """
         self.name = name
         self.side = side
-        self.preferences: Union[tuple[Union[Proposer, Responder], ...], None] = None
-        self.match: Union[Proposer, Responder, None] = None
+        self.preferences: Optional[tuple[Proposer | Responder, ...]] = None
+        self.match: Optional[Proposer | Responder] = None
 
     def __repr__(self) -> str:
         return f"Name: {self.name}, Side: {self.side}, Match: {self.match}"
 
-    def is_acceptable(self, person: Union[Proposer, Responder]) -> bool:
+    def is_acceptable(self, person: Proposer | Responder) -> bool:
         """Checks if person is acceptable to self. Self is acceptable.
 
         Args:
-            person (Person)
+            person (Proposer | Responder)
 
         Returns:
             bool: Returns True if person is acceptable to self, False otherwise
@@ -85,16 +85,16 @@ class Proposer(Person):
             side (str): side of the person for super constructor, parsed from config.yaml
         """
         super().__init__(name, side)
-        self.last_proposal: Union[
-            Responder, Proposer, None
+        self.last_proposal: Optional[
+            Responder | Proposer
         ] = None  # last person that proposer proposed to
 
     @property
-    def acceptable_to_propose(self) -> tuple[Union[Responder, Proposer], ...]:
+    def acceptable_to_propose(self) -> tuple[Responder | Proposer, ...]:
         """Returns a tuple of acceptable responders to propose to.
 
         Returns:
-            tuple[Union[Responder, Proposer], ...]: tuple of acceptable responders
+            tuple[Responder | Proposer, ...]: tuple of acceptable responders
         """
         if self.preferences is not None:
             return tuple(
@@ -108,11 +108,11 @@ class Proposer(Person):
             raise ValueError("Preferences are not set.")
 
     @property
-    def next_proposal(self) -> Union[Responder, Proposer]:
+    def next_proposal(self) -> Responder | Proposer:
         """Returns the next acceptable responder to propose to, or self if no acceptable responders.
 
         Returns:
-            Union[Responder, Proposer]:
+            Responder | Proposer:
         """
         try:
             if self.last_proposal is None:
@@ -148,8 +148,8 @@ class Responder(Person):
             side (str): side of the person for super constructor, parsed from config.yaml
         """
         super().__init__(name, side)
-        self.current_proposals: Union[
-            list[Proposer], None
+        self.current_proposals: Optional[
+            list[Proposer]
         ] = None  # list of current proposals
 
     @property

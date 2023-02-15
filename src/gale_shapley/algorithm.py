@@ -1,7 +1,7 @@
 """Algorithm module."""
+from __future__ import annotations  # needed for | of Python 3.10
 
 import logging
-from typing import Union
 
 from gale_shapley.person import Proposer, Responder
 from gale_shapley.utils import timer_decorator
@@ -24,7 +24,7 @@ class Algorithm:
         self.round: int = 0
 
     @property
-    def persons(self) -> list[Union[Proposer, Responder]]:
+    def persons(self) -> list[Proposer | Responder]:
         """Returns all proposers and responders."""
         return self.proposers + self.responders
 

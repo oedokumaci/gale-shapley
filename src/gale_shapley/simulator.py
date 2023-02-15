@@ -1,8 +1,9 @@
 """Simulator module."""
+from __future__ import annotations  # needed for | of Python 3.10
 
 import logging
 import random
-from typing import Union
+from typing import Optional
 
 from gale_shapley.algorithm import Algorithm
 from gale_shapley.person import Proposer, Responder
@@ -33,13 +34,13 @@ class Simulator:
         self.num_proposers = num_proposers
         self.num_responders = num_responders
         self.preference_type = preference_type
-        self.proposers: Union[list[Proposer], None] = None
-        self.responders: Union[list[Responder], None] = None
-        self.results: Union[list[Algorithm], None] = None
+        self.proposers: Optional[list[Proposer]] = None
+        self.responders: Optional[list[Responder]] = None
+        self.results: Optional[list[Algorithm]] = None
         self.number_of_simulations: int = 100
 
     @property
-    def persons(self) -> list[Union[Proposer, Responder]]:
+    def persons(self) -> list[Proposer | Responder]:
         """Returns all proposers and responders."""
         if self.proposers is None or self.responders is None:
             raise ValueError("Proposers and responders are not created yet.")
@@ -53,7 +54,7 @@ class Simulator:
             for proposer in self.proposers:  # looping one side is enough
                 if proposer.preferences is not None and proposer.is_matched:
                     better_than_match_of_proposer: tuple[
-                        Union[Proposer, Responder], ...
+                        Proposer | Responder, ...
                     ] = proposer.preferences[
                         : proposer.preferences.index(proposer.match)
                     ]
@@ -100,7 +101,7 @@ class Simulator:
                     for i in range(self.num_responders)
                 ]
 
-            select_from: list[Union[Proposer, Responder]]
+            select_from: list[Proposer | Responder]
             for proposer in proposers:
                 select_from = responders + [proposer]
                 random.shuffle(select_from)
