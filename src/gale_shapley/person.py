@@ -3,8 +3,6 @@ Person class is also the base class for Proposer and Responder classes."""
 
 from __future__ import annotations
 
-from typing import Optional
-
 
 class Person:
     """Person class. Represents a side in the matching environment. This class is also the base class for Proposer and Responder."""
@@ -18,8 +16,8 @@ class Person:
         """
         self.name = name
         self.side = side
-        self.preferences: Optional[tuple[Proposer | Responder, ...]] = None
-        self.match: Optional[Proposer | Responder] = None
+        self.preferences: tuple[Proposer | Responder, ...] | None = None
+        self.match: Proposer | Responder | None = None
 
     def __repr__(self) -> str:
         return f"Name: {self.name}, Side: {self.side}, Match: {self.match}"
@@ -85,9 +83,9 @@ class Proposer(Person):
             side (str): side of the person for super constructor, parsed from config.yaml
         """
         super().__init__(name, side)
-        self.last_proposal: Optional[
-            Responder | Proposer
-        ] = None  # last person that proposer proposed to
+        self.last_proposal: Responder | Proposer | None = (
+            None  # last person that proposer proposed to
+        )
 
     @property
     def acceptable_to_propose(self) -> tuple[Responder | Proposer, ...]:
@@ -148,9 +146,9 @@ class Responder(Person):
             side (str): side of the person for super constructor, parsed from config.yaml
         """
         super().__init__(name, side)
-        self.current_proposals: Optional[
-            list[Proposer]
-        ] = None  # list of current proposals
+        self.current_proposals: list[
+            Proposer
+        ] | None = None  # list of current proposals
 
     @property
     def awaiting_to_respond(self) -> bool:

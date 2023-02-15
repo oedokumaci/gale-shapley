@@ -3,7 +3,6 @@ from __future__ import annotations  # needed for | of Python 3.10
 
 import logging
 import random
-from typing import Optional
 
 from gale_shapley.algorithm import Algorithm
 from gale_shapley.person import Proposer, Responder
@@ -34,9 +33,9 @@ class Simulator:
         self.num_proposers = num_proposers
         self.num_responders = num_responders
         self.preference_type = preference_type
-        self.proposers: Optional[list[Proposer]] = None
-        self.responders: Optional[list[Responder]] = None
-        self.results: Optional[list[Algorithm]] = None
+        self.proposers: list[Proposer] | None = None
+        self.responders: list[Responder] | None = None
+        self.results: list[Algorithm] | None = None
         self.number_of_simulations: int = 100
 
     @property
