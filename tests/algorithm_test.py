@@ -17,9 +17,12 @@ class TestProposeRespondTerminate:
     algorithm: Algorithm
 
     @pytest.fixture(autouse=True)
-    def set_proposers_and_responders(
-        self, create_deterministic_proposers_and_responders_fix
-    ):
+    def set_proposers_and_responders_fix(
+        self,
+        create_deterministic_proposers_and_responders_fix: tuple[
+            list[Proposer], list[Responder]
+        ],
+    ) -> None:
         (
             self.__class__.proposers,
             self.__class__.responders,
