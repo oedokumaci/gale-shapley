@@ -61,3 +61,17 @@ class TestProposerResponder:
     def test_next_proposal(self) -> None:
         assert self.m_1.next_proposal == self.w_2
         assert self.m_2.next_proposal == self.m_2
+
+    def test_current_proposals(self) -> None:
+        assert self.w_1.current_proposals == [self.m_1, self.m_2]
+        assert self.w_2.current_proposals is None
+
+    def test_respond(self) -> None:
+        for responder in self.responders:
+            responder.respond()
+
+    def test_match(self) -> None:
+        assert self.m_1.match == self.w_1
+        assert self.w_1.match == self.m_1
+        assert self.m_2.match is None
+        assert self.w_2.match is None
