@@ -6,33 +6,33 @@ from gale_shapley.person import Proposer, Responder
 from gale_shapley.simulator import Simulator
 
 
-@pytest.fixture
-def m_1() -> Proposer:
+@pytest.fixture(scope="class")
+def m_1_fix() -> Proposer:
     """Pytest fixture for proposer m_1."""
     return Proposer("m_1", "man")
 
 
-@pytest.fixture
-def m_2() -> Proposer:
+@pytest.fixture(scope="class")
+def m_2_fix() -> Proposer:
     """Pytest fixture for proposer m_2."""
     return Proposer("m_2", "man")
 
 
-@pytest.fixture
-def w_1() -> Responder:
+@pytest.fixture(scope="class")
+def w_1_fix() -> Responder:
     """Pytest fixture for responder w_1."""
     return Responder("w_1", "woman")
 
 
-@pytest.fixture
-def w_2() -> Responder:
+@pytest.fixture(scope="class")
+def w_2_fix() -> Responder:
     """Pytest fixture for responder w_2."""
     return Responder("w_2", "woman")
 
 
-@pytest.fixture
-def create_deterministic_proposers_and_responders(
-    m_1: Proposer, m_2: Proposer, w_1: Responder, w_2: Responder
+@pytest.fixture(scope="class")
+def create_deterministic_proposers_and_responders_fix(
+    m_1_fix: Proposer, m_2_fix: Proposer, w_1_fix: Responder, w_2_fix: Responder
 ) -> tuple[list[Proposer], list[Responder]]:
     """Pytest fixture to create proposers and responders with following preferences.
        m_1 m_2 w_1 w_2
@@ -42,17 +42,17 @@ def create_deterministic_proposers_and_responders(
     3. m_1     w_1 w_2
 
     Args:
-        m_1 (Proposer): conftest.py fixture
-        m_2 (Proposer): conftest.py fixture
-        w_1 (Responder): conftest.py fixture
-        w_2 (Responder): conftest.py fixture
+        m_1_fix (Proposer): conftest.py fixture
+        m_2_fix (Proposer): conftest.py fixture
+        w_1_fix (Responder): conftest.py fixture
+        w_2_fix (Responder): conftest.py fixture
 
     Returns:
         tuple[list[Proposer], list[Responder]]: tuple of list of proposers and list of responders
     """
     proposers: list[Proposer]
     responders: list[Responder]
-    proposers, responders = [m_1, m_2], [w_1, w_2]
+    proposers, responders = [m_1_fix, m_2_fix], [w_1_fix, w_2_fix]
     proposers[0].preferences = [responders[0], responders[1], proposers[0]]
     proposers[1].preferences = [responders[0], proposers[1], responders[1]]
     responders[0].preferences = [proposers[0], proposers[1], responders[0]]
@@ -63,7 +63,7 @@ def create_deterministic_proposers_and_responders(
 @pytest.fixture(
     params=[(random.randint(1, 20), random.randint(1, 20)) for _ in range(20)]
 )
-def sim_random_test_input(request: pytest.FixtureRequest) -> Simulator:
+def sim_random_test_input_fix(request: pytest.FixtureRequest) -> Simulator:
     """Pytest fixture to create 20 Simulator objects.
     There are between 1 to 20 (not necessarily equal) number of men and women.
     Preferences are also randomly generated.
