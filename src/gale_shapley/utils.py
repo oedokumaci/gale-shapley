@@ -4,9 +4,15 @@ import logging
 import os
 import sys
 from time import time
-from typing import Any, Callable
+from typing import Callable, TypeVar
 
-LOG_PATH = os.path.join(os.path.dirname(__file__), "../../logs/")
+from typing_extensions import (  # Paramspec is new in Python 3.10, see https://www.python.org/dev/peps/pep-0612/
+    ParamSpec,
+)
+
+R = TypeVar("R")
+P = ParamSpec("P")
+LOG_PATH = os.path.join(os.path.dirname(__file__).split("src")[0], "logs/")
 
 
 def init_logger(file_name: str) -> None:
@@ -44,10 +50,10 @@ def init_logger(file_name: str) -> None:
     logging.info("")
 
 
-def timer_decorator(func: Callable) -> Callable:
+def timer_decorator(func: Callable[P, R]) -> Callable[P, R]:
     """Decorator that prints the time it took to execute a function."""
 
-    def wrapper_function(*args, **kwargs) -> Any:
+    def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         """Wrapper function that prints the time it took to execute a function.
 
         Returns:
@@ -61,4 +67,4 @@ def timer_decorator(func: Callable) -> Callable:
         )
         return result
 
-    return wrapper_function
+    return wrapper
