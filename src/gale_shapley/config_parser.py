@@ -2,6 +2,7 @@
 If the config.yaml is valid, logger is initialized here."""
 
 import logging
+import os
 
 import yaml
 from pydantic import BaseModel, validator
@@ -11,7 +12,9 @@ from gale_shapley.exceptions import ConfigError
 from gale_shapley.utils import init_logger
 
 PREFERENCE_TYPES: tuple[str] = ("random",)
-PATH_TO_YAMLCONFIG: str = "../../config/config.yaml"
+PATH_TO_YAMLCONFIG: str = (
+    os.path.dirname(__file__).split("src")[0] + "config/config.yaml"
+)
 
 
 class YAMLConfig(BaseModel):

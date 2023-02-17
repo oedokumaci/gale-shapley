@@ -2,6 +2,7 @@ import random
 
 import pytest
 
+from gale_shapley.config_parser import YAMLConfig
 from gale_shapley.person import Proposer, Responder
 from gale_shapley.simulator import Simulator
 
@@ -78,5 +79,12 @@ def sim_random_test_input_fix(request: pytest.FixtureRequest) -> Simulator:
     number_of_proposers: int
     number_of_responders: int
     number_of_proposers, number_of_responders = request.param
-    sim = Simulator("man", "woman", number_of_proposers, number_of_responders, "random")
-    return sim
+    mock_config = {  # TODO - use mock actually
+        "proposer_side_name": "man",
+        "responder_side_name": "woman",
+        "number_of_proposers": number_of_proposers,
+        "number_of_responders": number_of_responders,
+        "preference_type": "random",
+        "log_file_name": "test_logs.log",
+    }
+    return Simulator(YAMLConfig(**mock_config))
