@@ -21,7 +21,7 @@ def init_logger(file_name: str) -> None:
     Args:
         file_name (str): the name of the log file
     """
-    log_file_path = os.path.join(LOG_PATH, file_name)
+    log_file_path: str = os.path.join(LOG_PATH, file_name)
     if os.path.exists(log_file_path):
         os.remove(log_file_path)
     else:
@@ -59,11 +59,11 @@ def timer_decorator(func: Callable[P, R]) -> Callable[P, R]:
         Returns:
             Any: the result of the function
         """
-        t1 = time()
+        t1: float = time()
         result = func(*args, **kwargs)
-        t2 = time()
+        t2: float = time()
         logging.info(
-            f"Method {func.__name__!r} of module {func.__module__!r} executed in {t2 - t1:.4f} seconds."
+            f"Method {func.__name__!r} of module {func.__module__!r} executed in {t2 - t1:.2f} seconds."
         )
         return result
 
