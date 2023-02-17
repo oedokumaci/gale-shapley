@@ -124,11 +124,7 @@ class Simulator:
         Returns:
             bool: True if stable, False otherwise
         """
-        if not self.is_individually_rational():
-            return False
-        if len(self.blocking_pairs) > 0:
-            return False
-        return True
+        return self.is_individually_rational() and len(self.blocking_pairs) == 0
 
     @timer_decorator
     def simulate(
