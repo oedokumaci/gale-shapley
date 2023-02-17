@@ -12,7 +12,7 @@ from typing_extensions import (  # Paramspec is new in Python 3.10, see https://
 
 R = TypeVar("R")
 P = ParamSpec("P")
-LOG_PATH = os.path.join(os.path.dirname(__file__).split("src")[0], "logs/")
+LOG_PATH: str = os.path.join(os.path.dirname(__file__).split("src")[0], "logs/")
 
 
 def init_logger(file_name: str) -> None:
