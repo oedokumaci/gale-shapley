@@ -1,189 +1,75 @@
-"""This module contains the schema for the config.yaml file and parses it when imported."""
+"""This module parses and validates the config.yaml.
+If the config.yaml is valid, logger is initialized here."""
 
 import logging
-import os.path
 
 import yaml
+from pydantic import BaseModel, validator
+from pydantic.fields import ModelField
 
-from gale_shapley.exceptions import ConfigError, TwoSidedMatchingError
+from gale_shapley.exceptions import ConfigError
 from gale_shapley.utils import init_logger
 
 PREFERENCE_TYPES: tuple[str] = ("random",)
+PATH_TO_YAMLCONFIG: str = "../../config/config.yaml"
 
 
-def _parse_proposer_and_responder(config: dict) -> tuple[str, str]:
-    """Parses the proposer and responder from the config.yaml file.
-
-    Args:
-        config (dict): loaded config.yaml file
-
-    Raises:
-        ConfigError:
-        TwoSidedMatchingError:
-
-    Returns:
-        tuple[str, str]: parsed proposer and responder
-    """
-    logging.info("Parsing proposer and responder from config.yaml...")
-
-    try:
-        proposer_and_responder = config["proposer_and_responder"]
-    except (KeyError, TypeError):
-        raise ConfigError(
-            "proposer_and_responder is not specified properly in config.yaml, see example_config.yaml for an example"
-        )
-
-    if not isinstance(proposer_and_responder, list):
-        raise ConfigError(
-            "proposer_and_responder should be specified as a list in config.yaml, see example_config.yaml for an example"
-        )
-    if len(set(proposer_and_responder)) != 2:
-        raise TwoSidedMatchingError(set(proposer_and_responder))
-    proposer, responder = proposer_and_responder
-
-    if not isinstance(proposer, str):
-        raise ConfigError(f"Proposer should be a string, {proposer} is not a string")
-    if not isinstance(responder, str):
-        raise ConfigError(f"Responder should be a string, {responder} is not a string")
-
-    logging.info("Parsing complete.")
-    return proposer, responder
-
-
-def _parse_number_of_proposers_and_responders(config: dict) -> tuple[int, int]:
-    """Parses the number of proposers and responders from the config.yaml file.
-
-    Args:
-        config (dict): loaded config.yaml file
+class YAMLConfig(BaseModel):
+    """Parses and validates the config.yaml file. Inherits from pydantic BaseModel.
+    One can use @dataclass decorator instead of BaseModel, but validation is not as easy as with BaseModel.
 
     Raises:
-        ConfigError:
-
-    Returns:
-        tuple[int, int]: parsed number of proposers and responders
+        ConfigError
     """
-    logging.info("Parsing number of proposers and responders from config.yaml...")
 
-    try:
-        number_of_proposers = config["number_of_proposers"]
-    except (KeyError, TypeError):
-        raise ConfigError(
-            "number_of_proposers is not specified properly in config.yaml, see example_config.yaml for an example"
-        )
-    if not isinstance(number_of_proposers, int):
-        raise ConfigError(
-            "number_of_proposers should be specified as an integer in config.yaml, see example_config.yaml for an example"
-        )
-    if number_of_proposers <= 0:
-        raise ConfigError("number_of_proposers should be greater than 0")
+    proposer_side_name: str
+    responder_side_name: str
+    preference_type: str
+    number_of_proposers: int
+    number_of_responders: int
+    log_file_name: str
 
-    try:
-        number_of_responders = config["number_of_responders"]
-    except (KeyError, TypeError):
-        raise ConfigError(
-            "number_of_responders is not specified properly in config.yaml, see example_config.yaml for an example"
-        )
-    if not isinstance(number_of_responders, int):
-        raise ConfigError(
-            "number_of_responders should be specified as an integer in config.yaml, see example_config.yaml for an example"
-        )
-    if number_of_responders <= 0:
-        raise ConfigError("number_of_responders should be greater than 0")
+    @validator("preference_type")
+    def preference_type_must_be_valid(cls, v: str) -> str:
+        if v not in PREFERENCE_TYPES:
+            raise ConfigError(
+                f"preference_type should be {' or '.join(PREFERENCE_TYPES)}, {v} is not valid"
+            )
+        return v
 
-    logging.info("Parsing complete.")
-    return number_of_proposers, number_of_responders
+    @validator("number_of_proposers", "number_of_responders")
+    def number_of_each_side_member_must_be_positive(
+        cls, v: int, field: ModelField
+    ) -> int:
+        if not v > 0:
+            raise ConfigError(f"{field.name} must be greater than 0, {v} is not")
+        return v
 
-
-def _parse_preference_type(config: dict) -> str:
-    """Parses the preference type from the config.yaml file.
-
-    Args:
-        config (dict): loaded config.yaml file
-
-    Raises:
-        ConfigError:
-
-    Returns:
-        str: parsed preference type
-    """
-    logging.info("Parsing preference type from config.yaml...")
-
-    try:
-        preference_type = config["preference_type"]
-    except (KeyError, TypeError):
-        raise ConfigError(
-            "preference_type is not specified properly in config.yaml, see example_config.yaml for an example"
-        )
-    if not isinstance(preference_type, str):
-        raise ConfigError(
-            "preference_type should be specified as a string in config.yaml, see example_config.yaml for an example"
-        )
-    if preference_type not in PREFERENCE_TYPES:
-        raise ConfigError(
-            f"preference_type should be one of {*PREFERENCE_TYPES,}, {preference_type} is not one of them"
-        )
-
-    logging.info("Parsing complete.")
-    return preference_type
+    @validator("log_file_name")
+    def log_file_name_must_be_valid(cls, v: str) -> str:
+        if v.startswith("/"):
+            raise ConfigError(
+                f"log_file_name should not start with /, {v} starts with /"
+            )
+        if not v.endswith(".log"):
+            raise ConfigError(f"log_file_name should be a .log file, {v} is not")
+        # PROD CODE
+        # if os.path.exists(f"../../logs/{v}"):  # if log file exists ask to overwrite
+        #     user_input = input(f"log_file_name {v} already exists, overwrite? y/n (n)") or "n"
+        #     if user_input != "y":
+        #         raise SystemExit("exiting not to overwrite, please change log_file_name in config.yaml")
+        return v
 
 
-def _parse_log_file(config: dict) -> str:
-    """Parses the log file from the config.yaml file.
+with open(PATH_TO_YAMLCONFIG) as yaml_config:
+    config_input = YAMLConfig(**yaml.safe_load(yaml_config))
 
-    Args:
-        config (dict): loaded config.yaml file
-
-    Raises:
-        ConfigError:
-
-    Returns:
-        str: parsed log file
-    """
-    print(
-        "Parsing log file from config.yaml..."
-    )  # not logging because logging is not initialized yet
-
-    try:
-        log_file = config["log_file"]
-    except (KeyError, TypeError):
-        raise ConfigError(
-            "log_file is not specified properly in config.yaml, see example_config.yaml for an example"
-        )
-    if not isinstance(log_file, str):
-        raise ConfigError(
-            "log_file should be specified as a string in config.yaml, see example_config.yaml for an example"
-        )
-
-    print("Parsing complete.")
-    return log_file
-
-
-path_to_config_yaml: str = os.path.join(
-    os.path.dirname(__file__), "../../config/config.yaml"
-)
-with open(path_to_config_yaml) as config_yaml:
-    config = yaml.safe_load(config_yaml)
-
-LOG_FILE = _parse_log_file(config)
-init_logger(LOG_FILE)
-
-PROPOSER_SIDE_NAME, RESPONDER_SIDE_NAME = _parse_proposer_and_responder(config)
-logging.info(f"Proposer: {PROPOSER_SIDE_NAME}, Responder: {RESPONDER_SIDE_NAME}")
-
-NUMBER_OF_PROPOSERS, NUMBER_OF_RESPONDERS = _parse_number_of_proposers_and_responders(
-    config
+init_logger(config_input.log_file_name)
+logging.info("Parsing config.yaml is complete")
+logging.info(
+    f"Proposer side name: {config_input.proposer_side_name}, Responder side name: {config_input.responder_side_name}"
 )
 logging.info(
-    f"Number of proposers: {NUMBER_OF_PROPOSERS}, Number of responders: {NUMBER_OF_RESPONDERS}"
+    f"Number of proposers: {config_input.number_of_proposers}, Number of responders: {config_input.number_of_responders}"
 )
-
-PREFERENCE_TYPE = _parse_preference_type(config)
-logging.info(f"Preference type: {PREFERENCE_TYPE}")
-
-parsed_config: tuple[str, str, int, int, str] = (
-    PROPOSER_SIDE_NAME,
-    RESPONDER_SIDE_NAME,
-    NUMBER_OF_PROPOSERS,
-    NUMBER_OF_RESPONDERS,
-    PREFERENCE_TYPE,
-)
+logging.info(f"Preference type: {config_input.preference_type}")

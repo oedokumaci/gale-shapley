@@ -22,6 +22,7 @@ pdm==2.4.5
 platformdirs==2.5.2
 pluggy==1.0.0
 pre-commit==3.0.4
+pydantic==1.10.5
 pygments==2.14.0
 pyproject-hooks==1.0.0
 pytest==7.2.1
@@ -35,6 +36,7 @@ setuptools==65.5.0
 shellingham==1.5.0.post1
 tomli==2.0.1
 tomlkit==0.11.6
+typing-extensions==4.5.0
 unearth==0.7.2
 urllib3==1.26.14
 virtualenv==20.16.6

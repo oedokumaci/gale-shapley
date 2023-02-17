@@ -1,5 +1,6 @@
-proposer_and_responder: [woman, man] # first entry is proposer, second is responder
-preference_type: random # random for now, input will be implemented later
-number_of_proposers: 5 # number of proposers, not necessarily equal to number of responders
-number_of_responders: 7 # number of responders, not necessarily equal to number of proposers
-log_file: logs.log # log file name, will be saved in logs folder
+proposer_side_name: man
+responder_side_name: woman
+number_of_proposers: 5
+number_of_responders: 7
+preference_type: random # only random is valid for now, custom input will be implemented later
+log_file: logs.log # will be saved in logs folder

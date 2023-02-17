@@ -1,10 +1,11 @@
 """Simulator module."""
-from __future__ import annotations  # needed for | of Python 3.10
+from __future__ import annotations  # needed in 3.9 for | of Python 3.10
 
 import logging
 import random
 
 from gale_shapley.algorithm import Algorithm
+from gale_shapley.config_parser import YAMLConfig
 from gale_shapley.person import Proposer, Responder
 from gale_shapley.utils import timer_decorator
 
@@ -12,27 +13,17 @@ from gale_shapley.utils import timer_decorator
 class Simulator:
     """Simulator class. Creates objects and runs the algorithm."""
 
-    def __init__(
-        self,
-        proposer_name: str,
-        responder_name: str,
-        num_proposers: int,
-        num_responders: int,
-        preference_type: str,
-    ) -> None:
+    def __init__(self, config_input: YAMLConfig) -> None:
         """Constructor for Simulator class.
 
         Args:
-            proposer_name (str): parsed from config file
-            responder_name (str): parsed from config file
-            num_proposers (int): parsed from config file
-            num_responders (int): parsed from config file
+            config_input (YAMLConfig): parsed from config file
         """
-        self.proposer_name = proposer_name
-        self.responder_name = responder_name
-        self.num_proposers = num_proposers
-        self.num_responders = num_responders
-        self.preference_type = preference_type
+        self.proposer_name: str = config_input.proposer_side_name
+        self.responder_name: str = config_input.responder_side_name
+        self.num_proposers: int = config_input.number_of_proposers
+        self.num_responders: int = config_input.number_of_responders
+        self.preference_type: str = config_input.preference_type
         self.proposers: list[Proposer] | None = None
         self.responders: list[Responder] | None = None
         self.results: list[Algorithm] | None = None
