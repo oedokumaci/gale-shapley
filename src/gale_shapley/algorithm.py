@@ -1,5 +1,5 @@
 """Algorithm module."""
-from __future__ import annotations  # needed for | of Python 3.10
+from __future__ import annotations  # needed in 3.9 for | of Python 3.10
 
 import logging
 
@@ -58,13 +58,19 @@ class Algorithm:
         """Prints all matches, does not print unmatched responders."""
         logging.info("")
         for proposer in self.proposers:
-            if proposer.match is not None:
+            if (
+                proposer.match is not None
+            ):  # mypy complains if proposer.is_matched is used
                 logging.info(
                     f"{proposer.name} is matched to {'self' if proposer.name == proposer.match.name else proposer.match.name}."
                 )
+            else:
+                logging.info(f"{proposer.name} is unmatched.")
         for responder in self.responders:
             if responder.match == responder:
                 logging.info(f"{responder.name} is matched to self.")
+            elif not responder.is_matched:
+                logging.info(f"{responder.name} is unmatched.")
         logging.info("")
 
     def print_all_preferences(self, compact: bool = True) -> None:
