@@ -1,11 +1,11 @@
-"""Person module. Represents a side in the matching environment.
+"""Person module. Creates units in the matching environment.
 Person class is also the base class for Proposer and Responder classes."""
 
 from __future__ import annotations
 
 
 class Person:
-    """Person class. Represents a side in the matching environment. This class is also the base class for Proposer and Responder."""
+    """Person class. Base class for Proposer and Responder."""
 
     def __init__(self, name: str, side: str) -> None:
         """Constructor for Person class.
