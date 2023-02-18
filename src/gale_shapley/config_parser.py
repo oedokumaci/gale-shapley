@@ -8,7 +8,6 @@ import yaml
 from pydantic import BaseModel, validator
 from pydantic.fields import ModelField
 
-from gale_shapley.exceptions import ConfigError
 from gale_shapley.utils import init_logger
 
 VALID_PREFERENCE_TYPES: tuple[str] = ("random",)
@@ -22,7 +21,7 @@ class YAMLConfig(BaseModel):
     One can use @dataclass decorator instead of BaseModel, but validation is not as easy as with BaseModel.
 
     Raises:
-        ConfigError
+        ValueError
     """
 
     proposer_side_name: str
@@ -35,7 +34,7 @@ class YAMLConfig(BaseModel):
     @validator("preference_type")
     def preference_type_must_be_valid(cls, v: str) -> str:
         if v not in VALID_PREFERENCE_TYPES:
-            raise ConfigError(
+            raise ValueError(
                 f"preference_type should be {' or '.join(VALID_PREFERENCE_TYPES)}, {v} is not valid"
             )
         return v
@@ -45,17 +44,17 @@ class YAMLConfig(BaseModel):
         cls, v: int, field: ModelField
     ) -> int:
         if not v > 0:
-            raise ConfigError(f"{field.name} must be greater than 0, {v} is not")
+            raise ValueError(f"{field.name} must be greater than 0, {v} is not")
         return v
 
     @validator("log_file_name")
     def log_file_name_must_be_valid(cls, v: str) -> str:
         if v.startswith("/"):
-            raise ConfigError(
+            raise ValueError(
                 f"log_file_name should not start with /, {v} starts with /"
             )
         if not v.endswith(".log"):
-            raise ConfigError(f"log_file_name should be a .log file, {v} is not")
+            raise ValueError(f"log_file_name should be a .log file, {v} is not")
         # PROD CODE
         # if os.path.exists(f"../../logs/{v}"):  # if log file exists ask to overwrite
         #     user_input = input(f"log_file_name {v} already exists, overwrite? y/n (n)") or "n"
