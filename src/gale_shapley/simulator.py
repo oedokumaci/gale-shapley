@@ -138,14 +138,18 @@ class Simulator:
         """
         self.results = []
         offset: int = len(str(self.number_of_simulations))  # for formatting print
+        logging.info("")
+        logging.info("Starting simulations...")
         for i in range(self.number_of_simulations):
             logging.info("")
             logging.info(f"{'*':*>30} SIMULATION {str(i+1):>{offset}} {'*':*>30}")
             self.proposers, self.responders = self.create_objects()
             algorithm = Algorithm(self.proposers, self.responders)
             algorithm.run(print_all_preferences, report_matches)
-            if self.is_stable():
-                logging.info("Matching is stable.")
-            else:
-                logging.info("Matching is not stable.")
+            # if self.is_stable():
+            #     logging.info("Matching is stable.")
+            # else:
+            #     logging.info("Matching is not stable.")
             self.results.append(algorithm)
+        logging.info("")
+        logging.info("Simulations ended.")

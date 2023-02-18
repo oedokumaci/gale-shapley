@@ -11,7 +11,7 @@ from pydantic.fields import ModelField
 from gale_shapley.exceptions import ConfigError
 from gale_shapley.utils import init_logger
 
-PREFERENCE_TYPES: tuple[str] = ("random",)
+VALID_PREFERENCE_TYPES: tuple[str] = ("random",)
 PATH_TO_YAMLCONFIG: str = (
     os.path.dirname(__file__).split("src")[0] + "config/config.yaml"
 )
@@ -34,9 +34,9 @@ class YAMLConfig(BaseModel):
 
     @validator("preference_type")
     def preference_type_must_be_valid(cls, v: str) -> str:
-        if v not in PREFERENCE_TYPES:
+        if v not in VALID_PREFERENCE_TYPES:
             raise ConfigError(
-                f"preference_type should be {' or '.join(PREFERENCE_TYPES)}, {v} is not valid"
+                f"preference_type should be {' or '.join(VALID_PREFERENCE_TYPES)}, {v} is not valid"
             )
         return v
 
@@ -68,7 +68,7 @@ with open(PATH_TO_YAMLCONFIG) as yaml_config:
     config_input = YAMLConfig(**yaml.safe_load(yaml_config))
 
 init_logger(config_input.log_file_name)
-logging.info("Parsing config.yaml is complete")
+logging.info("Parsing config.yaml is complete.")
 logging.info(
     f"Proposer side name: {config_input.proposer_side_name}, Responder side name: {config_input.responder_side_name}"
 )

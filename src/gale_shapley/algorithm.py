@@ -56,6 +56,7 @@ class Algorithm:
 
     def report_matches(self) -> None:
         """Prints all matches, does not print unmatched responders."""
+        logging.info("")
         for proposer in self.proposers:
             if proposer.match is not None:
                 logging.info(
@@ -64,6 +65,7 @@ class Algorithm:
         for responder in self.responders:
             if responder.match == responder:
                 logging.info(f"{responder.name} is matched to self.")
+        logging.info("")
 
     def print_all_preferences(self, compact: bool = True) -> None:
         """Prints the preferences of all proposers and responders.
@@ -115,6 +117,7 @@ class Algorithm:
         """
         if print_all_preferences:
             self.print_all_preferences()
+        logging.info("")
         logging.info("Running algorithm...")
         while not self.terminate():
             self.proposers_propose()

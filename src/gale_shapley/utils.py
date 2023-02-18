@@ -47,7 +47,6 @@ def init_logger(file_name: str) -> None:
         logging.getLogger(key).setLevel(logging.ERROR)
 
     logging.info(f"Path to log file: {os.path.abspath(log_file_path)}")
-    logging.info("")
 
 
 def timer_decorator(func: Callable[P, R]) -> Callable[P, R]:
