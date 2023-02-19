@@ -12,8 +12,8 @@ Time complexity is O(n^2), space complexity is O(n).
 
 &nbsp;
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 </div>
 
@@ -30,9 +30,9 @@ Similarly, for zsh run
 ```bash
 pdm --pep582 >> ~/.zshrc
 ```
-Then `git clone` the project and run `mkdir __pypackages__` in the project directory. This lets [PDM] know that you are using [PEP 582] instead of virtualenv. Now you can run `pdm sync`, which will install all the dependencies in the project directory. Sample output is shown below.
+Then `git clone` the project and `mkdir __pypackages__` in the project directory. This lets [PDM] know that you are using [PEP 582] instead of virtualenv. Now you can `pdm install`, which will install all the dependencies in the project directory. A sample output is shown below.
 
-<img src=./style/PDM-Sync.png width="800">
+<img src=./style/PDM-Install.png width="600">
 
 In order to configure your IDE to support [PEP 582], you can follow the instructions [here](https://pdm.fming.dev/docs/pep582/).
 
