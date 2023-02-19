@@ -1,4 +1,5 @@
 """Simulator module."""
+
 from __future__ import annotations  # needed in 3.9 for | of Python 3.10
 
 import logging
@@ -70,26 +71,22 @@ class Simulator:
             tuple[list[Proposer], list[Responder]]: list of proposers and list of responders
         """
         if self.preference_type == "random":
-            proposers: list[Proposer]
-            responders: list[Responder]
+            proposer_name_short: str
+            responder_name_short: str
             if self.proposer_name[0] != self.responder_name[0]:
-                proposers = [
-                    Proposer(f"{self.proposer_name[0]}_{i+1}", self.proposer_name)
-                    for i in range(self.num_proposers)
-                ]
-                responders = [
-                    Responder(f"{self.responder_name[0]}_{i+1}", self.responder_name)
-                    for i in range(self.num_responders)
-                ]
+                proposer_name_short = self.proposer_name[0]
+                responder_name_short = self.responder_name[0]
             else:  # use full names if first letter is the same
-                proposers = [
-                    Proposer(f"{self.proposer_name}_{i+1}", self.proposer_name)
-                    for i in range(self.num_proposers)
-                ]
-                responders = [
-                    Responder(f"{self.responder_name}_{i+1}", self.responder_name)
-                    for i in range(self.num_responders)
-                ]
+                proposer_name_short = self.proposer_name
+                responder_name_short = self.responder_name
+            proposers: list[Proposer] = [
+                Proposer(f"{proposer_name_short}_{i+1}", self.proposer_name)
+                for i in range(self.num_proposers)
+            ]
+            responders: list[Responder] = [
+                Responder(f"{responder_name_short}_{i+1}", self.responder_name)
+                for i in range(self.num_responders)
+            ]
 
             select_from: list[Proposer | Responder]
             for proposer in proposers:
