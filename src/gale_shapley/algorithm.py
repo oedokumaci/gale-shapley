@@ -1,4 +1,5 @@
 """Algorithm module."""
+
 from __future__ import annotations  # needed in 3.9 for | of Python 3.10
 
 import logging
