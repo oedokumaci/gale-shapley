@@ -1,8 +1,8 @@
 """Module for utility functions."""
 
 import logging
-import os
 import sys
+from pathlib import Path
 from time import time
 from typing import Callable, TypeVar
 
@@ -12,7 +12,7 @@ from typing_extensions import (  # Paramspec is new in Python 3.10, see https://
 
 R = TypeVar("R")
 P = ParamSpec("P")
-LOG_PATH: str = os.path.join(os.path.dirname(__file__).split("src")[0], "logs/")
+LOG_PATH: Path = Path(__file__).parent.parent.parent / "logs"
 
 
 def init_logger(file_name: str) -> None:
@@ -21,15 +21,13 @@ def init_logger(file_name: str) -> None:
     Args:
         file_name (str): the name of the log file
     """
-    log_file_path: str = os.path.join(LOG_PATH, file_name)
-    if os.path.exists(log_file_path):
-        os.remove(log_file_path)
-    else:
-        os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+    log_file: Path = LOG_PATH / file_name
+    log_file.unlink(missing_ok=True)
+    log_file.touch()
     log_formatter = logging.Formatter("%(asctime)s:%(levelname)s: %(message)s")
     log_formatter.datefmt = "%Y-%m-%d %H:%M:%S"
 
-    log_handler = logging.FileHandler(log_file_path)
+    log_handler = logging.FileHandler(str(log_file))
     log_handler.setFormatter(log_formatter)
     log_handler.setLevel(logging.INFO)
 
@@ -46,7 +44,7 @@ def init_logger(file_name: str) -> None:
     for key in logging.Logger.manager.loggerDict:
         logging.getLogger(key).setLevel(logging.ERROR)
 
-    logging.info(f"Path to log file: {os.path.abspath(log_file_path)}")
+    logging.info(f"Path to log file: {str(log_file.resolve())}")
 
 
 def timer_decorator(func: Callable[P, R]) -> Callable[P, R]:
