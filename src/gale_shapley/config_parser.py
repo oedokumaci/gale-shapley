@@ -2,15 +2,15 @@
 
 from __future__ import annotations  # needed in 3.9 for | of Python 3.10
 
-import os
+from pathlib import Path
 
 import yaml
 from pydantic import BaseModel, root_validator, validator
 from pydantic.fields import ModelField
 
-VALID_PREFERENCE_TYPES: tuple[str] = ("random",)
-PATH_TO_YAMLCONFIG: str = (
-    os.path.dirname(__file__).split("src")[0] + "config/config.yaml"
+VALID_PREFERENCE_TYPES: tuple[str, ...] = ("random",)
+PATH_TO_YAMLCONFIG: Path = (
+    Path(__file__).parent.parent.parent / "config" / "config.yaml"
 )
 
 
@@ -74,12 +74,13 @@ class YAMLConfig(BaseModel):
         if not v.endswith(".log"):
             raise ValueError(f"log_file_name should be a .log file, {v} is not")
         # PROD CODE
-        # if os.path.exists(f"../../logs/{v}"):  # if log file exists ask to overwrite
+        # log_file = Path(__file__).parent.parent.parent / "logs" / v
+        # if log_file.exists():  # if log file exists ask to overwrite
         #     user_input = input(f"log_file_name {v} already exists, overwrite? y/n (n)") or "n"
         #     if user_input != "y":
         #         raise SystemExit("exiting not to overwrite, please change log_file_name in config.yaml")
         return v
 
 
-with open(PATH_TO_YAMLCONFIG) as yaml_config:
+with PATH_TO_YAMLCONFIG.open() as yaml_config:
     config_input = YAMLConfig(**yaml.safe_load(yaml_config))
