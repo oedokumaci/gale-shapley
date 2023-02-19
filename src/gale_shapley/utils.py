@@ -12,7 +12,7 @@ from typing_extensions import (  # Paramspec is new in Python 3.10, see https://
 
 R = TypeVar("R")
 P = ParamSpec("P")
-LOG_PATH: Path = Path(__file__).parent.parent.parent / "logs"
+LOG_PATH: Path = Path(__file__).parents[2] / "logs"
 
 
 def init_logger(file_name: str) -> None:
