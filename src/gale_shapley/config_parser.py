@@ -1,9 +1,11 @@
 """This module parses and validates the config.yaml."""
 
+from __future__ import annotations  # needed in 3.9 for | of Python 3.10
+
 import os
 
 import yaml
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, root_validator, validator
 from pydantic.fields import ModelField
 
 VALID_PREFERENCE_TYPES: tuple[str] = ("random",)
@@ -14,11 +16,13 @@ PATH_TO_YAMLCONFIG: str = (
 
 class YAMLConfig(BaseModel):
     """Parses and validates the config.yaml file. Inherits from pydantic BaseModel.
-    One can use @dataclass decorator instead of BaseModel, but validation is not as easy as with BaseModel.
 
     Raises:
         ValueError
     """
+
+    # One can use also use pydantic's @dataclass decorator instead of BaseModel, which accepts validators.
+    # See https://github.com/pydantic/pydantic/issues/710 for a discussion.
 
     proposer_side_name: str
     responder_side_name: str
@@ -26,6 +30,24 @@ class YAMLConfig(BaseModel):
     number_of_proposers: int
     number_of_responders: int
     log_file_name: str
+
+    @validator("proposer_side_name", "responder_side_name")
+    def side_names_must_be_valid(cls, v: str, field: ModelField) -> str:
+        if not v.isalpha():
+            raise ValueError(
+                f"{field.name} must be of letters, {v} is not a valid name"
+            )
+        return v
+
+    @root_validator
+    def side_names_must_be_different(
+        cls, values: dict[str, str | int]
+    ) -> dict[str, str | int]:
+        if values["proposer_side_name"] == values["responder_side_name"]:
+            raise ValueError(
+                "proposer_side_name and responder_side_name must be different"
+            )
+        return values
 
     @validator("preference_type")
     def preference_type_must_be_valid(cls, v: str) -> str:
