@@ -25,50 +25,53 @@ class Simulator:
         self.num_proposers: int = config_input.number_of_proposers
         self.num_responders: int = config_input.number_of_responders
         self.preference_type: str = config_input.preference_type
-        self.proposers: list[Proposer] | None = None
-        self.responders: list[Responder] | None = None
-        self.results: list[Algorithm] | None = None
+        self.proposers: list[Proposer] = []
+        self.responders: list[Responder] = []
+        self.results: list[Algorithm] = []
         self.number_of_simulations: int = 100
 
     @property
     def persons(self) -> list[Proposer | Responder]:
         """Returns all proposers and responders."""
-        if self.proposers is None or self.responders is None:
-            raise ValueError("Proposers and responders are not created yet.")
         return self.proposers + self.responders
 
     @property
     def blocking_pairs(self) -> list[tuple[Proposer, Responder]]:
         """Returns all blocking pairs."""
         blocking: list[tuple[Proposer, Responder]] = []
-        if self.proposers is not None and self.responders is not None:
-            for proposer in self.proposers:  # looping one side is enough
-                if proposer.preferences is not None and proposer.is_matched:
-                    better_than_match_of_proposer: tuple[
-                        Proposer | Responder, ...
-                    ] = proposer.preferences[
-                        : proposer.preferences.index(proposer.match)
-                    ]
-                    for responder in better_than_match_of_proposer:
-                        if isinstance(
-                            responder, Responder
-                        ):  # need for type checking only
-                            if not responder.is_matched:
-                                blocking.append((proposer, responder))
-                            else:
-                                if (
-                                    responder.preferences is not None
-                                    and responder.preferences.index(proposer)
+        for proposer in self.proposers:  # looping one side is enough
+            if bool(proposer.preferences) and proposer.is_matched:
+                better_than_match_of_proposer: tuple[
+                    Proposer | Responder, ...
+                ] = proposer.preferences[: proposer.preferences.index(proposer.match)]
+                for responder in better_than_match_of_proposer:
+                    if isinstance(
+                        responder, Responder
+                    ):  # do not want (self, self) in blocking
+                        if not responder.is_matched:
+                            blocking.append((proposer, responder))
+                        else:
+                            if (
+                                (bool(responder.preferences))
+                                and (
+                                    all(
+                                        item in responder.preferences
+                                        for item in [proposer, responder.match]
+                                    )
+                                )
+                                and (
+                                    responder.preferences.index(proposer)
                                     < responder.preferences.index(responder.match)
-                                ):
-                                    blocking.append((proposer, responder))
+                                )
+                            ):
+                                blocking.append((proposer, responder))
         return blocking
 
     def create_objects(self) -> tuple[list[Proposer], list[Responder]]:
         """Creates the objects for the algorithm.
 
         Returns:
-            tuple[list[Proposer], list[Responder]]: list of proposers and list of responders
+            tuple[list[Proposer], list[Responder]]: created list of proposers and list of responders
         """
         if self.preference_type == "random":
             proposer_name_short: str
@@ -109,7 +112,7 @@ class Simulator:
         for person in self.persons:
             if (
                 person.match is not None
-            ):  # that is, if person.is_matched but mypy does not know
+            ):  # mypy complains if proposer.is_matched is used
                 if not person.is_acceptable(person.match):
                     return False
         return True
@@ -121,7 +124,7 @@ class Simulator:
         Returns:
             bool: True if stable, False otherwise
         """
-        return self.is_individually_rational() and len(self.blocking_pairs) == 0
+        return self.is_individually_rational() and not bool(self.blocking_pairs)
 
     @timer_decorator
     def simulate(
@@ -133,7 +136,6 @@ class Simulator:
             print_all_preferences (bool, optional): Defaults to True
             report_matches (bool, optional): Defaults to True
         """
-        self.results = []
         offset: int = len(str(self.number_of_simulations))  # for formatting print
         logging.info("")
         logging.info("Starting simulations...")

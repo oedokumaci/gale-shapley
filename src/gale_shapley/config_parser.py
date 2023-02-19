@@ -13,7 +13,8 @@ PATH_TO_YAMLCONFIG: Path = Path(__file__).parents[2] / "config" / "config.yaml"
 
 
 class YAMLConfig(BaseModel):
-    """Parses and validates the config.yaml file. Inherits from pydantic BaseModel.
+    """Parses and validates the config.yaml file.
+    Inherits from pydantic BaseModel.
 
     Raises:
         ValueError

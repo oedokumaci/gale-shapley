@@ -64,7 +64,7 @@ class TestProposerResponder:
 
     def test_current_proposals(self) -> None:
         assert self.w_1.current_proposals == [self.m_1, self.m_2]
-        assert self.w_2.current_proposals is None
+        assert not bool(self.w_2.current_proposals)
 
     def test_respond(self) -> None:
         for responder in self.responders:
@@ -73,5 +73,5 @@ class TestProposerResponder:
     def test_match(self) -> None:
         assert self.m_1.match == self.w_1
         assert self.w_1.match == self.m_1
-        assert self.m_2.match is None
-        assert self.w_2.match is None
+        assert not bool(self.m_2.match)
+        assert not bool(self.w_2.match)

@@ -46,16 +46,16 @@ class TestProposeRespondTerminate:
         assert self.m_1.next_proposal == self.w_2
         assert self.m_2.next_proposal == self.m_2
         assert self.w_1.current_proposals == [self.m_1, self.m_2]
-        assert self.w_2.current_proposals is None
+        assert not bool(self.w_2.current_proposals)
 
     def test_responders_respond(self) -> None:
         self.algorithm.responders_respond()
-        assert self.w_1.current_proposals is None
-        assert self.w_2.current_proposals is None
+        assert not bool(self.w_1.current_proposals)
+        assert not bool(self.w_2.current_proposals)
         assert self.m_1.match == self.w_1
         assert self.w_1.match == self.m_1
-        assert self.m_2.match is None
-        assert self.w_2.match is None
+        assert not bool(self.m_2.match)
+        assert not bool(self.w_2.match)
 
     def test_terminate(self) -> None:
         assert not self.algorithm.terminate()

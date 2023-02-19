@@ -9,7 +9,8 @@ from gale_shapley.utils import timer_decorator
 
 
 class Algorithm:
-    """Gale-Shapley Algorithm class. Uses __slots__ instead of the default __dict__ for memory efficiency."""
+    """Gale-Shapley Algorithm class.
+    Uses __slots__ instead of the default __dict__ for memory efficiency."""
 
     __slots__ = ("proposers", "responders", "round")
 
@@ -94,7 +95,7 @@ class Algorithm:
                 data.append(
                     [
                         person.preferences[i].name
-                        if person.preferences is not None
+                        if bool(person.preferences)
                         and i < len(person.preferences)
                         and person.is_acceptable(person.preferences[i])
                         else ""
