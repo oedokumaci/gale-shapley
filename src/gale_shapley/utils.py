@@ -6,9 +6,11 @@ from pathlib import Path
 from time import time
 from typing import Callable, TypeVar
 
-from typing_extensions import (  # Paramspec is new in Python 3.10, see https://www.python.org/dev/peps/pep-0612/
-    ParamSpec,
+from typing_extensions import (
+    ParamSpec,  # need typing_extensions for Python < 3.10; Paramspec is new in Python 3.10, see https://www.python.org/dev/peps/pep-0612/
 )
+
+from gale_shapley.config_parser import YAMLConfig
 
 R = TypeVar("R")
 P = ParamSpec("P")
@@ -47,6 +49,22 @@ def init_logger(file_name: str) -> None:
     logging.info(f"Path to log file: {str(log_file.resolve())}")
 
 
+def log_config_info(config_input: YAMLConfig) -> None:
+    """Log the information from the config file.
+
+    Args:
+        config_input (YAMLConfig): The parsed and validated config input object
+    """
+    logging.info("Parsing config.yaml is complete.")
+    logging.info(
+        f"Proposer side name: {config_input.proposer_side_name}, Responder side name: {config_input.responder_side_name}"
+    )
+    logging.info(
+        f"Number of proposers: {config_input.number_of_proposers}, Number of responders: {config_input.number_of_responders}"
+    )
+    logging.info(f"Preference type: {config_input.preference_type}")
+
+
 def timer_decorator(func: Callable[P, R]) -> Callable[P, R]:
     """Decorator that prints the time it took to execute a function."""
 
@@ -57,10 +75,10 @@ def timer_decorator(func: Callable[P, R]) -> Callable[P, R]:
             Any: the result of the function
         """
         t1: float = time()
-        result = func(*args, **kwargs)
+        result: R = func(*args, **kwargs)
         t2: float = time()
         logging.info(
-            f"Method {func.__name__!r} of module {func.__module__!r} executed in {t2 - t1:.2f} seconds."
+            f"Method {func.__name__!r} of module {func.__module__!r} executed in {t2 - t1:.3f} seconds."
         )
         return result
 
