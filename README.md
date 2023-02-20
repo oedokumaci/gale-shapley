@@ -21,7 +21,7 @@ Time complexity is O(n^2), space complexity is O(n).
 
 ## Installation
 
-Pip installing the package from PyPI is not yet available. Instead, clone the repository and install the package locally. Follow the Developer Guide Installation instructions below.
+Pip installing the package from PyPI is not yet available. Instead, clone the repository and install the package locally. Follow the [Developer Guide Setup](#setup) instructions below.
 
 ## Usage
 
@@ -44,7 +44,7 @@ python -m gale_shapley --help
 
 # Developer Guide
 
-## Installation
+## Setup
 
 This project is [PDM]-managed, which is compatible with [PEP 582] and [PEP 621]. If you are a developer, first `pip install pdm` and then make your Python interpreter aware of [PEP 582]. If you are using bash, you can do this by running
 
