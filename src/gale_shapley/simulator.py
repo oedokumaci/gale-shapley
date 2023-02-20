@@ -35,6 +35,56 @@ class Simulator:
         """Returns all proposers and responders."""
         return self.proposers + self.responders
 
+    def create_objects(self) -> tuple[list[Proposer], list[Responder]]:
+        """Creates the objects for the algorithm.
+
+        Returns:
+            tuple[list[Proposer], list[Responder]]: created list of proposers and list of responders
+        """
+        if self.preference_type == "Random":
+            proposer_name_short: str
+            responder_name_short: str
+            if self.proposer_name[0].lower() != self.responder_name[0].lower():
+                proposer_name_short = self.proposer_name[0].lower()
+                responder_name_short = self.responder_name[0].lower()
+            else:  # use full names if first letter is the same
+                proposer_name_short = self.proposer_name.lower()
+                responder_name_short = self.responder_name.lower()
+            proposers: list[Proposer] = [
+                Proposer(f"{proposer_name_short}_{i+1}", self.proposer_name)
+                for i in range(self.num_proposers)
+            ]
+            responders: list[Responder] = [
+                Responder(f"{responder_name_short}_{i+1}", self.responder_name)
+                for i in range(self.num_responders)
+            ]
+
+            select_from: list[Proposer | Responder]
+            for proposer in proposers:
+                select_from = responders + [proposer]
+                random.shuffle(select_from)
+                proposer.preferences = tuple(select_from)
+            for responder in responders:
+                select_from = proposers + [responder]
+                random.shuffle(select_from)
+                responder.preferences = tuple(select_from)
+
+        return proposers, responders
+
+    def is_individually_rational(self) -> bool:
+        """Checks if the matching is individually rational.
+
+        Returns:
+            bool: True if individually rational, False otherwise
+        """
+        for person in self.persons:
+            if (
+                person.match is not None
+            ):  # mypy complains if proposer.is_matched is used
+                if not person.is_acceptable(person.match):
+                    return False
+        return True
+
     @property
     def blocking_pairs(self) -> list[tuple[Proposer, Responder]]:
         """Returns all blocking pairs."""
@@ -67,56 +117,6 @@ class Simulator:
                                 blocking.append((proposer, responder))
         return blocking
 
-    def create_objects(self) -> tuple[list[Proposer], list[Responder]]:
-        """Creates the objects for the algorithm.
-
-        Returns:
-            tuple[list[Proposer], list[Responder]]: created list of proposers and list of responders
-        """
-        if self.preference_type == "random":
-            proposer_name_short: str
-            responder_name_short: str
-            if self.proposer_name[0] != self.responder_name[0]:
-                proposer_name_short = self.proposer_name[0]
-                responder_name_short = self.responder_name[0]
-            else:  # use full names if first letter is the same
-                proposer_name_short = self.proposer_name
-                responder_name_short = self.responder_name
-            proposers: list[Proposer] = [
-                Proposer(f"{proposer_name_short}_{i+1}", self.proposer_name)
-                for i in range(self.num_proposers)
-            ]
-            responders: list[Responder] = [
-                Responder(f"{responder_name_short}_{i+1}", self.responder_name)
-                for i in range(self.num_responders)
-            ]
-
-            select_from: list[Proposer | Responder]
-            for proposer in proposers:
-                select_from = responders + [proposer]
-                random.shuffle(select_from)
-                proposer.preferences = tuple(select_from)
-            for responder in responders:
-                select_from = proposers + [responder]
-                random.shuffle(select_from)
-                responder.preferences = tuple(select_from)
-
-        return proposers, responders
-
-    def is_individually_rational(self) -> bool:
-        """Checks if matching is individually rational.
-
-        Returns:
-            bool: True if individually rational, False otherwise
-        """
-        for person in self.persons:
-            if (
-                person.match is not None
-            ):  # mypy complains if proposer.is_matched is used
-                if not person.is_acceptable(person.match):
-                    return False
-        return True
-
     @timer_decorator
     def is_stable(self) -> bool:
         """Checks if the matching is stable.
@@ -128,13 +128,17 @@ class Simulator:
 
     @timer_decorator
     def simulate(
-        self, print_all_preferences: bool = True, report_matches: bool = True
+        self,
+        print_all_preferences: bool = True,
+        compact: bool = True,
+        report_matches: bool = True,
     ) -> None:
         """Simulates the algorithm desired number of times.
 
         Args:
-            print_all_preferences (bool, optional): Defaults to True
-            report_matches (bool, optional): Defaults to True
+            print_all_preferences (bool, optional): Prints individual preferences before running, defaults to False
+            compact (bool, optional): If True prints all in one table, defaults to True
+            report_matches (bool, optional): Reports the final matching, defaults to True
         """
         offset: int = len(str(self.number_of_simulations))  # for formatting print
         logging.info("")
@@ -144,7 +148,11 @@ class Simulator:
             logging.info(f"{'*':*>30} SIMULATION {str(i+1):>{offset}} {'*':*>30}")
             self.proposers, self.responders = self.create_objects()
             algorithm = Algorithm(self.proposers, self.responders)
-            algorithm.run(print_all_preferences, report_matches)
+            algorithm.run(
+                print_all_preferences=print_all_preferences,
+                compact=compact,
+                report_matches=report_matches,
+            )
             # if self.is_stable():
             #     logging.info("Matching is stable.")
             # else:

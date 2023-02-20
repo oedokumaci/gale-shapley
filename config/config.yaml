@@ -1,6 +1,6 @@
-proposer_side_name: man
-responder_side_name: woman
+proposer_side_name: Men
+responder_side_name: Women
 number_of_proposers: 12 
 number_of_responders: 12
-preference_type: random
+preference_type: Random
 log_file_name: logs.log

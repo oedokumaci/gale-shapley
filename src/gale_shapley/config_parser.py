@@ -8,7 +8,7 @@ import yaml
 from pydantic import BaseModel, root_validator, validator
 from pydantic.fields import ModelField
 
-VALID_PREFERENCE_TYPES: tuple[str, ...] = ("random",)
+VALID_PREFERENCE_TYPES: tuple[str, ...] = ("Random",)
 PATH_TO_YAMLCONFIG: Path = Path(__file__).parents[2] / "config" / "config.yaml"
 
 
@@ -42,9 +42,12 @@ class YAMLConfig(BaseModel):
     def side_names_must_be_different(
         cls, values: dict[str, str | int]
     ) -> dict[str, str | int]:
-        if values["proposer_side_name"] == values["responder_side_name"]:
+        if (
+            str(values["proposer_side_name"]).lower()  # type: ignore
+            == str(values["responder_side_name"]).lower()  # type: ignore
+        ):
             raise ValueError(
-                "proposer_side_name and responder_side_name must be different"
+                "proposer_side_name and responder_side_name must be different, case insensitive"
             )
         return values
 

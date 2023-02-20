@@ -58,7 +58,7 @@ class Algorithm:
 
     def report_matches(self) -> None:
         """Prints all matches, does not print unmatched responders."""
-        logging.info("")
+        logging.info("Printing the matching:")
         for proposer in self.proposers:
             if (
                 proposer.match is not None
@@ -73,8 +73,8 @@ class Algorithm:
                 logging.info(f"{responder.name} is matched to self.")
             elif not responder.is_matched:
                 logging.info(f"{responder.name} is unmatched.")
-        logging.info("")
 
+    @timer_decorator
     def print_all_preferences(self, compact: bool = True) -> None:
         """Prints the preferences of all proposers and responders.
 
@@ -102,7 +102,7 @@ class Algorithm:
                         for person in self.persons
                     ]
                 )
-            format_row: str = "{:>5}" * (
+            format_row: str = "{:6}" * (
                 len(header) + 1
             )  # doing with f-strings could be a pain
             logging.info(format_row.format("", *header))
@@ -110,21 +110,28 @@ class Algorithm:
             for pref, row in zip(first_column, data):
                 logging.info(format_row.format(pref, *row))
         else:
+            logging.info("Printing preferences for each person separately:")
             for person in self.persons:
                 person.print_preferences()
+                if person != self.persons[-1]:
+                    logging.info("")
 
     @timer_decorator
     def run(
-        self, print_all_preferences: bool = True, report_matches: bool = True
+        self,
+        print_all_preferences: bool = True,
+        compact: bool = True,
+        report_matches: bool = True,
     ) -> None:
         """Runs the algorithm and prints desired information.
 
         Args:
-            print_all_preferences (bool, optional): prints individual preferences before running, defaults to False
-            report_matches (bool, optional): reports final matching, defaults to True
+            print_all_preferences (bool, optional): Prints individual preferences before running, defaults to False
+            compact (bool, optional): If True prints all in one table, defaults to True
+            report_matches (bool, optional): Reports the final matching, defaults to True
         """
         if print_all_preferences:
-            self.print_all_preferences()
+            self.print_all_preferences(compact=compact)
         logging.info("")
         logging.info("Running algorithm...")
         while not self.terminate():

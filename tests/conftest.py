@@ -84,7 +84,7 @@ def sim_random_test_input_fix(request: pytest.FixtureRequest) -> Simulator:
         "responder_side_name": "woman",
         "number_of_proposers": number_of_proposers,
         "number_of_responders": number_of_responders,
-        "preference_type": "random",
+        "preference_type": "Random",
         "log_file_name": "test_logs.log",
     }
     return Simulator(YAMLConfig(**mock_config))
