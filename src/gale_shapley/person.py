@@ -49,9 +49,11 @@ class Person:
         logging.info(
             f"{self.name} has the following preferences, * indicates acceptable:"
         )
+        offset_one: int = len(str(len(self.preferences)))
+        offset_two: int = max(len(person.name) for person in self.preferences)
         for i, person in enumerate(self.preferences):
             logging.info(
-                f"{i + 1}. {person.name} {'*' if self.is_acceptable(person) else ''}"
+                f"{i + 1}.{'':{offset_one-len(str(i+1))+1}}{person.name:<{offset_two + 1}}{'*' if self.is_acceptable(person) else ''}"
             )
 
     @property
