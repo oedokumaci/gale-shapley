@@ -42,6 +42,8 @@ For a list of all the CLI arguments and options, run
 python -m gale_shapley --help
 ```
 
+&nbsp;
+
 # Developer Guide
 
 ## Setup
