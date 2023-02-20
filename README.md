@@ -17,7 +17,34 @@ Time complexity is O(n^2), space complexity is O(n).
 
 </div>
 
-# Developer Setup
+# User Guide
+
+## Installation
+
+Pip installing the package from PyPI is not yet available. Instead, clone the repository and install the package locally. Follow the Developer Guide Installation instructions below.
+
+## Usage
+
+### Configuration
+
+First edit the `config/config.yaml` to your liking. An example config file can be found at `config/example_config.yaml`.
+
+### Quick Start
+
+After configuring the `config.yaml`, simply run the following command in the project directory.
+```bash
+python -m gale_shapley
+```
+
+### Detailed Usage
+For a list of all the CLI arguments and options, run
+```bash
+python -m gale_shapley --help
+```
+
+# Developer Guide
+
+## Installation
 
 This project is [PDM]-managed, which is compatible with [PEP 582] and [PEP 621]. If you are a developer, first `pip install pdm` and then make your Python interpreter aware of [PEP 582]. If you are using bash, you can do this by running
 
@@ -34,9 +61,13 @@ Then `git clone` the project and `mkdir __pypackages__` in the project directory
 
 <img src=./style/PDM-Install.png width="600">
 
+## Development
+
+### IDE Support
+
 In order to configure your IDE to support [PEP 582], you can follow the instructions [here](https://pdm.fming.dev/docs/pep582/).
 
-&nbsp;
+### Pre-commit Hooks
 
 The project also uses pre-commit hooks. Because the project uses [PDM], you **do not** need to `pip install pre-commit`. Instead, run directly
 ```bash
