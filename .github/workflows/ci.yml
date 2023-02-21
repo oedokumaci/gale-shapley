@@ -1,0 +1,111 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  LANG: en_US.utf-8
+  LC_ALL: en_US.utf-8
+  PYTHONIOENCODING: UTF-8
+
+jobs:
+
+  quality:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up PDM
+      uses: pdm-project/setup-pdm@v3
+      with:
+        python-version: "3.9"
+
+    - name: Resolving dependencies
+      run: pdm lock -v
+
+    - name: Install dependencies
+      run: pdm install
+
+    - name: Install pre-commit hooks
+      run: pdm run pre-commit install
+
+    - name: Run black
+      run: pdm run pre-commit run black
+
+    - name: Run flake8
+      run: pdm run pre-commit run flake8
+
+    - name: Run isort
+      run: pdm run pre-commit run isort
+
+    - name: Run end-of-file-fixer
+      run: pdm run pre-commit run end-of-file-fixer
+
+    - name: Run check-yaml
+      run: pdm run pre-commit run check-yaml
+
+    - name: Run debug-statements
+      run: pdm run pre-commit run debug-statements
+
+    - name: Run name-tests-test
+      run: pdm run pre-commit run name-tests-test
+
+    - name: Run requirements-txt-fixer
+      run: pdm run pre-commit run requirements-txt-fixer
+
+    - name: Run codespell
+      run: pdm run pre-commit run codespell
+
+    - name: Run pdm-export
+      run: pdm run pre-commit run pdm-export
+
+    - name: Run pdm-lock-check
+      run: pdm run pre-commit run pdm-lock-check
+
+    - name: Run mypy
+      run: pdm run pre-commit run mypy
+
+  tests:
+
+    strategy:
+      matrix:
+        os:
+        - ubuntu-latest
+        - macos-latest
+        - windows-latest
+        python-version:
+        - "3.9"
+        - "3.10"
+        - "3.11"
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Set up PDM
+      uses: pdm-project/setup-pdm@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Resolving dependencies
+      run: pdm lock -v
+
+    - name: Install dependencies
+      run: pdm install
+
+    - name: Run pytest-check
+      run: pdm run pre-commit run pytest-check -v
