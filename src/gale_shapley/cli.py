@@ -39,7 +39,3 @@ def main(
     print("")
     print(f"Logs are saved to {(LOG_PATH / config_input.log_file_name).resolve()}")
     raise typer.Exit()
-
-
-if __name__ == "__main__":
-    typer.run(main)
