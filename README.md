@@ -12,8 +12,11 @@ Time complexity is O(n^2), space complexity is O(n).
 
 &nbsp;
 
+![Tests](https://github.com/oedokumaci/gale-shapley/actions/workflows/ci.yml/badge.svg)
 [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 </div>
 
