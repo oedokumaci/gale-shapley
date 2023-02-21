@@ -102,7 +102,7 @@ class Algorithm:
                         for person in self.persons
                     ]
                 )
-            format_row: str = "{:6}" * (
+            format_row: str = "{:6}" * (  # TODO: fix this
                 len(header) + 1
             )  # doing with f-strings could be a pain
             logging.info(format_row.format("", *header))
