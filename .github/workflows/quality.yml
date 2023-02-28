@@ -1,4 +1,4 @@
-name: ci
+name: quality
 
 on:
   push:
@@ -76,36 +76,3 @@ jobs:
 
     - name: Run mypy
       run: pdm run pre-commit run mypy
-
-  tests:
-
-    strategy:
-      matrix:
-        os:
-        - ubuntu-latest
-        - macos-latest
-        - windows-latest
-        python-version:
-        - "3.9"
-        - "3.10"
-        - "3.11"
-
-    runs-on: ${{ matrix.os }}
-
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-
-    - name: Set up PDM
-      uses: pdm-project/setup-pdm@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Resolving dependencies
-      run: pdm lock -v
-
-    - name: Install dependencies
-      run: pdm install
-
-    - name: Run pytest-check
-      run: pdm run pre-commit run pytest-check -v
