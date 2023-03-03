@@ -43,8 +43,9 @@ class YAMLConfig(BaseModel):
         cls, values: dict[str, str | int]
     ) -> dict[str, str | int]:
         if (
-            str(values["proposer_side_name"]).lower()  # type: ignore
-            == str(values["responder_side_name"]).lower()  # type: ignore
+            str(values["proposer_side_name"]).casefold()  # type: ignore
+            == str(values["responder_side_name"]).casefold()  # type: ignore
+            # for why casefold but not lower see https://docs.python.org/3/library/stdtypes.html
         ):
             raise ValueError(
                 "proposer_side_name and responder_side_name must be different, case insensitive"
