@@ -112,6 +112,29 @@ class YAMLConfig(BaseModel):
         return values
 
 
+def side_swap(config_input: YAMLConfig) -> None:
+    """Swaps the proposer and responder sides.
+
+    Args:
+        config_input (YAMLConfig): The config input from the config.yaml file
+
+    Returns:
+        YAMLConfig: The config input with the proposer and responder sides swapped
+    """
+    config_input.proposer_side_name, config_input.responder_side_name = (
+        config_input.responder_side_name,
+        config_input.proposer_side_name,
+    )
+    config_input.number_of_proposers, config_input.number_of_responders = (
+        config_input.number_of_responders,
+        config_input.number_of_proposers,
+    )
+    config_input.proposers, config_input.responders = (
+        config_input.responders,
+        config_input.proposers,
+    )
+
+
 with PATH_TO_YAMLCONFIG.open() as yaml_config:
     config_data = yaml.safe_load(yaml_config)
 config_data = {k.casefold(): v for k, v in config_data.items()}
