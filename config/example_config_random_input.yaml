@@ -1,0 +1,9 @@
+PROPOSER_SIDE_NAME: Men
+RESPONDER_SIDE_NAME: Women
+
+NUMBER_OF_PROPOSERS: 5 
+NUMBER_OF_RESPONDERS: 7
+
+PREFERENCE_TYPE: random # random or input are valid
+
+LOG_FILE_NAME: logs.log # will be saved under logs folder
