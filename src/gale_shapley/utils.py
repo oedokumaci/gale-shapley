@@ -59,9 +59,14 @@ def log_config_info(config_input: YAMLConfig) -> None:
     logging.info(
         f"Proposer side name: {config_input.proposer_side_name}, Responder side name: {config_input.responder_side_name}"
     )
-    logging.info(
-        f"Number of proposers: {config_input.number_of_proposers}, Number of responders: {config_input.number_of_responders}"
-    )
+    if config_input.preference_type == "random":
+        logging.info(
+            f"Number of proposers: {config_input.number_of_proposers}, Number of responders: {config_input.number_of_responders}"
+        )
+    elif config_input.preference_type == "input":
+        logging.info(
+            f"Number of proposers: {len(config_input.proposers)}, Number of responders: {len(config_input.responders)}"
+        )
     logging.info(f"Preference type: {config_input.preference_type}")
 
 
