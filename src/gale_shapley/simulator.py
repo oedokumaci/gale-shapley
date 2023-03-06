@@ -20,11 +20,7 @@ class Simulator:
         Args:
             config_input (YAMLConfig): parsed from config file
         """
-        self.proposer_name: str = config_input.proposer_side_name
-        self.responder_name: str = config_input.responder_side_name
-        self.num_proposers: int = config_input.number_of_proposers
-        self.num_responders: int = config_input.number_of_responders
-        self.preference_type: str = config_input.preference_type
+        self.config_input = config_input
         self.proposers: list[Proposer] = []
         self.responders: list[Responder] = []
         self.results: list[Algorithm] = []
@@ -41,24 +37,42 @@ class Simulator:
         Returns:
             tuple[list[Proposer], list[Responder]]: created list of proposers and list of responders
         """
-        if self.preference_type == "Random":
+        proposers: list[Proposer] = []
+        responders: list[Responder] = []
+
+        if self.config_input.preference_type.casefold() == "random":
+            # create short names for proposers and responders
             proposer_name_short: str
             responder_name_short: str
-            if self.proposer_name[0].lower() != self.responder_name[0].lower():
-                proposer_name_short = self.proposer_name[0].lower()
-                responder_name_short = self.responder_name[0].lower()
+            if (
+                self.config_input.proposer_side_name[0].casefold()
+                != self.config_input.responder_side_name[0].casefold()
+            ):
+                proposer_name_short = self.config_input.proposer_side_name[0].casefold()
+                responder_name_short = self.config_input.responder_side_name[
+                    0
+                ].casefold()
             else:  # use full names if first letter is the same
-                proposer_name_short = self.proposer_name.lower()
-                responder_name_short = self.responder_name.lower()
-            proposers: list[Proposer] = [
-                Proposer(f"{proposer_name_short}_{i+1}", self.proposer_name)
-                for i in range(self.num_proposers)
-            ]
-            responders: list[Responder] = [
-                Responder(f"{responder_name_short}_{i+1}", self.responder_name)
-                for i in range(self.num_responders)
-            ]
+                proposer_name_short = self.config_input.proposer_side_name.casefold()
+                responder_name_short = self.config_input.responder_side_name.casefold()
 
+            # create proposers and responders with no preferences
+            for i in range(self.config_input.number_of_proposers):
+                proposers.append(
+                    Proposer(
+                        f"{proposer_name_short}_{i+1}",
+                        self.config_input.proposer_side_name,
+                    )
+                )
+            for i in range(self.config_input.number_of_responders):
+                responders.append(
+                    Responder(
+                        f"{responder_name_short}_{i+1}",
+                        self.config_input.responder_side_name,
+                    )
+                )
+
+            # randomly assign preferences
             select_from: list[Proposer | Responder]
             for proposer in proposers:
                 select_from = responders + [proposer]
@@ -68,6 +82,56 @@ class Simulator:
                 select_from = proposers + [responder]
                 random.shuffle(select_from)
                 responder.preferences = tuple(select_from)
+
+        elif self.config_input.preference_type.casefold() == "input":
+            # create proposers and responders with no preferences
+            for proposer_name in self.config_input.proposers:
+                proposers.append(
+                    Proposer(proposer_name, self.config_input.proposer_side_name)
+                )
+            for responder_name in self.config_input.responders:
+                responders.append(
+                    Responder(responder_name, self.config_input.responder_side_name)
+                )
+
+            # assign inputted preferences
+            preferences: list[Proposer | Responder]
+            for proposer in proposers:
+                preferences = []
+                for responder_name in self.config_input.proposers[proposer.name]:
+                    for responder in responders:
+                        if responder.name == responder_name:
+                            preferences.append(responder)
+                if len(preferences) < len(responders) + 1:
+                    if proposer not in preferences:
+                        preferences.append(proposer)
+                    missing_responders: list[Responder] = [
+                        responder
+                        for responder in responders
+                        if responder.name
+                        not in self.config_input.proposers[proposer.name]
+                    ]
+                    random.shuffle(missing_responders)
+                    preferences.extend(missing_responders)
+                proposer.preferences = tuple(preferences)
+            for responder in responders:
+                preferences = []
+                for proposer_name in self.config_input.responders[responder.name]:
+                    for proposer in proposers:
+                        if proposer.name == proposer_name:
+                            preferences.append(proposer)
+                if len(preferences) < len(proposers) + 1:
+                    if responder not in preferences:
+                        preferences.append(responder)
+                    missing_proposers: list[Proposer] = [
+                        proposer
+                        for proposer in proposers
+                        if proposer.name
+                        not in self.config_input.responders[responder.name]
+                    ]
+                    random.shuffle(missing_proposers)
+                    preferences.extend(missing_proposers)
+                responder.preferences = tuple(preferences)
 
         return proposers, responders
 

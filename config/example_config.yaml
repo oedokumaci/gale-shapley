@@ -1,6 +1,0 @@
-proposer_side_name: Men
-responder_side_name: Women
-number_of_proposers: 5
-number_of_responders: 7
-preference_type: Random # only Random is valid for now, custom input will be implemented later
-log_file: logs.log # will be saved in logs folder
