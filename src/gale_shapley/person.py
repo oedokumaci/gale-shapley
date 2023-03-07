@@ -25,7 +25,10 @@ class Person:
 
     def __repr__(self) -> str:
         """Returns a string representation of the person."""
-        return f"Name: {self.name}, Side: {self.side}, Match: {self.match}"
+        if self.match is not None:
+            return f"Name: {self.name}, Side: {self.side}, Match: {self.match.name}"
+        else:
+            return f"Name: {self.name}, Side: {self.side}, Match: None"
 
     def is_acceptable(self, person: Proposer | Responder) -> bool:
         """Checks if person is acceptable to self, self is acceptable.
