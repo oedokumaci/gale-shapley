@@ -37,13 +37,13 @@ First edit the `config/config.yaml` to your liking. An example config file can b
 
 After configuring the `config.yaml`, simply run the following command in the project directory.
 ```bash
-python -m gale_shapley
+pdm run python -m gale_shapley
 ```
 
 ### Detailed Usage
 For a list of all the CLI arguments and options, run
 ```bash
-python -m gale_shapley --help
+pdm run python -m gale_shapley --help
 ```
 
 &nbsp;
