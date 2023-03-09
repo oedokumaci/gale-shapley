@@ -61,7 +61,7 @@ class YAMLConfig(BaseModel):
     def preference_type_must_be_valid(cls, v: str) -> str:
         if v.casefold() not in VALID_PREFERENCE_TYPES:
             raise ValueError(
-                f"'preference_type' should be {' or '.join(VALID_PREFERENCE_TYPES)} case insensitive, {v} is not valid"
+                f"'preference_type' should be {' or '.join(VALID_PREFERENCE_TYPES)} case insensitive, {v!r} is not valid"
             )
         return v
 
@@ -84,7 +84,7 @@ class YAMLConfig(BaseModel):
         # PROD CODE
         # log_file = Path(__file__).parents[2] / "logs" / v
         # if log_file.exists():  # if log file exists ask to overwrite
-        #     user_input = input(f"log_file_name {v} already exists, overwrite? y/n (n)") or "n"
+        #     user_input = input(f"log_file_name {v!r} already exists, overwrite? y/n (n)") or "n"
         #     if user_input != "y":
         #         raise SystemExit("exiting not to overwrite, please change 'log_file_name' in 'config.yaml'")
         return v
