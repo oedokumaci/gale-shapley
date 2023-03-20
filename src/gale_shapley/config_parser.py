@@ -81,12 +81,6 @@ class YAMLConfig(BaseModel):
             )
         if not v.endswith(".log"):
             raise ValueError(f"log_file_name should be a .log file, {v!r} is not")
-        # PROD CODE
-        # log_file = Path(__file__).parents[2] / "logs" / v
-        # if log_file.exists():  # if log file exists ask to overwrite
-        #     user_input = input(f"log_file_name {v!r} already exists, overwrite? y/n (n)") or "n"
-        #     if user_input != "y":
-        #         raise SystemExit("exiting not to overwrite, please change 'log_file_name' in 'config.yaml'")
         return v
 
     @root_validator

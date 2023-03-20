@@ -28,11 +28,29 @@ def main(
     swap_sides: bool = swap_sides_option,
 ) -> None:
     """Simulates the Gale-Shapley Algorithm desired times and logs the results."""
-    init_logger(config_input.log_file_name)  # Logger is initialized here.
+    # Check if log file exists, if so ask to overwrite
+    log_file = LOG_PATH / config_input.log_file_name
+    if log_file.exists():  # if log file exists ask to overwrite
+        user_input = (
+            input(
+                f"log_file_name {config_input.log_file_name!r} already exists, overwrite? y/n (n): "
+            )
+            or "n"
+        )
+        if user_input != "y":
+            raise SystemExit(
+                "exiting not to overwrite, please change 'log_file_name' in 'config.yaml'"
+            )
+
+    # Initialize logger
+    init_logger(config_input.log_file_name)
+
+    # Log config info
     if swap_sides:
         side_swap(config_input)
     log_config_info(config_input)
 
+    # Simulate
     sim = Simulator(config_input)
     sim.number_of_simulations = number_of_simulations
     sim.simulate(
@@ -41,6 +59,8 @@ def main(
         report_matches=report_matches,
     )
 
+    # Print log file path
     print("")
-    print(f"Logs are saved to {(LOG_PATH / config_input.log_file_name).resolve()}")
+    print(f"Logs are saved to {log_file.resolve()}")
+
     raise typer.Exit()
