@@ -68,6 +68,9 @@ jobs:
     - name: Run codespell
       run: pdm run pre-commit run codespell
 
+    - name: Run pyupgrade
+      run: pdm run pre-commit run pyupgrade
+
     - name: Run pdm-export
       run: pdm run pre-commit run pdm-export
 
