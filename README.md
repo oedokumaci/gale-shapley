@@ -25,7 +25,13 @@ Time complexity is O(n^2), space complexity is O(n).
 
 ## Installation
 
-Pip installing the package from PyPI is not yet available. Instead, clone the repository and install the package locally. Follow the [Developer Guide Setup](#setup) instructions below.
+Pip installing the package from PyPI is not yet available. Instead, git clone the repository and install the package locally. Here are the steps:
+
+1. `pip install pdm`
+2. `git clone https://github.com/oedokumaci/gale-shapley`
+3. `cd gale-shapley`
+4. `pdm lock -v`
+5. `pdm install`
 
 ## Usage
 
