@@ -41,6 +41,7 @@ def main(
             raise SystemExit(
                 "exiting not to overwrite, please change 'log_file_name' in 'config.yaml'"
             )
+        print("")
 
     # Initialize logger
     init_logger(config_input.log_file_name)
@@ -61,6 +62,6 @@ def main(
 
     # Print log file path
     print("")
-    print(f"Logs are saved to {log_file.resolve()}")
+    print(f"logs are saved to {log_file.resolve()}")
 
     raise typer.Exit()
