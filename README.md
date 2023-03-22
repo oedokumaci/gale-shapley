@@ -24,6 +24,7 @@ Time complexity is O(n^2), space complexity is O(n).
 ## Requirements
 
 - Python >= 3.9
+- OS: Ubuntu, MacOS, Windows
 
 ## Installation
 
