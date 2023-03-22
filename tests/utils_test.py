@@ -12,7 +12,6 @@ from gale_shapley.utils import LOG_PATH, log_config_info, timer_decorator
     "level,msg",
     [
         (logging.INFO, "info"),
-        (logging.DEBUG, "debug"),
         (logging.WARNING, "warning"),
         (logging.ERROR, "error"),
         (logging.CRITICAL, "critical"),

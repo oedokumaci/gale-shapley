@@ -117,7 +117,7 @@ def valid_yaml_config_input() -> dict:
     }
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def logger_fixture() -> Generator[None, None, None]:
     log_file_path = LOG_PATH / "pytest_test.log"
     init_logger(log_file_path.name)
