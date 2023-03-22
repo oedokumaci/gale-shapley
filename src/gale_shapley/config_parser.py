@@ -43,7 +43,7 @@ class YAMLConfig(BaseModel):
             )
         return v
 
-    @root_validator
+    @root_validator(skip_on_failure=True)
     def side_names_must_be_different(
         cls, values: dict[str, str | int | dict[str, list[str]]]
     ) -> dict[str, str | int | dict[str, list[str]]]:
@@ -83,7 +83,7 @@ class YAMLConfig(BaseModel):
             raise ValueError(f"log_file_name should be a .log file, {v!r} is not")
         return v
 
-    @root_validator
+    @root_validator(skip_on_failure=True)
     def input_must_be_valid(
         cls, values: dict[str, str | int | dict[str, list[str]]]
     ) -> dict[str, str | int | dict[str, list[str]]]:
