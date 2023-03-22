@@ -31,7 +31,6 @@ def test_init_logger(
 
 
 def test_log_config_info(
-    logger_fixture: None,
     caplog: Generator[LogCaptureFixture, None, None],
     valid_yaml_config_input: dict,
 ) -> None:
