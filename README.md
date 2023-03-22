@@ -58,6 +58,10 @@ For a list of all the CLI arguments and options, run
 pdm run python -m gale_shapley --help
 ```
 
+A sample output with currently implemented CLI arguments and options is shown below.
+
+<img src=./style/CLI-Arguments.png width="600">
+
 &nbsp;
 
 # Developer Guide
