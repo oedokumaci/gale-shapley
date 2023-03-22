@@ -28,7 +28,7 @@ Time complexity is O(n^2), space complexity is O(n).
 
 ## Installation
 
-Pip installing the package from PyPI is not yet available. Instead, download the zip [from this link](https://github.com/oedokumaci/gale-shapley/archive/refs/heads/main.zip) and unzip. You will also need to change the folder name from gale-shapley-main to gale-shapley (or cd into gale-shapley-main in step 2 below). Alternatively, if you have git installed, simply run 
+Pip installing the package from PyPI is not yet available. Instead, download [from this link](https://github.com/oedokumaci/gale-shapley/archive/refs/heads/main.zip) and unzip. You will also need to change the folder name from gale-shapley-main to gale-shapley (or cd into gale-shapley-main in step 2 below). Alternatively, if you have git installed, simply run 
 ```bash
 git clone https://github.com/oedokumaci/gale-shapley
 ```
@@ -43,11 +43,11 @@ to install the package locally. After downloading, here are the steps to install
 
 ### Configuration
 
-First edit the `config/config.yaml` to your liking. Example config files can be found at `config/`.
+First edit the `./config/config.yaml` to your liking. Example config files can be found at `./config/`.
 
 ### Quick Start
 
-After configuring the `config.yaml`, simply run the following command in the project directory.
+After configuring the `./config/config.yaml`, simply run the following command in the project directory.
 ```bash
 pdm run python -m gale_shapley
 ```
