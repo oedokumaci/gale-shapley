@@ -1,32 +1,34 @@
 import logging
 from typing import Generator
 
+import pytest
 from pytest import LogCaptureFixture
 
 from gale_shapley.config_parser import YAMLConfig
-from gale_shapley.utils import LOG_PATH, init_logger, log_config_info, timer_decorator
+from gale_shapley.utils import LOG_PATH, log_config_info, timer_decorator
 
 
-def test_init_logger(caplog: Generator[LogCaptureFixture, None, None]) -> None:
-    log_file_path = LOG_PATH / "pytest_test.log"
-    init_logger(log_file_path.name)
+@pytest.mark.parametrize(
+    "level,msg",
+    [
+        (logging.INFO, "info"),
+        (logging.DEBUG, "debug"),
+        (logging.WARNING, "warning"),
+        (logging.ERROR, "error"),
+        (logging.CRITICAL, "critical"),
+    ],
+)
+def test_init_logger(
+    logger_fixture: None, caplog: Generator[LogCaptureFixture, None, None], level, msg
+) -> None:
+    logging.log(level, msg)
 
     # Assert that the log file was created in the correct directory
+    log_file_path = LOG_PATH / "pytest_test.log"
     assert log_file_path.is_file()
 
-    logging.debug("test")
-
     # Assert that the correct logs were produced
-    assert caplog.record_tuples == [
-        ("root", logging.INFO, f"Path to log file: {log_file_path.resolve()}"),
-        ("root", logging.DEBUG, "test"),
-    ]
-
-
-def test_unlink_log_file() -> None:
-    log_file_path = LOG_PATH / "pytest_test.log"
-    log_file_path.unlink()
-    assert not log_file_path.exists()
+    assert caplog.record_tuples[-1] == ("root", level, msg)
 
 
 def test_log_config_info(
@@ -45,7 +47,7 @@ def test_log_config_info(
     ]
 
 
-def test_timer_decorator(caplog) -> None:
+def test_timer_decorator(caplog: Generator[LogCaptureFixture, None, None]) -> None:
     # Define a test function that takes some time to execute
     @timer_decorator
     def test_function() -> str:

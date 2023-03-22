@@ -1,10 +1,12 @@
 import random
+from typing import Generator
 
 import pytest
 
 from gale_shapley.config_parser import YAMLConfig
 from gale_shapley.person import Proposer, Responder
 from gale_shapley.simulator import Simulator
+from gale_shapley.utils import LOG_PATH, init_logger
 
 
 @pytest.fixture(scope="class")
@@ -113,3 +115,11 @@ def valid_yaml_config_input() -> dict:
             "w5": ["m2"],
         },
     }
+
+
+@pytest.fixture
+def logger_fixture() -> Generator[None, None, None]:
+    log_file_path = LOG_PATH / "pytest_test.log"
+    init_logger(log_file_path.name)
+    yield
+    log_file_path.unlink()
