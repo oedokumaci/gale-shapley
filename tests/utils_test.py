@@ -32,12 +32,9 @@ def test_init_logger(
 
 
 def test_log_config_info(
-    logger_fixture: None,
     caplog: Generator[LogCaptureFixture, None, None],
     valid_yaml_config_input: dict,
 ) -> None:
-    logger_fixture
-
     # Set up a YAMLConfig object with some test data
     config_input = YAMLConfig(**valid_yaml_config_input)
 
@@ -51,11 +48,7 @@ def test_log_config_info(
     ]
 
 
-def test_timer_decorator(
-    logger_fixture: None, caplog: Generator[LogCaptureFixture, None, None]
-) -> None:
-    logger_fixture
-
+def test_timer_decorator(caplog: Generator[LogCaptureFixture, None, None]) -> None:
     # Define a test function that takes some time to execute
     @timer_decorator
     def test_function() -> str:

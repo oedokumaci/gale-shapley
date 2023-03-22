@@ -1,5 +1,5 @@
+import logging
 import random
-from time import sleep
 from typing import Generator
 
 import pytest
@@ -118,10 +118,12 @@ def valid_yaml_config_input() -> dict:
     }
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="package")
 def logger_fixture() -> Generator[None, None, None]:
     log_file_path = LOG_PATH / "pytest_test.log"
     init_logger(log_file_path.name)
     yield
-    sleep(2)  # wait for logger to finish writing to file, Windows fix
+    logger = logging.getLogger()
+    for handler in logger.handlers:  # close all handlers, Windows fix
+        handler.close()
     log_file_path.unlink()
