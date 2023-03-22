@@ -23,21 +23,28 @@ Time complexity is O(n^2), space complexity is O(n).
 
 # User Guide
 
+## Requirements
+
+- Python >= 3.9
+
 ## Installation
 
-Pip installing the package from PyPI is not yet available. Instead, git clone the repository and install the package locally. Here are the steps:
+Pip installing the package from PyPI is not yet available. Instead, download the zip [from this link](https://github.com/oedokumaci/gale-shapley/archive/refs/heads/main.zip) and unzip. You will also need to change the folder name from gale-shapley-main to gale-shapley (or cd into gale-shapley-main in step 2 below). Alternatively, if you have git installed, simply run 
+```bash
+git clone https://github.com/oedokumaci/gale-shapley
+```
+to install the package locally. After downloading, here are the steps to install the dependencies in a virtual environment using [PDM]:
 
 1. `pip install pdm`
-2. `git clone https://github.com/oedokumaci/gale-shapley`
-3. `cd gale-shapley`
-4. `pdm lock -v`
-5. `pdm install`
+2. `cd gale-shapley`
+3. `pdm lock -v`
+4. `pdm install`
 
 ## Usage
 
 ### Configuration
 
-First edit the `config/config.yaml` to your liking. An example config file can be found at `config/example_config.yaml`.
+First edit the `config/config.yaml` to your liking. Example config files can be found at `config/`.
 
 ### Quick Start
 
