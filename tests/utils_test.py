@@ -32,7 +32,9 @@ def test_init_logger(
 
 
 def test_log_config_info(
-    caplog: Generator[LogCaptureFixture, None, None], valid_yaml_config_input: dict
+    logger_fixture: None,
+    caplog: Generator[LogCaptureFixture, None, None],
+    valid_yaml_config_input: dict,
 ) -> None:
     # Set up a YAMLConfig object with some test data
     config_input = YAMLConfig(**valid_yaml_config_input)
