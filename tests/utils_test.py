@@ -22,6 +22,9 @@ def test_init_logger(caplog: Generator[LogCaptureFixture, None, None]) -> None:
         ("root", logging.DEBUG, "test"),
     ]
 
+
+def test_unlink_log_file() -> None:
+    log_file_path = LOG_PATH / "pytest_test.log"
     log_file_path.unlink()
     assert not log_file_path.exists()
 
