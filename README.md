@@ -87,7 +87,7 @@ Then `git clone` the project and `mkdir __pypackages__` in the project directory
 
 ### IDE Support
 
-In order to configure your IDE to support [PEP 582], you can follow the instructions [here](https://pdm.fming.dev/docs/pep582/).
+In order to configure your IDE to support [PEP 582], you can follow the instructions [here](https://pdm.fming.dev/latest/usage/pep582/).
 
 ### Pre-commit Hooks
 
