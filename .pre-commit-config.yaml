@@ -69,7 +69,10 @@ repos:
     hooks:
       - id: pytest-check
         name: pytest-check
-        entry: pdm run pytest tests -vv
+        entry: pdm run pytest
+        args:
+          - tests
+          - -vv
         language: system
         pass_filenames: false
         always_run: true

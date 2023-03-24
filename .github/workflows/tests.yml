@@ -50,4 +50,4 @@ jobs:
       run: pdm install
 
     - name: Run pytest-check
-      run: pdm run pre-commit run pytest-check
+      run: pdm run pre-commit run pytest-check -v
