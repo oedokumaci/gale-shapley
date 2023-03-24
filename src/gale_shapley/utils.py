@@ -46,7 +46,7 @@ def init_logger(file_name: str) -> None:
     for key in logging.Logger.manager.loggerDict:
         logging.getLogger(key).setLevel(logging.ERROR)
 
-    logging.info(f"Path to log file: {str(log_file.resolve())}")
+    logging.info(f"Path to log file: {log_file.resolve()}")
 
 
 def log_config_info(config_input: YAMLConfig) -> None:
@@ -83,7 +83,7 @@ def timer_decorator(func: Callable[P, R]) -> Callable[P, R]:
         result: R = func(*args, **kwargs)
         t2: float = time()
         logging.info(
-            f"Method {func.__name__!r} of module {func.__module__!r} executed in {t2 - t1:.3f} seconds."
+            f"Method {func.__name__!r} of module {func.__module__!r} executed in {t2 - t1:.4f} seconds."
         )
         return result
 
