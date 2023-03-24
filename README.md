@@ -36,8 +36,7 @@ to install the package locally. After downloading, here are the steps to install
 
 1. `pip install pdm`
 2. `cd gale-shapley`
-3. `pdm lock -v`
-4. `pdm install`
+3. `pdm install`
 
 ## Usage
 
