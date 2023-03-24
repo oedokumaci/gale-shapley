@@ -32,6 +32,9 @@ jobs:
       with:
         python-version: "3.9"
 
+    - name: Make __pypackages__ directory
+      run: mkdir __pypackages__
+
     - name: Install dependencies
       run: pdm install
 
