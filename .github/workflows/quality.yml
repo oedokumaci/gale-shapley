@@ -32,9 +32,6 @@ jobs:
       with:
         python-version: "3.9"
 
-    - name: Resolving dependencies
-      run: pdm lock -v
-
     - name: Install dependencies
       run: pdm install
 
