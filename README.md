@@ -19,6 +19,7 @@ Time complexity is O(n^2), space complexity is O(n).
 
 </div>
 
+&nbsp;
 # User Guide
 
 ## Requirements
