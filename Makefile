@@ -1,6 +1,6 @@
 .PHONY: help vscode-settings setup run project-help test pre-commit clean
 
-help:  ## Show this help message for each Makefile recipe.
+help:  ## Show this help message for each Makefile recipe
 ifeq ($(OS),Windows_NT)
 	@findstr /R /C:"^[a-zA-Z0-9 -]\+:.*##" $(MAKEFILE_LIST) | awk -F ':.*##' '{printf "\033[1;32m%-15s\033[0m %s\n", $$1, $$2}' | sort
 else
@@ -49,10 +49,10 @@ pre-commit:  ## Run pre-commit
 
 clean:  ## Clean cached files
 ifeq ($(OS),Windows_NT)
-	if exist .mypy_cache rmdir /s /q .mypy_cache
-	if exist .pytest_cache rmdir /s /q .pytest_cache
-	if exist src\gale_shapley\__pycache__ rmdir /s /q src\gale_shapley\__pycache__
-	if exist tests\__pycache__ rmdir /s /q tests\__pycache__
+	rmdir /s /q .mypy_cache || true
+	rmdir /s /q .pytest_cache || true
+	rmdir /s /q src\gale_shapley\__pycache__ || true
+	rmdir /s /q tests\__pycache__ || true
 else
 	rm -rf .mypy_cache
 	rm -rf .pytest_cache
