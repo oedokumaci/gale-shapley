@@ -37,14 +37,8 @@ jobs:
       with:
         python-version: "3.9"
 
-    - name: Make __pypackages__ directory
-      run: mkdir __pypackages__
-
-    - name: Install dependencies
-      run: pdm install
-
-    - name: Install pre-commit hooks
-      run: pdm run pre-commit install
+    - name: Install dependencies and pre-commit hooks
+      run: make setup
 
     - name: Run black
       run: pdm run pre-commit run --all-files black

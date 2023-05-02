@@ -48,11 +48,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
   
-    - name: Make __pypackages__ directory
-      run: mkdir __pypackages__
+    - name: Install dependencies and pre-commit hooks
+      run: make setup
 
-    - name: Install dependencies
-      run: pdm install
-
-    - name: Run pytest-check
-      run: pdm run pre-commit run pytest-check -v
+    - name: Run tests
+      run: make test
