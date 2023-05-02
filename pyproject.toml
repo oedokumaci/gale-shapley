@@ -9,6 +9,7 @@ dependencies = [
     "pyyaml>=6.0",
     "pydantic>=1.10.5",
     "typer>=0.7.0",
+    "pdm>=2.5.3",
 ]
 requires-python = ">=3.9"
 readme = "README.md"
@@ -18,7 +19,8 @@ license = {text = "MIT"}
 [tool.pdm.dev-dependencies]
 workflow = [
     "pre-commit>=3.0.4",
-    "pdm>=2.4.5",
+    "mypy>=1.2.0",
+    "types-PyYAML>=6.0.12.9",
 ]
 test = [
     "pytest>=7.2.1",

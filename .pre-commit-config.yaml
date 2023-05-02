@@ -42,31 +42,29 @@ repos:
     hooks:
       - id: pyupgrade
 
-  - repo: https://github.com/pdm-project/pdm
-    rev: 2.5.3 # any PDM release exposing the hook should work
+  - repo: local
     hooks:
       - id: pdm-export
+        name: pdm-export
+        entry: pdm export
         args:
           - -o
           - requirements.txt
           - --without-hashes
-        files: ^pdm.lock$
+        language: system
+        pass_filenames: false
       - id: pdm-lock-check
-        files: ^pdm.toml$
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.2.0
-    hooks:
+        name: pdm-lock-check
+        entry: pdm lock --check
+        language: system
+        pass_filenames: false
       - id: mypy
-        # exclude: ^tests/
+        name: mypy
         args:
           - src
+        entry: pdm run mypy
+        language: system
         pass_filenames: false
-        additional_dependencies:
-          - types-PyYAML
-
-  - repo: local
-    hooks:
       - id: pytest-check
         name: pytest-check
         entry: pdm run pytest
