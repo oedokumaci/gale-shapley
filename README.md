@@ -37,7 +37,7 @@ to install the package locally. After downloading, here are the steps to install
 
 1. `pip install pdm`
 2. `cd gale-shapley`
-3. `pdm install`
+3. `pdm install --prod`
 
 ## Usage
 
@@ -66,28 +66,16 @@ A sample output with currently implemented CLI arguments and options is shown be
 
 # Developer Guide
 
+## Makefile
+There is a Makefile in the project directory. You can run `make help` to see the available commands as below. The Makefile is also used in the CI/CD pipeline.
+
+<img src=./style/Make.png width="600">
+
 ## Setup
 
-This project is [PDM]-managed, which is compatible with [PEP 582] and [PEP 621]. If you are a developer, first `pip install pdm` and then make your Python interpreter aware of [PEP 582]. If you are using bash, you can do this by running
-
-```bash
-pdm --pep582 >> ~/.bash_profile
-```
-
-Similarly, for zsh run
-
-```bash
-pdm --pep582 >> ~/.zshrc
-```
-Then `git clone` the project and `mkdir __pypackages__` in the project directory. This lets [PDM] know that you are using [PEP 582] instead of virtualenv. Now you can `pdm install`, which will install all the dependencies in the project directory. A sample output is shown below.
-
-<img src=./style/PDM-Install.png width="600">
+This project is [PDM]-managed, which is compatible with [PEP 621](https://www.python.org/dev/peps/pep-0621) (also compatible with the <i>rejected</i> [PEP 582](https://www.python.org/dev/peps/pep-0582)). If you are a developer, first `pip install pdm` and then `git clone` the project. Next you can `pdm install` in the project directory, which will install all the dependencies in a [virtual environment](https://pdm.fming.dev/latest/usage/venv/).
 
 ## Development
-
-### IDE Support
-
-In order to configure your IDE to support [PEP 582], you can follow the instructions [here](https://pdm.fming.dev/latest/usage/pep582/).
 
 ### Pre-commit Hooks
 
@@ -95,8 +83,9 @@ The project also uses pre-commit hooks. Because the project uses [PDM], you **do
 ```bash
 pdm run pre-commit install
 ```
-in the project directory to install hooks to your local `.git`.
+in the project directory to install hooks to your local `.git`. Alternatively, you can also activate the virtual environment and run
+```bash
+pre-commit install
+```
 
-[pep 582]: https://www.python.org/dev/peps/pep-0582
-[pep 621]: https://www.python.org/dev/peps/pep-0621
 [PDM]: https://pdm.fming.dev
