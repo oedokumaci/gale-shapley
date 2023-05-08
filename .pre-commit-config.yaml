@@ -60,9 +60,7 @@ repos:
         pass_filenames: false
       - id: mypy
         name: mypy
-        args:
-          - src
-        entry: pdm run mypy
+        entry: bash -c "if git diff --name-only --cached --diff-filter=ACM | grep -q '\.py$'; then pdm run mypy $(git diff --name-only --cached --diff-filter=ACM | grep '\.py$'); elif git diff --name-only --cached --diff-filter=ACM | grep -q . ; then echo 'No staged .py files, skipping...'; else find src -name '*.py' -exec pdm run mypy {} + ; fi"
         language: system
         pass_filenames: false
       - id: pytest-check
