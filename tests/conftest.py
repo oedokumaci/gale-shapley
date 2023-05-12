@@ -4,7 +4,7 @@ from typing import Generator
 
 import pytest
 
-from gale_shapley.config_parser import YAMLConfig
+from gale_shapley.config import YAMLConfig, YAMLConfigDict
 from gale_shapley.person import Proposer, Responder
 from gale_shapley.simulator import Simulator
 from gale_shapley.utils import LOG_PATH, init_logger
@@ -57,10 +57,10 @@ def create_deterministic_proposers_and_responders_fix(
     proposers: list[Proposer]
     responders: list[Responder]
     proposers, responders = [m_1_fix, m_2_fix], [w_1_fix, w_2_fix]
-    proposers[0].preferences = [responders[0], responders[1], proposers[0]]
-    proposers[1].preferences = [responders[0], proposers[1], responders[1]]
-    responders[0].preferences = [proposers[0], proposers[1], responders[0]]
-    responders[1].preferences = [proposers[1], proposers[0], responders[1]]
+    proposers[0].preferences = (responders[0], responders[1], proposers[0])
+    proposers[1].preferences = (responders[0], proposers[1], responders[1])
+    responders[0].preferences = (proposers[0], proposers[1], responders[0])
+    responders[1].preferences = (proposers[1], proposers[0], responders[1])
     return proposers, responders
 
 
@@ -82,13 +82,15 @@ def sim_random_test_input_fix(request: pytest.FixtureRequest) -> Simulator:
     number_of_proposers: int
     number_of_responders: int
     number_of_proposers, number_of_responders = request.param
-    mock_config = {  # TODO - use mock actually
+    mock_config: YAMLConfigDict = {  # TODO - use mock actually
         "proposer_side_name": "man",
         "responder_side_name": "woman",
         "number_of_proposers": number_of_proposers,
         "number_of_responders": number_of_responders,
         "preference_type": "Random",
         "log_file_name": "test_logs.log",
+        "proposers": {},
+        "responders": {},
     }
     return Simulator(YAMLConfig(**mock_config))
 

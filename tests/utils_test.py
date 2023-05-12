@@ -1,10 +1,9 @@
 import logging
-from typing import Generator
 
 import pytest
 from pytest import LogCaptureFixture
 
-from gale_shapley.config_parser import YAMLConfig
+from gale_shapley.config import YAMLConfig
 from gale_shapley.utils import LOG_PATH, log_config_info, timer_decorator
 
 
@@ -18,7 +17,7 @@ from gale_shapley.utils import LOG_PATH, log_config_info, timer_decorator
     ],
 )
 def test_init_logger(
-    logger_fixture: None, caplog: Generator[LogCaptureFixture, None, None], level, msg
+    logger_fixture: None, caplog: LogCaptureFixture, level, msg
 ) -> None:
     logger_fixture
     logging.log(level, msg)
@@ -32,7 +31,7 @@ def test_init_logger(
 
 
 def test_log_config_info(
-    caplog: Generator[LogCaptureFixture, None, None],
+    caplog: LogCaptureFixture,
     valid_yaml_config_input: dict,
 ) -> None:
     # Set up a YAMLConfig object with some test data
@@ -48,7 +47,7 @@ def test_log_config_info(
     ]
 
 
-def test_timer_decorator(caplog: Generator[LogCaptureFixture, None, None]) -> None:
+def test_timer_decorator(caplog: LogCaptureFixture) -> None:
     # Define a test function that takes some time to execute
     @timer_decorator
     def test_function() -> str:

@@ -1,7 +1,7 @@
 import pytest
 from pydantic.error_wrappers import ValidationError
 
-from gale_shapley.config_parser import YAMLConfig, side_swap
+from gale_shapley.config import YAMLConfig, side_swap
 
 
 def test_valid_yaml_input(valid_yaml_config_input: dict) -> None:

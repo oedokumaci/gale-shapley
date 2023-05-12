@@ -6,7 +6,7 @@ import logging
 import random
 
 from gale_shapley.algorithm import Algorithm
-from gale_shapley.config_parser import YAMLConfig
+from gale_shapley.config import YAMLConfig
 from gale_shapley.person import Proposer, Responder
 from gale_shapley.utils import timer_decorator
 

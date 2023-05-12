@@ -2,7 +2,7 @@
 
 import typer
 
-from gale_shapley.config_parser import config_input, side_swap
+from gale_shapley.config import config_input, side_swap
 from gale_shapley.simulator import Simulator
 from gale_shapley.utils import LOG_PATH, init_logger, log_config_info
 

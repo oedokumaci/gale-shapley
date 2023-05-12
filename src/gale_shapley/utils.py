@@ -10,7 +10,7 @@ from typing_extensions import (
     ParamSpec,  # need typing_extensions for Python < 3.10; Paramspec is new in Python 3.10, see https://www.python.org/dev/peps/pep-0612/
 )
 
-from gale_shapley.config_parser import YAMLConfig
+from gale_shapley.config import YAMLConfig
 
 R = TypeVar("R")
 P = ParamSpec("P")

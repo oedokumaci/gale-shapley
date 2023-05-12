@@ -4,6 +4,7 @@ from __future__ import annotations  # needed in 3.9 for | of Python 3.10
 
 import warnings
 from pathlib import Path
+from typing import TypedDict
 
 import yaml
 from pydantic import BaseModel, root_validator, validator
@@ -104,6 +105,17 @@ class YAMLConfig(BaseModel):
                         stacklevel=2,
                     )
         return values
+
+
+class YAMLConfigDict(TypedDict):
+    proposer_side_name: str
+    responder_side_name: str
+    preference_type: str
+    number_of_proposers: int
+    number_of_responders: int
+    log_file_name: str
+    proposers: dict[str, list[str]]
+    responders: dict[str, list[str]]
 
 
 def side_swap(config_input: YAMLConfig) -> None:
