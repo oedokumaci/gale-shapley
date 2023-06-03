@@ -36,7 +36,7 @@ else
 endif
 
 run:  ## Run project
-	pdm run python -m gale_shapley
+	pdm run python -m gale_shapley $(number_of_simulations)
 
 project-help:  ## Show project help
 	pdm run python -m gale_shapley --help
