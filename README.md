@@ -29,7 +29,38 @@ Time complexity is O(n^2), space complexity is O(n).
 
 ## Installation
 
-Pip installing the package from PyPI is not yet available. Instead, download [from this link](https://github.com/oedokumaci/gale-shapley/archive/refs/heads/main.zip) and unzip. You will also need to change the folder name from gale-shapley-main to gale-shapley (or cd into gale-shapley-main in step 2 below). Alternatively, if you have git installed, simply run 
+There are three easy ways to install the package.
+
+### Using Docker
+
+The easiest way to run the project is to use Docker. First, install [Docker](https://docs.docker.com/get-docker/). Then, run the following command in the project directory.
+```bash
+docker build -t gale-shapley .
+```
+This will build the Docker image. After the image is built, the following are some examples of how to run the project.
+
+```bash
+docker run --rm -it -v "$(pwd)/config/example_config_custom_input.yaml:/usr/src/app/config/config.yaml" gale-shapley
+```
+
+```bash
+docker run --rm -it -v "$(pwd)/config/example_config_random_input.yaml:/usr/src/app/config/config.yaml" -e number_of_simulations=100 gale-shapley
+```
+
+```bash
+docker run --rm -it -v "PATH_TO_YOUR_CONFIG.yaml:/usr/src/app/config/config.yaml" -e number_of_simulations=NUMBER_OF_DESIRED_SIMULATIONS gale-shapley
+```
+
+These commands will run the project with the specified config file and number of simulations. The output can be seen in the terminal. The `-v` option mounts the specified config file to the container. The `-e` option sets the environment variable `number_of_simulations` to the specified value. The `--rm` option removes the container after it exits. The `-it` option is for interactive mode.
+
+
+### Download Zip File
+
+Pip installing the package from PyPI is not yet available. Instead, download [from this link](https://github.com/oedokumaci/gale-shapley/archive/refs/heads/main.zip) and unzip. You will also need to change the folder name from gale-shapley-main to gale-shapley (or cd into gale-shapley-main in step 2 below). 
+
+### Using Git
+
+If you have git installed, simply run 
 ```bash
 git clone https://github.com/oedokumaci/gale-shapley
 ```
