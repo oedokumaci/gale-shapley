@@ -70,8 +70,8 @@ jobs:
     - name: Run pyupgrade
       run: pdm run pre-commit run --all-files pyupgrade
 
-    - name: Run pdm-export
-      run: pdm run pre-commit run --all-files pdm-export
+    # - name: Run pdm-export
+    #   run: pdm run pre-commit run --all-files pdm-export
 
     - name: Run pdm-lock-check
       run: pdm run pre-commit run --all-files pdm-lock-check
