@@ -45,6 +45,6 @@ typer==0.9.0
 types-PyYAML==6.0.12.10
 typing-extensions==4.5.0
 unearth==0.9.0
-urllib3==1.26.15
+urllib3==1.26.18
 virtualenv==20.21.0
 zipp==3.15.0
