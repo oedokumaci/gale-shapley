@@ -31,9 +31,9 @@ class YAMLConfig(BaseModel):
     number_of_proposers: int
     number_of_responders: int
     log_file_name: str
-    proposers: dict[
-        str, list[str]
-    ] = {}  # mutable default values are fine, pydantic takes care of it
+    proposers: dict[str, list[str]] = (
+        {}
+    )  # mutable default values are fine, pydantic takes care of it
     responders: dict[str, list[str]] = {}
 
     @validator("proposer_side_name", "responder_side_name")

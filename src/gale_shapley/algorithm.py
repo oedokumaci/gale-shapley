@@ -94,11 +94,13 @@ class Algorithm:
             for i in range(len(first_column)):
                 data.append(
                     [
-                        person.preferences[i].name
-                        if bool(person.preferences)
-                        and i < len(person.preferences)
-                        and person.is_acceptable(person.preferences[i])
-                        else ""
+                        (
+                            person.preferences[i].name
+                            if bool(person.preferences)
+                            and i < len(person.preferences)
+                            and person.is_acceptable(person.preferences[i])
+                            else ""
+                        )
                         for person in self.persons
                     ]
                 )

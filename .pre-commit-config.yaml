@@ -1,11 +1,11 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 24.2.0
     hooks:
       - id: black
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
+    rev: 7.0.0
     hooks:
       - id: flake8
         args:
@@ -16,7 +16,7 @@ repos:
           - flake8-bugbear
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.12.0 # need 5.12.0 to fix RuntimeError: The Poetry configuration is invalid
+    rev: 5.13.2 # need 5.12.0 to fix RuntimeError: The Poetry configuration is invalid
     hooks:
       - id: isort
         args:
@@ -24,7 +24,7 @@ repos:
           - --profile=black # to be compatible with black
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: end-of-file-fixer
       - id: check-yaml
@@ -33,14 +33,46 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.4
+    rev: v2.2.6
     hooks:
       - id: codespell
+        exclude: ^config/
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.3.2
+    rev: v3.15.1
     hooks:
       - id: pyupgrade
+        args: [--py310-plus]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
+        args:
+          - src
+          - tests
+        pass_filenames: false
+        additional_dependencies:
+          - pydantic==1.10.8
+          - pytest
+          - rich
+          - typer
+          - types-PyYAML
+
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.7.1
+    hooks:
+      - id: nbqa-black
+        # additional_dependencies: [jupytext]  # optional, only if you're using Jupytext
+      - id: nbqa-pyupgrade
+        args: [--py310-plus]
+      - id: nbqa-isort
+        args: [--float-to-top, --profile=black]
+
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.7.1
+    hooks:
+      - id: nbstripout
 
   - repo: local
     hooks:
@@ -57,19 +89,6 @@ repos:
       - id: pdm-lock-check
         name: pdm-lock-check
         entry: pdm lock --check
-        language: system
-        pass_filenames: false
-      - id: mypy
-        name: mypy
-        entry: |
-          bash -c "
-          if git diff --name-only --cached --diff-filter=ACM | grep -q '\.py$'; then
-            pdm run mypy $(git diff --name-only --cached --diff-filter=ACM | grep '\.py$');
-          elif git diff --name-only --cached --diff-filter=ACM | grep -q . ; then
-            echo 'No staged .py files, skipping...';
-          else
-            find src -name '*.py' -exec pdm run mypy {} +;
-          fi"
         language: system
         pass_filenames: false
       - id: pytest-check

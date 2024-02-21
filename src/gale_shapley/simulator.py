@@ -155,9 +155,9 @@ class Simulator:
         blocking: list[tuple[Proposer, Responder]] = []
         for proposer in self.proposers:  # looping one side is enough
             if bool(proposer.preferences) and proposer.is_matched:
-                better_than_match_of_proposer: tuple[
-                    Proposer | Responder, ...
-                ] = proposer.preferences[: proposer.preferences.index(proposer.match)]
+                better_than_match_of_proposer: tuple[Proposer | Responder, ...] = (
+                    proposer.preferences[: proposer.preferences.index(proposer.match)]
+                )
                 for responder in better_than_match_of_proposer:
                     if isinstance(
                         responder, Responder

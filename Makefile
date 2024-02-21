@@ -1,4 +1,4 @@
-.PHONY: help vscode-settings setup update-dev update-user run project-help test pre-commit clean
+.PHONY: help vscode-settings setup update-dev update-user run docker-build docker-run docker docker-logs docker-stop docker-kill project-help test pre-commit clean
 
 help:  ## Show this help message for each Makefile recipe
 ifeq ($(OS),Windows_NT)
@@ -12,7 +12,7 @@ setup:  ## Setup project
 	pdm run pre-commit install
 
 update-dev:  ## Update project dependencies for development
-	pdm update
+	pdm update --skip pydantic
 	pdm run pre-commit autoupdate
 	make test
 

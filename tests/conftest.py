@@ -1,6 +1,6 @@
 import logging
 import random
-from typing import Generator
+from collections.abc import Generator
 
 import pytest
 
