@@ -12,8 +12,9 @@ Time complexity is O(n^2), space complexity is O(n).
 
 ![Tests](https://github.com/oedokumaci/gale-shapley/actions/workflows/tests.yml/badge.svg)
 ![Quality](https://github.com/oedokumaci/gale-shapley/actions/workflows/quality.yml/badge.svg)
-[![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
 ![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -33,25 +34,22 @@ There are three easy ways to install the package.
 
 ### Using Docker
 
-The easiest way to run the project is to use Docker. First, install [Docker](https://docs.docker.com/get-docker/). Then, run the following command in the project directory.
+An easy way to run the project is to use Docker. First, install [Docker](https://docs.docker.com/get-docker/). Then, run the following command in the project directory.
 ```bash
 docker build -t gale-shapley .
 ```
 This will build the Docker image. After the image is built, the following are some examples of how to run the project.
 
 ```bash
-docker run --rm -it -v "$(pwd)/config/example_config_custom_input.yaml:/usr/src/app/config/config.yaml" gale-shapley
+docker run --rm -it \
+-v $(pwd)/config/example_config_custom_input.yaml:/usr/src/app/config/config.yaml \
+-v $(pwd)/logs:/usr/src/app/logs \
+-e number_of_simulations=$(number_of_simulations) \
+gale-shapley
 ```
 
-```bash
-docker run --rm -it -v "$(pwd)/config/example_config_random_input.yaml:/usr/src/app/config/config.yaml" -e number_of_simulations=100 gale-shapley
-```
-
-```bash
-docker run --rm -it -v "PATH_TO_YOUR_CONFIG.yaml:/usr/src/app/config/config.yaml" -e number_of_simulations=NUMBER_OF_DESIRED_SIMULATIONS gale-shapley
-```
-
-These commands will run the project with the specified config file and number of simulations. The output can be seen in the terminal. The `-v` option mounts the specified config file to the container. The `-e` option sets the environment variable `number_of_simulations` to the specified value. The `--rm` option removes the container after it exits. The `-it` option is for interactive mode.
+These commands will run the project with the specified config file and number of simulations. The output can be seen in the terminal. The `-v` option mounts the specified config file and logs directory to the container. The `-e` option sets the environment variable `number_of_simulations` to the specified value. The `--rm` option removes the container after it exits. The `-it` option is for interactive mode.
+You can also use Makefile recipes to run the project with Docker. See the [Makefile](#makefile) section for more information.
 
 
 ### Download Zip File
