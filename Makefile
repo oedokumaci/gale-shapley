@@ -42,6 +42,27 @@ endif
 run:  ## Run project
 	pdm run python -m gale_shapley $(number_of_simulations)
 
+docker-build: ## Build Docker image for the project
+	docker build -t gale-shapley .
+
+docker-run: ## Run Docker container for the project
+	docker run --rm -it \
+	-v $(PWD)/config/example_config_custom_input.yaml:/usr/src/app/config/config.yaml \
+	-v $(PWD)/logs:/usr/src/app/logs \
+	-e number_of_simulations=$(number_of_simulations) \
+	gale-shapley
+
+docker: docker-build docker-run ## Build and run project in Docker
+
+docker-logs: ## Show Docker container logs
+	docker logs -f $(shell docker ps -q)
+
+docker-stop: ## Stop Docker container
+	docker stop $(shell docker ps -q)
+
+docker-kill: ## Kill Docker container
+	docker kill $(shell docker ps -q)
+
 project-help:  ## Show project help
 	pdm run python -m gale_shapley --help
 
