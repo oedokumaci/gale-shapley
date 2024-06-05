@@ -8,7 +8,7 @@ authors = [
 dependencies = [
     "pdm>=2.5.3",
     "pyyaml>=6.0",
-    "pydantic==1.10.8",
+    "pydantic==1.10.13",
     "typer>=0.7.0",
 ]
 requires-python = ">=3.9"
