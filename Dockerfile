@@ -5,7 +5,7 @@ FROM python:3.11
 WORKDIR /usr/src/app
 
 # Copy the current directory contents into the container
-COPY . /usr/src/app
+COPY . .
 
 # Install PDM (Python Dependency Manager)
 RUN pip install pdm
