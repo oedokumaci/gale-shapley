@@ -1,11 +1,19 @@
+"""Tests for the config parser module."""
+
+from typing import Any
+
 import pytest
-from pydantic.error_wrappers import ValidationError
 
 from gale_shapley.config import YAMLConfig, side_swap
 
 
-def test_valid_yaml_input(valid_yaml_config_input: dict) -> None:
-    config = YAMLConfig(**valid_yaml_config_input)
+def test_valid_yaml_input(valid_yaml_config_input: dict[str, Any]) -> None:
+    """Test that valid YAML input is parsed correctly.
+
+    Args:
+        valid_yaml_config_input: Fixture providing valid YAML config
+    """
+    config = YAMLConfig.parse_obj(valid_yaml_config_input)
     assert config.proposer_side_name == "men"
     assert config.responder_side_name == "women"
     assert config.preference_type == "random"
@@ -27,8 +35,13 @@ def test_valid_yaml_input(valid_yaml_config_input: dict) -> None:
     }
 
 
-def test_valid_side_swap(valid_yaml_config_input: dict) -> None:
-    config = YAMLConfig(**valid_yaml_config_input)
+def test_valid_side_swap(valid_yaml_config_input: dict[str, Any]) -> None:
+    """Test that side swap works correctly.
+
+    Args:
+        valid_yaml_config_input: Fixture providing valid YAML config
+    """
+    config = YAMLConfig.parse_obj(valid_yaml_config_input)
     side_swap(config)
     assert config.proposer_side_name == "women"
     assert config.responder_side_name == "men"
@@ -50,19 +63,96 @@ def test_valid_side_swap(valid_yaml_config_input: dict) -> None:
 
 
 @pytest.mark.parametrize(
-    "invalid_input,error_type",
+    "invalid_input,expected_error",
     [
-        ({"preference_type": "invalid"}, ValueError),
-        ({"number_of_proposers": -1}, ValueError),
-        ({"number_of_responders": -1}, ValueError),
-        ({"log_file_name": ""}, ValueError),
-        ({"proposer_side_name": []}, ValidationError),
-        ({"responder_side_name": []}, ValidationError),
+        (
+            {
+                "proposer_side_name": "men",
+                "responder_side_name": "men",
+                "preference_type": "random",
+                "number_of_proposers": 4,
+                "number_of_responders": 5,
+                "log_file_name": "simulation.log",
+                "proposers": {},
+                "responders": {},
+            },
+            ValueError,
+        ),
+        (
+            {
+                "proposer_side_name": "men",
+                "responder_side_name": "women",
+                "preference_type": "invalid",
+                "number_of_proposers": 4,
+                "number_of_responders": 5,
+                "log_file_name": "simulation.log",
+                "proposers": {},
+                "responders": {},
+            },
+            ValueError,
+        ),
+        (
+            {
+                "proposer_side_name": "men",
+                "responder_side_name": "women",
+                "preference_type": "random",
+                "number_of_proposers": -1,
+                "number_of_responders": 5,
+                "log_file_name": "simulation.log",
+                "proposers": {},
+                "responders": {},
+            },
+            ValueError,
+        ),
+        (
+            {
+                "proposer_side_name": "men",
+                "responder_side_name": "women",
+                "preference_type": "random",
+                "number_of_proposers": 4,
+                "number_of_responders": 5,
+                "log_file_name": "/simulation.log",
+                "proposers": {},
+                "responders": {},
+            },
+            ValueError,
+        ),
+        (
+            {
+                "proposer_side_name": "men",
+                "responder_side_name": "women",
+                "preference_type": "random",
+                "number_of_proposers": 4,
+                "number_of_responders": 5,
+                "log_file_name": "simulation",
+                "proposers": {},
+                "responders": {},
+            },
+            ValueError,
+        ),
+        (
+            {
+                "proposer_side_name": "men",
+                "responder_side_name": "women",
+                "preference_type": "input",
+                "number_of_proposers": 4,
+                "number_of_responders": 5,
+                "log_file_name": "simulation.log",
+                "proposers": {},
+                "responders": {},
+            },
+            ValueError,
+        ),
     ],
 )
 def test_invalid_yaml_input(
-    valid_yaml_config_input: dict, invalid_input: dict, error_type: type
+    invalid_input: dict[str, Any], expected_error: type[Exception]
 ) -> None:
-    with pytest.raises(error_type):
-        input_data = {**valid_yaml_config_input, **invalid_input}
-        YAMLConfig(**input_data)
+    """Test that invalid YAML input raises appropriate errors.
+
+    Args:
+        invalid_input: Invalid YAML input
+        expected_error: Expected error type
+    """
+    with pytest.raises(expected_error):
+        YAMLConfig.parse_obj(invalid_input)

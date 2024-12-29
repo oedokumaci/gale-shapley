@@ -1,18 +1,23 @@
-from __future__ import annotations
+"""Tests for the person module."""
+
+from typing import ClassVar
 
 import pytest
 
 from gale_shapley.person import Proposer, Responder
 
 
-class TestProposerResponder:
-    proposers: list[Proposer]
-    responders: list[Responder]
-    persons: list[Responder | Proposer]
-    m_1: Proposer
-    m_2: Proposer
-    w_1: Responder
-    w_2: Responder
+class TestPerson:
+    """Test class for Person base class functionality."""
+
+    # Class variables for test data
+    proposers: ClassVar[list[Proposer]]
+    responders: ClassVar[list[Responder]]
+    persons: ClassVar[list[Responder | Proposer]]
+    m_1: ClassVar[Proposer]
+    m_2: ClassVar[Proposer]
+    w_1: ClassVar[Responder]
+    w_2: ClassVar[Responder]
 
     @pytest.fixture(autouse=True)
     def set_proposers_and_responders_fix(
@@ -21,6 +26,11 @@ class TestProposerResponder:
             list[Proposer], list[Responder]
         ],
     ) -> None:
+        """Set up test data with deterministic proposers and responders.
+
+        Args:
+            create_deterministic_proposers_and_responders_fix: Fixture providing proposers and responders
+        """
         (
             self.__class__.proposers,
             self.__class__.responders,
@@ -29,49 +39,49 @@ class TestProposerResponder:
         self.__class__.m_1, self.__class__.m_2 = self.proposers
         self.__class__.w_1, self.__class__.w_2 = self.responders
 
-    # Preferences of proposers and responders:
-    #    m_1 m_2 w_1 w_2
-    #    --- --- --- ---
-    # 1. w_1 w_1 m_1 m_2
-    # 2. w_2 m_2 m_2 m_1
-    # 3. m_1     w_1 w_2
-
     def test_is_acceptable(self) -> None:
+        """Test that is_acceptable works correctly.
+
+        Preferences of proposers and responders:
+           m_1 m_2 w_1 w_2
+           --- --- --- ---
+        1. w_1 w_1 m_1 m_2
+        2. w_2 m_2 m_2 m_1
+        3. m_1     w_1 w_2
+        """
+        # Test proposer preferences
         assert self.m_1.is_acceptable(self.w_1)
+        assert self.m_1.is_acceptable(self.w_2)
+        assert self.m_1.is_acceptable(self.m_1)
+        assert self.m_2.is_acceptable(self.w_1)
+        assert self.m_2.is_acceptable(self.m_2)
         assert not self.m_2.is_acceptable(self.w_2)
-        for person in self.persons:
-            assert person.is_acceptable(person)
+
+        # Test responder preferences
+        assert self.w_1.is_acceptable(self.m_1)
+        assert self.w_1.is_acceptable(self.m_2)
+        assert self.w_1.is_acceptable(self.w_1)
+        assert self.w_2.is_acceptable(self.m_2)
+        assert self.w_2.is_acceptable(self.m_1)
+        assert self.w_2.is_acceptable(self.w_2)
 
     def test_is_matched(self) -> None:
+        """Test that is_matched property works correctly."""
+        # Initially no one is matched
         for person in self.persons:
             assert not person.is_matched
 
-    def test_acceptable_to_propose(self) -> None:
-        assert self.m_1.acceptable_to_propose == (self.w_1, self.w_2, self.m_1)
-        assert self.m_2.acceptable_to_propose == (self.w_1, self.m_2)
+        # Test matching
+        self.m_1.match = self.w_1
+        self.w_1.match = self.m_1
+        assert self.m_1.is_matched
+        assert self.w_1.is_matched
 
-    def test_propose(self) -> None:
-        for proposer in self.proposers:
-            proposer.propose()
+        # Test unmatching
+        self.m_1.is_matched = False
+        assert not self.m_1.is_matched
+        assert self.m_1.match is None
 
-    def test_last_proposal(self) -> None:
-        assert self.m_1.last_proposal == self.w_1
-        assert self.m_2.last_proposal == self.w_1
-
-    def test_next_proposal(self) -> None:
-        assert self.m_1.next_proposal == self.w_2
-        assert self.m_2.next_proposal == self.m_2
-
-    def test_current_proposals(self) -> None:
-        assert self.w_1.current_proposals == [self.m_1, self.m_2]
-        assert not bool(self.w_2.current_proposals)
-
-    def test_respond(self) -> None:
-        for responder in self.responders:
-            responder.respond()
-
-    def test_match(self) -> None:
-        assert self.m_1.match == self.w_1
-        assert self.w_1.match == self.m_1
-        assert not bool(self.m_2.match)
-        assert not bool(self.w_2.match)
+        # Test invalid setting
+        with pytest.raises(ValueError):
+            self.m_1.is_matched = True

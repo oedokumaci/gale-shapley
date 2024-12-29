@@ -25,10 +25,11 @@ class Person:
 
     def __repr__(self) -> str:
         """Returns a string representation of the person."""
-        if self.match is not None:
-            return f"Name: {self.name}, Side: {self.side}, Match: {self.match.name}"
-        else:
-            return f"Name: {self.name}, Side: {self.side}, Match: None"
+        match self.match:
+            case None:
+                return f"Name: {self.name}, Side: {self.side}, Match: None"
+            case _:
+                return f"Name: {self.name}, Side: {self.side}, Match: {self.match.name}"
 
     def is_acceptable(self, person: Proposer | Responder) -> bool:
         """Checks if person is acceptable to self, self is acceptable.
@@ -44,8 +45,7 @@ class Person:
         """
         if self and person in self.preferences:
             return self.preferences.index(person) <= self.preferences.index(self)
-        else:
-            raise ValueError(f"Either {self} or {person} is not in preferences.")
+        raise ValueError(f"Either {self} or {person} is not in preferences.")
 
     def print_preferences(self) -> None:
         """Prints the preferences of the person, * indicates acceptable."""
@@ -54,9 +54,9 @@ class Person:
         )
         offset_one: int = len(str(len(self.preferences)))
         offset_two: int = max(len(person.name) for person in self.preferences)
-        for i, person in enumerate(self.preferences):
+        for i, person in enumerate(self.preferences, start=1):
             logging.info(
-                f"{i + 1}.{'':{offset_one-len(str(i+1))+1}}{person.name:<{offset_two + 1}}{'*' if self.is_acceptable(person) else ''}"
+                f"{i}.{'':{offset_one - len(str(i)) + 1}}{person.name:<{offset_two + 1}}{'*' if self.is_acceptable(person) else ''}"
             )
 
     @property
@@ -78,10 +78,11 @@ class Person:
         Raises:
             ValueError: Raises ValueError if value is True, can only be set to False
         """
-        if not value:
-            self.match = None
-        else:
-            raise ValueError("is_matched attribute can only be set to False")
+        match value:
+            case False:
+                self.match = None
+            case True:
+                raise ValueError("is_matched attribute can only be set to False")
 
 
 class Proposer(Person):
@@ -114,22 +115,23 @@ class Proposer(Person):
             Responder | Proposer
         """
         try:
-            if self.last_proposal is None:
-                return self.acceptable_to_propose[0]
-            return self.acceptable_to_propose[
-                self.acceptable_to_propose.index(self.last_proposal) + 1
-            ]
+            match self.last_proposal:
+                case None:
+                    return self.acceptable_to_propose[0]
+                case _:
+                    return self.acceptable_to_propose[
+                        self.acceptable_to_propose.index(self.last_proposal) + 1
+                    ]
         except IndexError:
             return self
 
     def propose(self) -> None:
         """Proposes to the next acceptable responder. If self is next, sets match to self. Updates last_proposal."""
-        if isinstance(
-            self.next_proposal, Proposer
-        ):  # meaning self is next, doing this to pass type check
-            self.match = self
-        else:
-            self.next_proposal.current_proposals.append(self)
+        match self.next_proposal:
+            case Proposer():  # meaning self is next
+                self.match = self
+            case responder:
+                responder.current_proposals.append(self)
         self.last_proposal = self.next_proposal
 
 
@@ -164,38 +166,42 @@ class Responder(Person):
         """
         return list(filter(self.is_acceptable, self.current_proposals))
 
-    def _most_preferred(
-        self, proposals: list[Proposer]
-    ) -> Proposer:  # returns most preferred of the list
+    def _most_preferred(self, proposals: list[Proposer]) -> Proposer:
+        """Returns most preferred of the list.
+
+        Args:
+            proposals (list[Proposer]): List of proposals to find most preferred from
+
+        Raises:
+            ValueError: If preferences or proposals is empty, or proposal not in preferences
+
+        Returns:
+            Proposer: Most preferred proposer
+        """
         if (
             bool(self.preferences)
             and bool(proposals)
             and all(proposal in self.preferences for proposal in proposals)
         ):
             return min(proposals, key=self.preferences.index)
-        else:
-            raise ValueError(
-                "Either preferences or proposals is empty, or one of the proposals is not in preferences."
-            )
+        raise ValueError(
+            "Either preferences or proposals is empty, or one of the proposals is not in preferences."
+        )
 
     def respond(self) -> None:
         """Responds to proposals and clears the current_proposals."""
         if bool(self.acceptable_proposals):
-            new_match: Proposer
-            if isinstance(self.match, Proposer):  # if already matched to a proposer
-                new_match = self._most_preferred(
-                    self.acceptable_proposals + [self.match]
-                )
-                if new_match != self.match:
-                    self.match.is_matched = False  # make current match unmatched
-                    self.match = new_match  # current match is set to new match
-                    new_match.match = self  # current match of the match is set to self
-                    # logging.info(f"{self.name} is engaged to {self.match.name}")
-                else:  # otherwise do nothing, keeping for readability
-                    pass
-            else:  # if not matched or matched to self
-                new_match = self._most_preferred(self.acceptable_proposals)
-                self.match = new_match
-                new_match.match = self
-                # logging.info(f"{self.name} is engaged to {self.match.name}")
+            match self.match:
+                case Proposer() as current_match:
+                    new_match = self._most_preferred(
+                        self.acceptable_proposals + [current_match]
+                    )
+                    if new_match != current_match:
+                        current_match.is_matched = False
+                        self.match = new_match
+                        new_match.match = self
+                case _:
+                    new_match = self._most_preferred(self.acceptable_proposals)
+                    self.match = new_match
+                    new_match.match = self
         self.current_proposals = []

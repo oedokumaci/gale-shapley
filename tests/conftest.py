@@ -1,6 +1,9 @@
+"""Test fixtures for the Gale-Shapley algorithm."""
+
 import logging
 import random
 from collections.abc import Generator
+from typing import Final
 
 import pytest
 
@@ -54,13 +57,14 @@ def create_deterministic_proposers_and_responders_fix(
     Returns:
         tuple[list[Proposer], list[Responder]]: tuple of list of proposers and list of responders
     """
-    proposers: list[Proposer]
-    responders: list[Responder]
-    proposers, responders = [m_1_fix, m_2_fix], [w_1_fix, w_2_fix]
+    proposers: list[Proposer] = [m_1_fix, m_2_fix]
+    responders: list[Responder] = [w_1_fix, w_2_fix]
+
     proposers[0].preferences = (responders[0], responders[1], proposers[0])
     proposers[1].preferences = (responders[0], proposers[1], responders[1])
     responders[0].preferences = (proposers[0], proposers[1], responders[0])
     responders[1].preferences = (proposers[1], proposers[0], responders[1])
+
     return proposers, responders
 
 
@@ -77,26 +81,30 @@ def sim_random_test_input_fix(request: pytest.FixtureRequest) -> Simulator:
         request (pytest.FixtureRequest): pytest fixture request
 
     Returns:
-        Simulator:
+        Simulator: A simulator instance with random configuration
     """
-    number_of_proposers: int
-    number_of_responders: int
-    number_of_proposers, number_of_responders = request.param
-    mock_config: YAMLConfigDict = {  # TODO - use mock actually
+    num_proposers, num_responders = request.param
+
+    mock_config: Final[YAMLConfigDict] = {
         "proposer_side_name": "man",
         "responder_side_name": "woman",
-        "number_of_proposers": number_of_proposers,
-        "number_of_responders": number_of_responders,
+        "number_of_proposers": num_proposers,
+        "number_of_responders": num_responders,
         "preference_type": "Random",
         "log_file_name": "test_logs.log",
         "proposers": {},
         "responders": {},
     }
-    return Simulator(YAMLConfig(**mock_config))
+    return Simulator(YAMLConfig.parse_obj(mock_config))
 
 
 @pytest.fixture
 def valid_yaml_config_input() -> dict:
+    """Returns a valid YAML configuration dictionary for testing.
+
+    Returns:
+        dict: A valid configuration dictionary
+    """
     return {
         "proposer_side_name": "men",
         "responder_side_name": "women",

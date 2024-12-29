@@ -1,11 +1,11 @@
 repos:
   - repo: https://github.com/psf/black
-    rev: 24.2.0
+    rev: 24.10.0
     hooks:
       - id: black
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.0.0
+    rev: 7.1.1
     hooks:
       - id: flake8
         args:
@@ -24,7 +24,7 @@ repos:
           - --profile=black # to be compatible with black
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: end-of-file-fixer
       - id: check-yaml
@@ -33,19 +33,19 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+    rev: v2.3.0
     hooks:
       - id: codespell
         exclude: ^config/
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.15.1
+    rev: v3.19.1
     hooks:
       - id: pyupgrade
-        args: [--py310-plus]
+        args: [--py312-plus]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
+    rev: v1.14.0
     hooks:
       - id: mypy
         args:
@@ -53,14 +53,14 @@ repos:
           - tests
         pass_filenames: false
         additional_dependencies:
-          - pydantic==1.10.8
+          - pydantic>=2.0.0
           - pytest
           - rich
           - typer
           - types-PyYAML
 
   - repo: https://github.com/nbQA-dev/nbQA
-    rev: 1.7.1
+    rev: 1.9.1
     hooks:
       - id: nbqa-black
         # additional_dependencies: [jupytext]  # optional, only if you're using Jupytext
@@ -70,7 +70,7 @@ repos:
         args: [--float-to-top, --profile=black]
 
   - repo: https://github.com/kynan/nbstripout
-    rev: 0.7.1
+    rev: 0.8.1
     hooks:
       - id: nbstripout
 

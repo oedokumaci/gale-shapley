@@ -1,63 +1,86 @@
-import logging
+"""Tests for the utils module."""
 
-import pytest
-from pytest import LogCaptureFixture
+import logging
+from typing import Final
 
 from gale_shapley.config import YAMLConfig
-from gale_shapley.utils import LOG_PATH, log_config_info, timer_decorator
+from gale_shapley.utils import LOG_PATH, init_logger, log_config_info, timer_decorator
 
 
-@pytest.mark.parametrize(
-    "level,msg",
-    [
-        (logging.INFO, "info"),
-        (logging.WARNING, "warning"),
-        (logging.ERROR, "error"),
-        (logging.CRITICAL, "critical"),
-    ],
-)
-def test_init_logger(
-    logger_fixture: None, caplog: LogCaptureFixture, level, msg
-) -> None:
-    logger_fixture
-    logging.log(level, msg)
+def test_init_logger() -> None:
+    """Test that logger initialization works correctly."""
+    test_log_file: Final[str] = "test_logs.log"
 
-    # Assert that the log file was created in the correct directory
-    log_file_path = LOG_PATH / "pytest_test.log"
-    assert log_file_path.is_file()
+    # Clear existing handlers
+    logger = logging.getLogger()
+    for handler in logger.handlers[:]:
+        logger.removeHandler(handler)
 
-    # Assert that the correct logs were produced
-    assert caplog.record_tuples[-1] == ("root", level, msg)
+    init_logger(test_log_file)
 
+    # Check that log file was created
+    log_file = LOG_PATH / test_log_file
+    assert log_file.exists()
+    assert log_file.is_file()
 
-def test_log_config_info(
-    caplog: LogCaptureFixture,
-    valid_yaml_config_input: dict,
-) -> None:
-    # Set up a YAMLConfig object with some test data
-    config_input = YAMLConfig(**valid_yaml_config_input)
+    # Check that logger was configured correctly
+    assert logger.level == logging.DEBUG
+    assert len(logger.handlers) == 2
 
-    # Call the function and check that the correct logs were produced
-    log_config_info(config_input)
-    assert caplog.record_tuples == [
-        ("root", logging.INFO, "Parsing config.yaml is complete."),
-        ("root", logging.INFO, "Proposer side name: men, Responder side name: women"),
-        ("root", logging.INFO, "Number of proposers: 4, Number of responders: 5"),
-        ("root", logging.INFO, "Preference type: random"),
-    ]
+    # Clean up
+    for handler in logger.handlers[:]:
+        handler.close()
+        logger.removeHandler(handler)
+    log_file.unlink()
 
 
-def test_timer_decorator(caplog: LogCaptureFixture) -> None:
-    # Define a test function that takes some time to execute
+def test_log_config_info(valid_yaml_config_input: dict) -> None:
+    """Test that config info logging works correctly.
+
+    Args:
+        valid_yaml_config_input: Fixture providing valid YAML config
+    """
+    # Initialize logger and config
+    test_log_file: Final[str] = "test_logs.log"
+    init_logger(test_log_file)
+    config = YAMLConfig.parse_obj(valid_yaml_config_input)
+
+    # Log config info
+    log_config_info(config)
+
+    # Check that log file contains expected info
+    log_file = LOG_PATH / test_log_file
+    log_contents = log_file.read_text()
+    assert "Parsing config.yaml is complete" in log_contents
+    assert "Proposer side name: men, Responder side name: women" in log_contents
+    assert "Number of proposers: 4, Number of responders: 5" in log_contents
+    assert "Preference type: random" in log_contents
+
+    # Clean up
+    log_file.unlink()
+
+
+def test_timer_decorator() -> None:
+    """Test that timer decorator works correctly."""
+    # Initialize logger
+    test_log_file: Final[str] = "test_logs.log"
+    init_logger(test_log_file)
+
+    # Define test function
     @timer_decorator
-    def test_function() -> str:
-        for _ in range(1000000):
-            pass
-        return "done"
+    def test_func() -> str:
+        return "test"
 
-    # Call the function and check that the correct logs were produced
-    result = test_function()
-    assert result == "done"
-    assert caplog.record_tuples[0][2].startswith(
-        "Method 'test_function' of module 'tests.utils_test' executed in "
-    )
+    # Call function and check result
+    result = test_func()
+    assert result == "test"
+
+    # Check that log file contains timing info
+    log_file = LOG_PATH / test_log_file
+    log_contents = log_file.read_text()
+    assert "Method 'test_func' of module" in log_contents
+    assert "executed in" in log_contents
+    assert "seconds" in log_contents
+
+    # Clean up
+    log_file.unlink()

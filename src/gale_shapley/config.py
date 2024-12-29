@@ -1,14 +1,10 @@
 """This module parses and validates the config.yaml."""
 
-from __future__ import annotations  # needed in 3.9 for | of Python 3.10
-
-import warnings
 from pathlib import Path
-from typing import TypedDict
+from typing import Annotated, TypedDict
 
 import yaml
-from pydantic import BaseModel, root_validator, validator
-from pydantic.fields import ModelField
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 VALID_PREFERENCE_TYPES: tuple[str, ...] = ("random", "input")
 PATH_TO_YAMLCONFIG: Path = Path(__file__).parents[2] / "config" / "config.yaml"
@@ -22,60 +18,44 @@ class YAMLConfig(BaseModel):
         ValueError
     """
 
-    # One can use also use pydantic's @dataclass decorator instead of BaseModel, which accepts validators.
-    # See https://github.com/pydantic/pydantic/issues/710 for a discussion.
+    model_config = ConfigDict(validate_assignment=True)
 
-    proposer_side_name: str
-    responder_side_name: str
+    proposer_side_name: Annotated[str, Field(pattern=r"^[a-zA-Z]+$")]
+    responder_side_name: Annotated[str, Field(pattern=r"^[a-zA-Z]+$")]
     preference_type: str
-    number_of_proposers: int
-    number_of_responders: int
+    number_of_proposers: Annotated[int, Field(gt=0)]
+    number_of_responders: Annotated[int, Field(gt=0)]
     log_file_name: str
-    proposers: dict[str, list[str]] = (
-        {}
-    )  # mutable default values are fine, pydantic takes care of it
-    responders: dict[str, list[str]] = {}
+    proposers: dict[str, list[str]] = Field(default_factory=dict)
+    responders: dict[str, list[str]] = Field(default_factory=dict)
 
-    @validator("proposer_side_name", "responder_side_name")
-    def side_names_must_be_valid(cls, v: str, field: ModelField) -> str:
-        if not v.isalpha():
-            raise ValueError(
-                f"{field.name} must be of letters, {v} is not a valid name"
-            )
-        return v
-
-    @root_validator(skip_on_failure=True)
-    def side_names_must_be_different(
-        cls, values: dict[str, str | int | dict[str, list[str]]]
-    ) -> dict[str, str | int | dict[str, list[str]]]:
+    @model_validator(mode="before")
+    @classmethod
+    def side_names_must_be_different(cls, data: dict) -> dict:
+        """Validate that side names are different (case-insensitive)."""
         if (
-            str(values["proposer_side_name"]).casefold()  # type: ignore
-            == str(values["responder_side_name"]).casefold()  # type: ignore
-            # for why casefold but not lower see https://docs.python.org/3/library/stdtypes.html
+            str(data.get("proposer_side_name", "")).casefold()
+            == str(data.get("responder_side_name", "")).casefold()
         ):
             raise ValueError(
                 "'proposer_side_name' and 'responder_side_name' must be different, case insensitive"
             )
-        return values
+        return data
 
-    @validator("preference_type")
+    @field_validator("preference_type")
+    @classmethod
     def preference_type_must_be_valid(cls, v: str) -> str:
+        """Validate that preference type is valid."""
         if v.casefold() not in VALID_PREFERENCE_TYPES:
             raise ValueError(
                 f"'preference_type' should be {' or '.join(VALID_PREFERENCE_TYPES)} case insensitive, {v!r} is not valid"
             )
         return v
 
-    @validator("number_of_proposers", "number_of_responders")
-    def number_of_each_side_person_must_be_positive(
-        cls, v: int, field: ModelField
-    ) -> int:
-        if not v > 0:
-            raise ValueError(f"{field.name!r} must be greater than 0, {v!r} is not")
-        return v
-
-    @validator("log_file_name")
+    @field_validator("log_file_name")
+    @classmethod
     def log_file_name_must_be_valid(cls, v: str) -> str:
+        """Validate that log file name is valid."""
         if v.startswith("/"):
             raise ValueError(
                 f"log_file_name should not start with /, {v!r} starts with /"
@@ -84,30 +64,36 @@ class YAMLConfig(BaseModel):
             raise ValueError(f"log_file_name should be a .log file, {v!r} is not")
         return v
 
-    @root_validator(skip_on_failure=True)
-    def input_must_be_valid(
-        cls, values: dict[str, str | int | dict[str, list[str]]]
-    ) -> dict[str, str | int | dict[str, list[str]]]:
-        if values["preference_type"].casefold() == "input":  # type: ignore
+    @model_validator(mode="after")
+    def input_must_be_valid(self) -> "YAMLConfig":
+        """Validate input preferences if preference_type is 'input'."""
+        if self.preference_type.casefold() == "input":
             for side in ("proposers", "responders"):
                 other_side = "responders" if side == "proposers" else "proposers"
-                for person, preferences in values[side].items():  # type: ignore
+                side_dict = getattr(self, side)
+                other_side_dict = getattr(self, other_side)
+
+                for person, preferences in side_dict.items():
                     for preference in preferences:
-                        if preference not in values[other_side]:  # type: ignore
+                        if preference not in other_side_dict:
                             raise ValueError(
                                 f"Preference {preference!r} of person {person!r} is not in {side!r}"
                             )
-                if len(values[side]) == 0:  # type: ignore
+                if not side_dict:
                     raise ValueError(f"no {side!r} inputted")
-                elif len(values[side]) != values[f"number_of_{side}"]:  # type: ignore
+                elif len(side_dict) != getattr(self, f"number_of_{side}"):
+                    import warnings
+
                     warnings.warn(
                         f"number of {side!r} inputted does not match 'number_of_{side}' in 'config.yaml'",
                         stacklevel=2,
                     )
-        return values
+        return self
 
 
 class YAMLConfigDict(TypedDict):
+    """Type hints for YAML configuration dictionary."""
+
     proposer_side_name: str
     responder_side_name: str
     preference_type: str
@@ -119,29 +105,32 @@ class YAMLConfigDict(TypedDict):
 
 
 def side_swap(config_input: YAMLConfig) -> None:
-    """Swaps the proposer and responder sides.
+    """Swap proposer and responder sides.
 
     Args:
-        config_input (YAMLConfig): The config input from the config.yaml file
-
-    Returns:
-        YAMLConfig: The config input with the proposer and responder sides swapped
+        config_input (YAMLConfig): config input to swap sides
     """
-    config_input.proposer_side_name, config_input.responder_side_name = (
-        config_input.responder_side_name,
-        config_input.proposer_side_name,
-    )
-    config_input.number_of_proposers, config_input.number_of_responders = (
-        config_input.number_of_responders,
-        config_input.number_of_proposers,
-    )
-    config_input.proposers, config_input.responders = (
-        config_input.responders,
-        config_input.proposers,
-    )
+    # Create a new config with swapped values
+    swapped_data = {
+        "proposer_side_name": config_input.responder_side_name,
+        "responder_side_name": config_input.proposer_side_name,
+        "number_of_proposers": config_input.number_of_responders,
+        "number_of_responders": config_input.number_of_proposers,
+        "proposers": config_input.responders,
+        "responders": config_input.proposers,
+        "preference_type": config_input.preference_type,
+        "log_file_name": config_input.log_file_name,
+    }
+
+    # Create a new instance with swapped values
+    new_config = YAMLConfig.parse_obj(swapped_data)
+
+    # Update the original config with the swapped values
+    for key, value in new_config.dict().items():
+        object.__setattr__(config_input, key, value)
 
 
 with PATH_TO_YAMLCONFIG.open() as yaml_config:
     config_data = yaml.safe_load(yaml_config)
 config_data = {k.casefold(): v for k, v in config_data.items()}
-config_input = YAMLConfig(**config_data)
+config_input = YAMLConfig.parse_obj(config_data)

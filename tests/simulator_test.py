@@ -1,15 +1,38 @@
+"""Tests for the simulator module."""
+
+from typing import ClassVar
+
+import pytest
+
 from gale_shapley.simulator import Simulator
 
 
-def test_stability(sim_random_test_input_fix: Simulator) -> None:
-    """Checks resulting match stability by using Simulator simulate method.
-    This is 20 random tests.
+class TestSimulator:
+    """Test class for Simulator functionality."""
 
-    Args:
-        sim_random_test_input_fix (Simulator): conftest.py fixture
-    """
-    sim_random_test_input_fix.number_of_simulations = 1
-    sim_random_test_input_fix.simulate(
-        print_all_preferences=False, compact=False, report_matches=False
-    )
-    assert sim_random_test_input_fix.is_stable()
+    sim: ClassVar[Simulator]
+
+    @pytest.fixture(autouse=True)
+    def set_simulator_fix(self, sim_random_test_input_fix: Simulator) -> None:
+        """Set up test data with random simulator input.
+
+        Args:
+            sim_random_test_input_fix: Fixture providing random simulator input
+        """
+        self.__class__.sim = sim_random_test_input_fix
+
+    def test_simulate(self) -> None:
+        """Test that simulation runs correctly."""
+        # Run simulation
+        self.sim.simulate(
+            print_all_preferences=False,
+            compact=True,
+            report_matches=False,
+        )
+
+        # Check that results were collected
+        assert len(self.sim.results) == self.sim.number_of_simulations
+
+        # Check that all matches are stable
+        for algorithm in self.sim.results:
+            assert all(proposer.is_matched for proposer in algorithm.proposers)

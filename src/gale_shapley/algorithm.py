@@ -1,29 +1,21 @@
 """Algorithm module."""
 
-from __future__ import annotations  # needed in 3.9 for | of Python 3.10
-
 import logging
+from dataclasses import dataclass
+from typing import Final
 
 from gale_shapley.person import Proposer, Responder
 from gale_shapley.utils import timer_decorator
 
 
+@dataclass(slots=True)
 class Algorithm:
     """Gale-Shapley Algorithm class.
-    Uses __slots__ instead of the default __dict__ for memory efficiency."""
+    Uses slots for memory efficiency."""
 
-    __slots__ = ("proposers", "responders", "round")
-
-    def __init__(self, proposers: list[Proposer], responders: list[Responder]) -> None:
-        """Constructor for Algorithm class.
-
-        Args:
-            proposers (list[Proposer]): list of proposers
-            responders (list[Responder]): list of responders
-        """
-        self.proposers = proposers
-        self.responders = responders
-        self.round: int = 0
+    proposers: list[Proposer]
+    responders: list[Responder]
+    round: int = 0
 
     @property
     def persons(self) -> list[Proposer | Responder]:
@@ -60,35 +52,36 @@ class Algorithm:
         """Prints all matches, does not print unmatched responders."""
         logging.info("Printing the matching:")
         for proposer in self.proposers:
-            if (
-                proposer.match is not None
-            ):  # mypy complains if proposer.is_matched is used
-                logging.info(
-                    f"{proposer.name} is matched to {'self' if proposer.name == proposer.match.name else proposer.match.name}."
-                )
-            else:
-                logging.info(f"{proposer.name} is unmatched.")
+            match proposer.match:
+                case None:
+                    logging.info(f"{proposer.name} is unmatched.")
+                case match if match.name == proposer.name:
+                    logging.info(f"{proposer.name} is matched to self.")
+                case match:
+                    logging.info(f"{proposer.name} is matched to {match.name}.")
+
         for responder in self.responders:
-            if responder.match == responder:
-                logging.info(f"{responder.name} is matched to self.")
-            elif not responder.is_matched:
-                logging.info(f"{responder.name} is unmatched.")
+            match responder.match:
+                case match if match == responder:
+                    logging.info(f"{responder.name} is matched to self.")
+                case None:
+                    logging.info(f"{responder.name} is unmatched.")
 
     @timer_decorator
     def print_all_preferences(self, compact: bool = True) -> None:
         """Prints the preferences of all proposers and responders.
 
         Args:
-            compact (bool, optional): If True prints all in one table. Defaults to True.
+            compact (bool): If True prints all in one table. Defaults to True.
         """
         if compact:
             logging.info(
                 "Printing preferences in compact format, only showing acceptables:"
             )
-            header: list[str] = [p.name for p in self.persons]
-            first_column: list[str] = [
-                f"{i + 1}."
-                for i in range(max(len(self.proposers), len(self.responders)) + 1)
+            header: Final[list[str]] = [p.name for p in self.persons]
+            first_column: Final[list[str]] = [
+                f"{i}."
+                for i in range(1, max(len(self.proposers), len(self.responders)) + 2)
             ]
             data: list[list[str]] = []
             for i in range(len(first_column)):
@@ -104,9 +97,7 @@ class Algorithm:
                         for person in self.persons
                     ]
                 )
-            format_row: str = "{:8}" * (  # TODO: fix this
-                len(header) + 1
-            )  # doing with f-strings could be a pain
+            format_row: Final[str] = "{:8}" * (len(header) + 1)
             logging.info(format_row.format("", *header))
             logging.info(format_row.format("", *["-" * len(h) for h in header]))
             for pref, row in zip(first_column, data):
@@ -128,21 +119,25 @@ class Algorithm:
         """Runs the algorithm and prints desired information.
 
         Args:
-            print_all_preferences (bool, optional): Prints individual preferences before running, defaults to False
-            compact (bool, optional): If True prints all in one table, defaults to True
-            report_matches (bool, optional): Reports the final matching, defaults to True
+            print_all_preferences (bool): Prints individual preferences before running. Defaults to True.
+            compact (bool): If True prints all in one table. Defaults to True.
+            report_matches (bool): Reports the final matching. Defaults to True.
         """
         if print_all_preferences:
             self.print_all_preferences(compact=compact)
-        logging.info("")
+            logging.info("")
+
         logging.info("Running algorithm...")
         while not self.terminate():
             self.proposers_propose()
             self.responders_respond()
             self.round += 1
-        for responder in self.responders:  # change None to self matches
+
+        # Change None to self matches for unmatched responders
+        for responder in self.responders:
             if not responder.is_matched:
                 responder.match = responder
+
         logging.info(f"Algorithm terminated after {self.round} rounds.")
         if report_matches:
             self.report_matches()
