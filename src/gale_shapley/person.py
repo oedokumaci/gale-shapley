@@ -43,7 +43,9 @@ class Person:
         Returns:
             bool: Returns True if person is acceptable to self, False otherwise
         """
-        if self and person in self.preferences:
+        if self == person:
+            return True
+        if person in self.preferences:
             return self.preferences.index(person) <= self.preferences.index(self)
         raise ValueError(f"Either {self} or {person} is not in preferences.")
 

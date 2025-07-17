@@ -65,6 +65,20 @@ class TestPerson:
         assert self.w_2.is_acceptable(self.m_1)
         assert self.w_2.is_acceptable(self.w_2)
 
+    def test_is_acceptable_invalid_preferences(self) -> None:
+        """Test that is_acceptable raises ValueError when preferences are invalid."""
+
+        proposer = Proposer("x", "man")
+        responder = Responder("y", "woman")
+        proposer.preferences = (responder,)
+
+        with pytest.raises(ValueError):
+            proposer.is_acceptable(responder)
+
+        responder.preferences = (proposer,)
+        with pytest.raises(ValueError):
+            responder.is_acceptable(proposer)
+
     def test_is_matched(self) -> None:
         """Test that is_matched property works correctly."""
         # Initially no one is matched
