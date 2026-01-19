@@ -1,11 +1,11 @@
 repos:
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 26.1.0
     hooks:
       - id: black
 
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.1.1
+    rev: 7.3.0
     hooks:
       - id: flake8
         args:
@@ -16,7 +16,7 @@ repos:
           - flake8-bugbear
 
   - repo: https://github.com/PyCQA/isort
-    rev: 5.13.2 # need 5.12.0 to fix RuntimeError: The Poetry configuration is invalid
+    rev: 7.0.0 # need 5.12.0 to fix RuntimeError: The Poetry configuration is invalid
     hooks:
       - id: isort
         args:
@@ -24,7 +24,7 @@ repos:
           - --profile=black # to be compatible with black
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
       - id: check-yaml
@@ -33,19 +33,19 @@ repos:
       - id: requirements-txt-fixer
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.3.0
+    rev: v2.4.1
     hooks:
       - id: codespell
         exclude: ^config/
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.1
+    rev: v3.21.2
     hooks:
       - id: pyupgrade
         args: [--py312-plus]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.14.0
+    rev: v1.19.1
     hooks:
       - id: mypy
         args:
@@ -70,7 +70,7 @@ repos:
         args: [--float-to-top, --profile=black]
 
   - repo: https://github.com/kynan/nbstripout
-    rev: 0.8.1
+    rev: 0.9.0
     hooks:
       - id: nbstripout
 
