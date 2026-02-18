@@ -1,2 +1,2 @@
-[tool.git-changelog]
 convention = "angular"
+sections = ["feat", "fix", "refactor", "build", "deps", "perf"]
