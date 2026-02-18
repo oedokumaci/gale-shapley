@@ -13,4 +13,4 @@ RUN uv sync --extra cli --extra gui --no-dev
 
 EXPOSE 8000
 
-CMD ["uv", "run", "python", "-m", "gale_shapley_algorithm"]
+CMD ["uv", "run", "uvicorn", "gale_shapley_algorithm._api.app:app", "--host", "0.0.0.0", "--port", "8000"]
