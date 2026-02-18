@@ -1,8 +1,8 @@
 """Convenience function for creating matchings."""
 
-from gale_shapley.algorithm import Algorithm
-from gale_shapley.person import Proposer, Responder
-from gale_shapley.result import MatchingResult
+from gale_shapley_algorithm.algorithm import Algorithm
+from gale_shapley_algorithm.person import Proposer, Responder
+from gale_shapley_algorithm.result import MatchingResult
 
 
 def create_matching(
@@ -27,8 +27,14 @@ def create_matching(
 
     Example:
         >>> result = create_matching(
-        ...     proposer_preferences={"alice": ["bob", "charlie"], "dave": ["charlie", "bob"]},
-        ...     responder_preferences={"bob": ["alice", "dave"], "charlie": ["dave", "alice"]},
+        ...     proposer_preferences={
+        ...         "alice": ["bob", "charlie"],
+        ...         "dave": ["charlie", "bob"],
+        ...     },
+        ...     responder_preferences={
+        ...         "bob": ["alice", "dave"],
+        ...         "charlie": ["dave", "alice"],
+        ...     },
         ... )
         >>> result.matches
         {'alice': 'bob', 'dave': 'charlie'}

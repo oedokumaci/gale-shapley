@@ -4,7 +4,7 @@ import logging
 
 import pytest
 
-from gale_shapley.person import Proposer, Responder
+from gale_shapley_algorithm.person import Proposer, Responder
 
 
 class TestSimulatorProperties:
@@ -19,8 +19,8 @@ class TestCreateObjects:
     """Tests for create_objects."""
 
     def test_random_mode_different_first_letters(self) -> None:
-        from gale_shapley._cli.config import YAMLConfig
-        from gale_shapley._cli.simulator import Simulator
+        from gale_shapley_algorithm._cli.config import YAMLConfig
+        from gale_shapley_algorithm._cli.simulator import Simulator
 
         config = YAMLConfig.model_validate(
             {
@@ -45,8 +45,8 @@ class TestCreateObjects:
 
     def test_random_mode_same_first_letters(self) -> None:
         """When side names start with same letter, use full names."""
-        from gale_shapley._cli.config import YAMLConfig
-        from gale_shapley._cli.simulator import Simulator
+        from gale_shapley_algorithm._cli.config import YAMLConfig
+        from gale_shapley_algorithm._cli.simulator import Simulator
 
         config = YAMLConfig.model_validate(
             {
@@ -76,8 +76,8 @@ class TestCreateObjects:
 
     def test_input_mode_partial_preferences(self) -> None:
         """Partial preferences should be filled in with remaining persons + self."""
-        from gale_shapley._cli.config import YAMLConfig
-        from gale_shapley._cli.simulator import Simulator
+        from gale_shapley_algorithm._cli.config import YAMLConfig
+        from gale_shapley_algorithm._cli.simulator import Simulator
 
         config = YAMLConfig.model_validate(
             {
@@ -120,8 +120,8 @@ class TestSimulate:
             assert all(p.is_matched for p in algo.proposers)
 
     def test_simulate_with_all_options(self, caplog: pytest.LogCaptureFixture) -> None:
-        from gale_shapley._cli.config import YAMLConfig
-        from gale_shapley._cli.simulator import Simulator
+        from gale_shapley_algorithm._cli.config import YAMLConfig
+        from gale_shapley_algorithm._cli.simulator import Simulator
 
         config = YAMLConfig.model_validate(
             {
@@ -144,8 +144,8 @@ class TestSimulate:
         assert len(sim.results) == 2
 
     def test_simulate_with_report_only(self, caplog: pytest.LogCaptureFixture) -> None:
-        from gale_shapley._cli.config import YAMLConfig
-        from gale_shapley._cli.simulator import Simulator
+        from gale_shapley_algorithm._cli.config import YAMLConfig
+        from gale_shapley_algorithm._cli.simulator import Simulator
 
         config = YAMLConfig.model_validate(
             {
@@ -180,7 +180,7 @@ class TestStability:
     """Tests for stability functions via the core stability module."""
 
     def _make_sim(self, proposers: list[Proposer], responders: list[Responder]):
-        from gale_shapley._cli.simulator import Simulator
+        from gale_shapley_algorithm._cli.simulator import Simulator
 
         sim = Simulator.__new__(Simulator)
         sim.proposers = proposers

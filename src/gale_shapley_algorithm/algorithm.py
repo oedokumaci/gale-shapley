@@ -3,8 +3,8 @@
 from dataclasses import dataclass
 from typing import Final
 
-from gale_shapley.person import Proposer, Responder
-from gale_shapley.result import MatchingResult
+from gale_shapley_algorithm.person import Proposer, Responder
+from gale_shapley_algorithm.result import MatchingResult
 
 
 @dataclass(slots=True)

@@ -5,7 +5,7 @@ from typing import Any
 
 import pytest
 
-from gale_shapley._cli.config import YAMLConfig, side_swap
+from gale_shapley_algorithm._cli.config import YAMLConfig, side_swap
 
 
 def test_valid_yaml_input(valid_yaml_config_input: dict[str, Any]) -> None:

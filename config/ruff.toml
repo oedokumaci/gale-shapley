@@ -1,5 +1,6 @@
 target-version = "py312"
 line-length = 120
+output-format = "concise"
 
 [lint]
 select = ["ALL"]
@@ -59,5 +60,18 @@ ignore = [
     "PLC0415",# import not at top-level
 ]
 
+[lint.flake8-quotes]
+docstring-quotes = "double"
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[lint.isort]
+known-first-party = ["gale_shapley_algorithm"]
+
 [lint.pydocstyle]
 convention = "google"
+
+[format]
+docstring-code-format = true
+docstring-code-line-length = 80

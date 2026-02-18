@@ -1,10 +1,10 @@
-"""Entry-point module, in case of using `python -m gale_shapley`."""
+"""Entry-point module, in case of using `python -m gale_shapley_algorithm`."""
 
 try:
     import typer
 except ImportError:
     raise SystemExit("CLI deps not installed. Install with: pip install gale-shapley-algorithm[cli]") from None
 
-from gale_shapley._cli.app import main
+from gale_shapley_algorithm._cli.app import main
 
 typer.run(main)

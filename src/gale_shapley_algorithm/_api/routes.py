@@ -2,9 +2,9 @@
 
 from fastapi import APIRouter
 
-from gale_shapley._api.models import MatchingRequest, MatchingResponse, StepsResponse
-from gale_shapley._api.step_through import _build_matching_response, _build_participants, run_step_through
-from gale_shapley.stability import check_stability
+from gale_shapley_algorithm._api.models import MatchingRequest, MatchingResponse, StepsResponse
+from gale_shapley_algorithm._api.step_through import _build_matching_response, _build_participants, run_step_through
+from gale_shapley_algorithm.stability import check_stability
 
 router = APIRouter(prefix="/api")
 

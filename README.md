@@ -1,123 +1,107 @@
-<div align="center">
+# gale-shapley
 
-<img src=./style/Gale-Shapley-Implementation.png width="800">
-
-&nbsp;
-
-This is a Python implementation of the celebrated Gale-Shapley (a.k.a. the Deferred Acceptance) Algorithm.
+A Python implementation of the celebrated Gale-Shapley (a.k.a. the Deferred Acceptance) Algorithm.
 
 Time complexity is O(n^2), space complexity is O(n).
 
-&nbsp;
-
-![CI](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/ci.yml/badge.svg)
-![Docs](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/docs.yml/badge.svg)
+[![CI](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/ci.yml/badge.svg)](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/ci.yml)
+[![Docs](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/docs.yml/badge.svg)](https://oedokumaci.github.io/gale-shapley-algorithm)
+[![PyPI](https://img.shields.io/pypi/v/gale-shapley-algorithm)](https://pypi.org/project/gale-shapley-algorithm/)
+[![Python](https://img.shields.io/pypi/pyversions/gale-shapley-algorithm)](https://pypi.org/project/gale-shapley-algorithm/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
-![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-</div>
-
-&nbsp;
-# User Guide
-
-## Requirements
-
-- Python >= 3.12
-- OS: Ubuntu, MacOS, Windows
-
 ## Installation
-
-There are three easy ways to install the package.
-
-### Install from PyPI
 
 ```bash
 pip install gale-shapley-algorithm
 ```
 
-For CLI support:
+With CLI support:
+
 ```bash
 pip install "gale-shapley-algorithm[cli]"
 ```
 
-For the GUI:
+With GUI:
+
 ```bash
 pip install "gale-shapley-algorithm[gui]"
 ```
 
-### Using Docker
+## Quick Start
 
-An easy way to run the project is to use Docker. First, install [Docker](https://docs.docker.com/get-docker/). Then, run the following command in the project directory.
+### As a Library
+
+```python
+import gale_shapley_algorithm as gsa
+
+result = gsa.create_matching(
+    proposer_preferences={
+        "alice": ["bob", "charlie"],
+        "dave": ["charlie", "bob"],
+    },
+    responder_preferences={
+        "bob": ["alice", "dave"],
+        "charlie": ["dave", "alice"],
+    },
+)
+print(result.matches)  # {'alice': 'bob', 'dave': 'charlie'}
+```
+
+### As a CLI
+
 ```bash
+# Run with default settings
+uvx --from "gale-shapley-algorithm[cli]" python -m gale_shapley_algorithm
+
+# See all options
+uvx --from "gale-shapley-algorithm[cli]" python -m gale_shapley_algorithm --help
+```
+
+### With Docker
+
+```bash
+# Build the image
 docker build -t gale-shapley .
-```
-This will build the Docker image. After the image is built, the following are some examples of how to run the project.
 
-```bash
+# Run with a config file
 docker run --rm -it \
--v $(pwd)/config/example_config_custom_input.yaml:/app/config/config.yaml \
--v $(pwd)/logs:/app/logs \
-gale-shapley
+  -v $(pwd)/config/example_config_custom_input.yaml:/app/config/config.yaml \
+  -v $(pwd)/logs:/app/logs \
+  gale-shapley
+
+# Run the GUI
+docker run --rm -p 8000:8000 gale-shapley \
+  uv run uvicorn gale_shapley_algorithm._api.app:app --host 0.0.0.0 --port 8000
 ```
-
-The `-v` option mounts the specified config file and logs directory to the container. The `--rm` option removes the container after it exits. The `-it` option is for interactive mode.
-
-To run the GUI instead:
-```bash
-docker run --rm -p 8000:8000 gale-shapley uv run uvicorn gale_shapley._api.app:app --host 0.0.0.0 --port 8000
-```
-
-### Using Git
-
-If you have git installed, simply run
-```bash
-git clone https://github.com/oedokumaci/gale-shapley-algorithm
-```
-to clone the repository locally. After cloning, install the dependencies using [uv](https://github.com/astral-sh/uv):
-
-1. `pip install uv`
-2. `cd gale-shapley`
-3. `uvx --from taskipy task setup`
-
-## Usage
-
-### Configuration
-
-First edit the `./config/config.yaml` to your liking. Example config files can be found at `./config/example_config_*`.
-
-### Quick Start
-
-After configuring the `./config/config.yaml`, simply run the following command in the project directory.
-```bash
-uvx --from taskipy task run
-```
-
-### Detailed Usage
-For a list of all the CLI arguments and options, run
-```bash
-uvx --from taskipy task run -- --help
-```
-
-A sample output with currently implemented CLI arguments and options is shown below.
-
-<img src=./style/CLI-Arguments.png width="600">
-
-&nbsp;
-
-# Developer Guide
-
-## Setup
-
-This project is managed with [uv](https://github.com/astral-sh/uv) and uses [taskipy](https://github.com/taskipy/taskipy) for task running. First install uv, then clone the project and run `uvx --from taskipy task setup` in the project directory to install all dependencies.
 
 ## Development
 
-### Pre-commit Hooks
+This project is managed with [uv](https://github.com/astral-sh/uv) and uses [taskipy](https://github.com/taskipy/taskipy) for task running.
 
-The project uses pre-commit hooks. Run
+```bash
+git clone https://github.com/oedokumaci/gale-shapley-algorithm
+cd gale-shapley
+uvx --from taskipy task setup   # Install dependencies
+uvx --from taskipy task run     # Run the application
+uvx --from taskipy task fix     # Auto-format + lint fix
+uvx --from taskipy task ci      # Run all CI checks
+uvx --from taskipy task test    # Run tests
+uvx --from taskipy task docs    # Serve docs locally
+```
+
+Install pre-commit hooks:
+
 ```bash
 uv run pre-commit install
 ```
-in the project directory to install hooks to your local `.git`.
+
+## Documentation
+
+Full documentation is available at [oedokumaci.github.io/gale-shapley-algorithm](https://oedokumaci.github.io/gale-shapley-algorithm).
+
+## License
+
+[MIT](LICENSE)

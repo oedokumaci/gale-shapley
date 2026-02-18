@@ -5,9 +5,9 @@ from typing import Final, NoReturn
 import typer
 from rich import print as rprint
 
-from gale_shapley._cli.config import load_config, side_swap
-from gale_shapley._cli.logging import LOG_PATH, init_logger, log_config_info
-from gale_shapley._cli.simulator import Simulator
+from gale_shapley_algorithm._cli.config import load_config, side_swap
+from gale_shapley_algorithm._cli.logging import LOG_PATH, init_logger, log_config_info
+from gale_shapley_algorithm._cli.simulator import Simulator
 
 number_of_simulations_argument: Final = typer.Argument(1, min=1, help="Desired number of simulations")
 print_all_preferences_option: Final = typer.Option(True, help="Print preferences of all")

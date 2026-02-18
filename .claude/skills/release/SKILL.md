@@ -19,10 +19,10 @@ Perform a full release for this project.
    ```
 3. Read `CHANGELOG.md` and extract the new version number from the latest heading.
 4. Present the changelog diff to the user for review. **Wait for user approval before continuing.**
-5. Update `__version__` in `src/gale_shapley/__init__.py` to match the new version (without the `v` prefix).
+5. Update `__version__` in `src/gale_shapley_algorithm/__init__.py` to match the new version (without the `v` prefix).
 6. Stage and commit:
    ```bash
-   git add CHANGELOG.md src/gale_shapley/__init__.py
+   git add CHANGELOG.md src/gale_shapley_algorithm/__init__.py
    git commit -m "chore: Release version X.Y.Z"
    ```
 7. Push, tag, and push the tag:

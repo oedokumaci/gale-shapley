@@ -3,7 +3,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from gale_shapley._api.app import app
+from gale_shapley_algorithm._api.app import app
 
 
 @pytest.fixture

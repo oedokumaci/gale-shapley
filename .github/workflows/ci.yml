@@ -54,6 +54,9 @@ jobs:
     - name: Check code quality (lint)
       run: uvx --from taskipy task lint_check
 
+    - name: Check types
+      run: uvx --from taskipy task typecheck
+
     - name: Build documentation
       run: uvx --from taskipy task docs_build
 

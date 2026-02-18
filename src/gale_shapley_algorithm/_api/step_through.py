@@ -1,15 +1,15 @@
 """Step-through execution of the Gale-Shapley algorithm, capturing per-round state."""
 
-from gale_shapley._api.models import (
+from gale_shapley_algorithm._api.models import (
     MatchingResponse,
     ProposalAction,
     RoundStep,
     StepsResponse,
 )
-from gale_shapley.algorithm import Algorithm
-from gale_shapley.person import Proposer, Responder
-from gale_shapley.result import MatchingResult, StabilityResult
-from gale_shapley.stability import check_stability
+from gale_shapley_algorithm.algorithm import Algorithm
+from gale_shapley_algorithm.person import Proposer, Responder
+from gale_shapley_algorithm.result import MatchingResult, StabilityResult
+from gale_shapley_algorithm.stability import check_stability
 
 
 def _build_participants(
