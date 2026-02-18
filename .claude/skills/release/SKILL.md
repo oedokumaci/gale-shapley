@@ -25,13 +25,13 @@ Perform a full release for this project.
    git add CHANGELOG.md src/gale_shapley_algorithm/__init__.py
    git commit -m "chore: Release version X.Y.Z"
    ```
-7. Push, tag, and push the tag:
+7. Push, tag, push the tag, and create the GitHub release:
    ```bash
    git push
    git tag vX.Y.Z
    git push --tags
+   gh release create vX.Y.Z --generate-notes
    ```
-8. The GitHub Actions release workflow will automatically create a GitHub release from the tag.
 
 ## Important
 
