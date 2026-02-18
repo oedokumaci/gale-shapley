@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v1.1.1](https://github.com/oedokumaci/gale-shapley/releases/tag/v1.1.1) - 2026-02-18
+
+<small>[Compare with v1.1.0](https://github.com/oedokumaci/gale-shapley/compare/v1.1.0...v1.1.1)</small>
+
+### Bug Fixes
+
+- update hardcoded version test and resolve EncodingWarnings ([44509fb](https://github.com/oedokumaci/gale-shapley/commit/44509fbef7e9e8b88a6571ed62031fb071834b68) by oedokumaci).
+
 ## [v1.1.0](https://github.com/oedokumaci/gale-shapley/releases/tag/v1.1.0) - 2026-02-18
 
 <small>[Compare with v1.0.0](https://github.com/oedokumaci/gale-shapley/compare/v1.0.0...v1.1.0)</small>
