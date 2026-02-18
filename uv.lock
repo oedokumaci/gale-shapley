@@ -205,15 +205,11 @@ source = { editable = "." }
 
 [package.optional-dependencies]
 cli = [
-    { name = "pydantic" },
-    { name = "pyyaml" },
     { name = "rich" },
     { name = "typer" },
 ]
 dev = [
     { name = "pre-commit" },
-    { name = "pydantic" },
-    { name = "pyyaml" },
     { name = "rich" },
     { name = "ruff" },
     { name = "typer" },
@@ -241,10 +237,6 @@ test = [
 requires-dist = [
     { name = "fastapi", marker = "extra == 'gui'", specifier = ">=0.115" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.0" },
-    { name = "pydantic", marker = "extra == 'cli'", specifier = ">=2.6.1" },
-    { name = "pydantic", marker = "extra == 'dev'", specifier = ">=2.6.1" },
-    { name = "pyyaml", marker = "extra == 'cli'", specifier = ">=6.0.1" },
-    { name = "pyyaml", marker = "extra == 'dev'", specifier = ">=6.0.1" },
     { name = "rich", marker = "extra == 'cli'", specifier = ">=13.0" },
     { name = "rich", marker = "extra == 'dev'", specifier = ">=13.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9" },
