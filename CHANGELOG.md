@@ -6,13 +6,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v1.1.3](https://github.com/oedokumaci/gale-shapley-algorithm/releases/tag/v1.1.3) - 2026-02-18
+
+<small>[Compare with v1.1.2](https://github.com/oedokumaci/gale-shapley-algorithm/compare/v1.1.2...v1.1.3)</small>
+
+### Bug Fixes
+
+- add missing shadcn/ui utility needed by frontend components ([f444af3](https://github.com/oedokumaci/gale-shapley-algorithm/commit/f444af30a3fd98f9a51e6c2d01a5b47314007de1) by oedokumaci).
+
+### Code Refactoring
+
+- align import name with package name and modernize project infrastructure ([4166c70](https://github.com/oedokumaci/gale-shapley-algorithm/commit/4166c707ca6d5ab64dfa92e10104b35d9684e2ba) by oedokumaci).
+
 ## [v1.1.2](https://github.com/oedokumaci/gale-shapley-algorithm/releases/tag/v1.1.2) - 2026-02-18
 
 <small>[Compare with v1.1.1](https://github.com/oedokumaci/gale-shapley-algorithm/compare/v1.1.1...v1.1.2)</small>
-
-### Build
-
-- rename PyPI package to gale-shapley-algorithm and rename GitHub repository ([1213c90](https://github.com/oedokumaci/gale-shapley-algorithm/commit/1213c90) by oedokumaci).
 
 ## [v1.1.1](https://github.com/oedokumaci/gale-shapley-algorithm/releases/tag/v1.1.1) - 2026-02-18
 
