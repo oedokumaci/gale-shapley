@@ -88,7 +88,9 @@ gale-shapley/
 │   ├── __init__.py       # Public API
 │   ├── __main__.py       # Module entry point (run via `task run`)
 │   ├── _cli/             # CLI implementation (typer + rich)
-│   │   └── logging.py    # Stdlib logging setup
+│   │   ├── app.py        # Typer app with main command
+│   │   ├── prompts.py    # Interactive prompt functions (rich.prompt)
+│   │   └── display.py    # Rich output formatting (tables, results)
 │   ├── _api/             # FastAPI backend for GUI
 │   │   └── app.py        # API endpoints
 │   ├── algorithm.py      # Core Gale-Shapley algorithm
@@ -105,8 +107,7 @@ gale-shapley/
 
 - **Public API**: Exports in `__init__.py` — always import from here (e.g., `from gale_shapley_algorithm import create_matching`)
 - **Internal**: `_cli/`, `_api/` — private implementation, never import from these directly
-- **CLI**: `__main__.py` entry point calls `_cli/`
-- **Logging**: Stdlib logging via `_cli/logging.py` (no loguru)
+- **CLI**: `__main__.py` entry point calls `_cli/app.py` which uses interactive prompts (no config files)
 
 ## Skills
 

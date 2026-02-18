@@ -10,6 +10,27 @@ A Python implementation of the celebrated Gale-Shapley (a.k.a. the Deferred Acce
 
 Time complexity is O(n^2), space complexity is O(n).
 
+## GUI with Docker
+
+The easiest way to try the algorithm is with the interactive web GUI:
+
+```bash
+docker build -t gale-shapley .
+docker run --rm -p 8000:8000 gale-shapley
+```
+
+Then open [http://localhost:8000](http://localhost:8000) in your browser.
+
+The GUI lets you:
+
+- **Add and remove people** on each side (proposers and responders)
+- **Set preferences** by drag-and-drop reordering
+- **Randomize** all preferences with one click
+- **Run the matching** and see results in a table with stability info
+- **Animate step-by-step** to watch proposals, rejections, and tentative matches unfold round by round in an SVG visualization
+- **Upload images** for each person to personalize the visualization
+- Toggle **dark/light mode**
+
 ## Installation
 
 ```bash
@@ -20,12 +41,6 @@ With CLI support:
 
 ```bash
 pip install "gale-shapley-algorithm[cli]"
-```
-
-With GUI:
-
-```bash
-pip install "gale-shapley-algorithm[gui]"
 ```
 
 ## Quick Start
@@ -50,29 +65,73 @@ print(result.matches)  # {'alice': 'bob', 'dave': 'charlie'}
 
 ### As a CLI
 
+The CLI uses interactive prompts -- no config files needed:
+
 ```bash
-# Run with default settings
+# Interactive mode: enter names and rank preferences
 uvx --from "gale-shapley-algorithm[cli]" python -m gale_shapley_algorithm
 
-# See all options
-uvx --from "gale-shapley-algorithm[cli]" python -m gale_shapley_algorithm --help
+# Random mode: auto-generate names and preferences
+uvx --from "gale-shapley-algorithm[cli]" python -m gale_shapley_algorithm --random
+
+# Swap proposers and responders
+uvx --from "gale-shapley-algorithm[cli]" python -m gale_shapley_algorithm --swap-sides
 ```
 
-### With Docker
+**Interactive mode example:**
 
-```bash
-# Build the image
-docker build -t gale-shapley .
+```
+$ python -m gale_shapley_algorithm
 
-# Run with a config file
-docker run --rm -it \
-  -v $(pwd)/config/example_config_custom_input.yaml:/app/config/config.yaml \
-  -v $(pwd)/logs:/app/logs \
-  gale-shapley
+  Gale-Shapley Algorithm
 
-# Run the GUI
-docker run --rm -p 8000:8000 gale-shapley \
-  uv run uvicorn gale_shapley_algorithm._api.app:app --host 0.0.0.0 --port 8000
+Enter proposer side name [Proposers]: Men
+Enter responder side name [Responders]: Women
+
+Enter names for Men (comma-separated): Will, Hampton
+Enter names for Women (comma-separated): April, Summer
+
+Ranking preferences for Men...
+
+  Available for Will:
+  1. April
+  2. Summer
+  Enter ranking for Will (e.g. 1,2): 1,2
+  -> Will: April > Summer
+
+  Available for Hampton:
+  1. April
+  2. Summer
+  Enter ranking for Hampton (e.g. 1,2): 2,1
+  -> Hampton: Summer > April
+
+Ranking preferences for Women...
+  ...
+
+┌──────── Matching Result ────────┐
+│ Men     │ Women                 │
+├─────────┼───────────────────────┤
+│ Will    │ April                 │
+│ Hampton │ Summer                │
+└─────────┴───────────────────────┘
+Completed in 1 round. Stable: Yes
+```
+
+**Random mode example:**
+
+```
+$ python -m gale_shapley_algorithm --random
+
+  Gale-Shapley Algorithm
+
+Enter proposer side name [Proposers]: Cats
+Enter responder side name [Responders]: Dogs
+Number of Cats [3]: 3
+Number of Dogs [3]: 3
+
+  ... (random preferences generated and displayed) ...
+
+Completed in 2 rounds. Stable: Yes
 ```
 
 ## Development
