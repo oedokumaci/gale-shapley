@@ -10,11 +10,10 @@ Time complexity is O(n^2), space complexity is O(n).
 
 &nbsp;
 
-![Tests](https://github.com/oedokumaci/gale-shapley/actions/workflows/tests.yml/badge.svg)
-![Quality](https://github.com/oedokumaci/gale-shapley/actions/workflows/quality.yml/badge.svg)
-[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev)
+![CI](https://github.com/oedokumaci/gale-shapley/actions/workflows/ci.yml/badge.svg)
+![Docs](https://github.com/oedokumaci/gale-shapley/actions/workflows/docs.yml/badge.svg)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 ![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -25,7 +24,7 @@ Time complexity is O(n^2), space complexity is O(n).
 
 ## Requirements
 
-- Python >= 3.9
+- Python >= 3.12
 - OS: Ubuntu, MacOS, Windows
 
 ## Installation
@@ -49,24 +48,24 @@ gale-shapley
 ```
 
 These commands will run the project with the specified config file and number of simulations. The output can be seen in the terminal. The `-v` option mounts the specified config file and logs directory to the container. The `-e` option sets the environment variable `number_of_simulations` to the specified value. The `--rm` option removes the container after it exits. The `-it` option is for interactive mode.
-You can also use Makefile recipes to run the project with Docker. See the [Makefile](#makefile) section for more information.
 
+### Install from PyPI
 
-### Download Zip File
-
-Pip installing the package from PyPI is not yet available. Instead, download [from this link](https://github.com/oedokumaci/gale-shapley/archive/refs/heads/main.zip) and unzip. You will also need to change the folder name from gale-shapley-main to gale-shapley (or cd into gale-shapley-main in step 2 below). 
+```bash
+pip install gale-shapley
+```
 
 ### Using Git
 
-If you have git installed, simply run 
+If you have git installed, simply run
 ```bash
 git clone https://github.com/oedokumaci/gale-shapley
 ```
-to install the package locally. After downloading, here are the steps to install the dependencies in a virtual environment using [PDM]:
+to clone the repository locally. After cloning, install the dependencies using [uv](https://github.com/astral-sh/uv):
 
-1. `pip install pdm`
+1. `pip install uv`
 2. `cd gale-shapley`
-3. `pdm install --prod`
+3. `uvx --from taskipy task setup`
 
 ## Usage
 
@@ -78,13 +77,13 @@ First edit the `./config/config.yaml` to your liking. Example config files can b
 
 After configuring the `./config/config.yaml`, simply run the following command in the project directory.
 ```bash
-pdm run python -m gale_shapley
+uvx --from taskipy task run
 ```
 
 ### Detailed Usage
 For a list of all the CLI arguments and options, run
 ```bash
-pdm run python -m gale_shapley --help
+uvx --from taskipy task run -- --help
 ```
 
 A sample output with currently implemented CLI arguments and options is shown below.
@@ -95,26 +94,16 @@ A sample output with currently implemented CLI arguments and options is shown be
 
 # Developer Guide
 
-## Makefile
-There is a Makefile in the project directory. You can run `make help` to see the available commands as below. The Makefile is also used in the CI/CD pipeline.
-
-<img src=./style/Make.png width="600">
-
 ## Setup
 
-This project is [PDM]-managed, which is compatible with [PEP 621](https://www.python.org/dev/peps/pep-0621) (also compatible with the <i>rejected</i> [PEP 582](https://www.python.org/dev/peps/pep-0582)). If you are a developer, first `pip install pdm` and then `git clone` the project. Next you can `pdm install` in the project directory, which will install all the dependencies in a [virtual environment](https://pdm.fming.dev/latest/usage/venv/).
+This project is managed with [uv](https://github.com/astral-sh/uv) and uses [taskipy](https://github.com/taskipy/taskipy) for task running. First install uv, then clone the project and run `uvx --from taskipy task setup` in the project directory to install all dependencies.
 
 ## Development
 
 ### Pre-commit Hooks
 
-The project also uses pre-commit hooks. Because the project uses [PDM], you **do not** need to `pip install pre-commit`. Instead, run directly
+The project uses pre-commit hooks. Run
 ```bash
-pdm run pre-commit install
+uv run pre-commit install
 ```
-in the project directory to install hooks to your local `.git`. Alternatively, you can also activate the virtual environment and run
-```bash
-pre-commit install
-```
-
-[PDM]: https://pdm.fming.dev
+in the project directory to install hooks to your local `.git`.
