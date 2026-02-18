@@ -4,4 +4,4 @@ hide:
 - navigation
 ---
 
-# ::: gale_shapley
+::: gale_shapley
