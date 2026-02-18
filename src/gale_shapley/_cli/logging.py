@@ -27,7 +27,7 @@ def init_logger(file_name: str) -> None:
 
     log_formatter = logging.Formatter("%(asctime)s:%(levelname)s: %(message)s")
     log_formatter.datefmt = "%Y-%m-%d %H:%M:%S"
-    log_handler = logging.FileHandler(str(log_file))
+    log_handler = logging.FileHandler(str(log_file), encoding="utf-8")
     log_handler.setFormatter(log_formatter)
     log_handler.setLevel(logging.INFO)
 
