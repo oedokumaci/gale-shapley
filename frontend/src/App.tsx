@@ -4,6 +4,7 @@ import { PreferenceEditor } from '@/components/PreferenceEditor';
 import { ResultsPanel } from '@/components/ResultsPanel';
 import { AnimationPlayer } from '@/components/AnimationPlayer';
 import { SVGMatchingVisualization } from '@/components/SVGMatchingVisualization';
+import { HowItWorksDialog } from '@/components/HowItWorksDialog';
 import { usePersonImages } from '@/hooks/usePersonImages';
 import { runMatching, runMatchingSteps } from '@/api/client';
 import { Sun, Moon } from 'lucide-react';
@@ -132,6 +133,11 @@ function App() {
     setResponderPrefs((prev) => ({ ...prev, [person]: newOrder }));
   }, []);
 
+  const randomizePrefs = useCallback(() => {
+    setProposerPrefs(buildRandomPrefs(proposerNames, responderNames));
+    setResponderPrefs(buildRandomPrefs(responderNames, proposerNames));
+  }, [proposerNames, responderNames]);
+
   function buildRequest(): MatchingRequest {
     return {
       proposer_preferences: { ...proposerPrefs },
@@ -214,6 +220,7 @@ function App() {
               <Button variant="outline" onClick={handleRunMatching} disabled={!canRun || loading} size="sm">
                 {loading ? 'Running...' : 'Run Matching'}
               </Button>
+              <HowItWorksDialog />
             </div>
 
             <PreferenceEditor
@@ -227,6 +234,7 @@ function App() {
               onRemoveResponder={removeResponder}
               onReorderProposerPref={reorderProposerPref}
               onReorderResponderPref={reorderResponderPref}
+              onRandomizePrefs={randomizePrefs}
               personImages={personImages}
               onUploadImage={uploadImage}
             />

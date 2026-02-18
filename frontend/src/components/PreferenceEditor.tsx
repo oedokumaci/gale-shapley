@@ -1,8 +1,10 @@
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { PersonList } from './PersonList';
 import { CompactPreferenceGrid } from './CompactPreferenceGrid';
+import { Shuffle } from 'lucide-react';
 import type { PersonImages } from '@/types';
 
 interface PreferenceEditorProps {
@@ -16,6 +18,7 @@ interface PreferenceEditorProps {
   onRemoveResponder: (name: string) => void;
   onReorderProposerPref: (person: string, newOrder: string[]) => void;
   onReorderResponderPref: (person: string, newOrder: string[]) => void;
+  onRandomizePrefs: () => void;
   personImages: PersonImages;
   onUploadImage: (name: string, file: File) => void;
 }
@@ -31,15 +34,27 @@ export function PreferenceEditor({
   onRemoveResponder,
   onReorderProposerPref,
   onReorderResponderPref,
+  onRandomizePrefs,
   personImages,
   onUploadImage,
 }: PreferenceEditorProps) {
+  const canRandomize = proposerNames.length > 0 && responderNames.length > 0;
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="space-y-3">
+      {canRandomize && (
+        <div className="flex justify-center">
+          <Button variant="outline" size="sm" onClick={onRandomizePrefs}>
+            <Shuffle className="h-3.5 w-3.5 mr-1.5" />
+            Randomize Preferences
+          </Button>
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {/* Proposers column */}
       <Card>
         <CardHeader className="pb-2 px-4 pt-4">
-          <CardTitle className="text-base">Proposers</CardTitle>
+          <CardTitle className="text-base text-center">Proposers</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 px-4 pb-4">
           <PersonList
@@ -74,7 +89,7 @@ export function PreferenceEditor({
       {/* Responders column */}
       <Card>
         <CardHeader className="pb-2 px-4 pt-4">
-          <CardTitle className="text-base">Responders</CardTitle>
+          <CardTitle className="text-base text-center">Responders</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3 px-4 pb-4">
           <PersonList
@@ -105,6 +120,7 @@ export function PreferenceEditor({
           )}
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

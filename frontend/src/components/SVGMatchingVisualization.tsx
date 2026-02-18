@@ -20,11 +20,14 @@ interface SVGMatchingVisualizationProps {
 }
 
 const VIEW_WIDTH = 900;
-const PROPOSER_X = 170;
-const RESPONDER_X = 730;
-const PADDING_Y = 65;
-const MIN_RADIUS = 18;
-const MAX_RADIUS = 28;
+const PROPOSER_X = 300;
+const RESPONDER_X = 600;
+const PADDING_Y = 55;
+const LABEL_Y = 22;
+const MIN_RADIUS = 16;
+const MAX_RADIUS = 24;
+const NARRATIVE_FONT = 7;
+const NARRATIVE_LINE_HEIGHT = 10;
 
 function computeLayout(names: string[], viewHeight: number) {
   const count = names.length;
@@ -40,7 +43,7 @@ function computeLayout(names: string[], viewHeight: number) {
 }
 
 function computeViewHeight(maxCount: number) {
-  return Math.max(300, PADDING_Y * 2 + (maxCount - 1) * 72);
+  return Math.max(280, PADDING_Y * 2 + (maxCount - 1) * 56);
 }
 
 function arrowEndpoints(
@@ -62,99 +65,86 @@ function arrowEndpoints(
 }
 
 function firstName(fullName: string): string {
-  // Keep compound names like "Bad Bunny" intact, otherwise use first name
   if (fullName === 'Bad Bunny') return 'Bad Bunny';
   return fullName.split(' ')[0];
 }
 
-interface NarrativeLine {
-  text: string;
-  color: 'neutral' | 'green' | 'red';
+const SVG_NARRATIVE_FILLS = {
+  neutral: 'var(--color-muted-foreground)',
+  green: '#22c55e',
+  red: '#ef4444',
+} as const;
+
+interface PositionedNarrative {
+  personName: string;
+  y: number;
+  lines: { text: string; color: 'neutral' | 'green' | 'red' }[];
 }
 
-function buildProposalNarrative(step: RoundStep): NarrativeLine[] {
-  return step.proposals.map((p) => ({
-    text: `${firstName(p.proposer)} proposes to ${firstName(p.responder)}`,
-    color: 'neutral' as const,
-  }));
+function buildProposerNarratives(
+  step: RoundStep,
+  phase: AnimationPhase,
+  proposerYMap: Map<string, number>,
+): PositionedNarrative[] {
+  if (phase === 'proposals' || phase === 'responses') {
+    // Each proposer: "→ {responder}"
+    return step.proposals.map((p) => ({
+      personName: p.proposer,
+      y: proposerYMap.get(p.proposer) ?? 0,
+      lines: [{ text: `→ ${firstName(p.responder)}`, color: 'neutral' as const }],
+    }));
+  }
+  // No narrative text for matches phase
+  if (phase === 'matches') {
+    return [];
+  }
+  return [];
 }
 
-function buildResponseNarrative(step: RoundStep): NarrativeLine[] {
+function buildResponderNarratives(
+  step: RoundStep,
+  phase: AnimationPhase,
+  responderYMap: Map<string, number>,
+): PositionedNarrative[] {
+  if (phase !== 'responses') return [];
+
   const rejectedProposers = new Set(step.rejections.map((r) => r.proposer));
   const matchByResponder = new Map(step.tentative_matches.map((m) => [m.responder, m.proposer]));
 
-  const lines: NarrativeLine[] = [];
-
+  // Group proposals by responder
+  const byResponder = new Map<string, typeof step.proposals>();
   for (const p of step.proposals) {
-    if (rejectedProposers.has(p.proposer)) {
-      const preferredMatch = matchByResponder.get(p.responder);
-      if (preferredMatch) {
+    if (!byResponder.has(p.responder)) byResponder.set(p.responder, []);
+    byResponder.get(p.responder)!.push(p);
+  }
+
+  const narratives: PositionedNarrative[] = [];
+
+  for (const [responder, proposals] of byResponder) {
+    const y = responderYMap.get(responder) ?? 0;
+    const lines: { text: string; color: 'neutral' | 'green' | 'red' }[] = [];
+
+    for (const p of proposals) {
+      if (rejectedProposers.has(p.proposer)) {
+        const preferred = matchByResponder.get(responder);
         lines.push({
-          text: `${firstName(p.responder)} rejects ${firstName(p.proposer)}, prefers ${firstName(preferredMatch)}`,
+          text: preferred
+            ? `✗ ${firstName(p.proposer)} (prefers ${firstName(preferred)})`
+            : `✗ ${firstName(p.proposer)}`,
           color: 'red',
         });
       } else {
         lines.push({
-          text: `${firstName(p.responder)} rejects ${firstName(p.proposer)}`,
-          color: 'red',
+          text: `✓ ${firstName(p.proposer)}`,
+          color: 'green',
         });
       }
-    } else {
-      lines.push({
-        text: `${firstName(p.responder)} accepts ${firstName(p.proposer)}`,
-        color: 'green',
-      });
     }
+
+    narratives.push({ personName: responder, y, lines });
   }
 
-  return lines;
-}
-
-function buildMatchNarrative(step: RoundStep): NarrativeLine[] {
-  const lines: NarrativeLine[] = [];
-  for (const m of step.tentative_matches) {
-    lines.push({
-      text: `${firstName(m.proposer)} ↔ ${firstName(m.responder)}`,
-      color: 'green',
-    });
-  }
-  for (const name of step.self_matches) {
-    lines.push({
-      text: `${firstName(name)} is unmatched`,
-      color: 'neutral',
-    });
-  }
-  return lines;
-}
-
-const NARRATIVE_COLORS = {
-  neutral: 'text-muted-foreground',
-  green: 'text-green-600 dark:text-green-400',
-  red: 'text-red-600 dark:text-red-400',
-} as const;
-
-function NarrativePanel({ lines, align }: { lines: NarrativeLine[]; align: 'left' | 'right' }) {
-  if (lines.length === 0) return null;
-  return (
-    <div className={`flex flex-col gap-1.5 ${align === 'right' ? 'text-right' : 'text-left'}`}>
-      {lines.map((line, i) => (
-        <p
-          key={i}
-          className={`text-[11px] leading-tight ${NARRATIVE_COLORS[line.color]}`}
-          style={{
-            fontFamily: "'DM Sans', system-ui, sans-serif",
-            animationName: 'fadeSlideIn',
-            animationDuration: '0.3s',
-            animationTimingFunction: 'ease-out',
-            animationFillMode: 'both',
-            animationDelay: `${i * 60}ms`,
-          }}
-        >
-          {line.text}
-        </p>
-      ))}
-    </div>
-  );
+  return narratives;
 }
 
 export function SVGMatchingVisualization({
@@ -233,39 +223,30 @@ export function SVGMatchingVisualization({
     ? null
     : phase === 'proposals' ? 'Proposals' : phase === 'responses' ? 'Responses' : 'Current Matches';
 
-  // Compute stats: matched vs unmatched per group
+  // Compute stats
   const matchedProposers = step ? step.tentative_matches.length : 0;
   const matchedResponders = step ? new Set(step.tentative_matches.map((m) => m.responder)).size : 0;
   const unmatchedProposers = proposerNames.length - matchedProposers - (step?.self_matches.length ?? 0);
   const unmatchedResponders = responderNames.length - matchedResponders;
 
-  // Build narrative lines
-  let leftNarrative: NarrativeLine[] = [];
-  let rightNarrative: NarrativeLine[] = [];
-
-  if (!isReady && step) {
-    if (phase === 'proposals') {
-      leftNarrative = buildProposalNarrative(step);
-    } else if (phase === 'responses') {
-      leftNarrative = buildProposalNarrative(step);
-      rightNarrative = buildResponseNarrative(step);
-    } else {
-      leftNarrative = buildMatchNarrative(step);
-    }
-  }
+  // Build positioned narratives
+  const leftNarratives = !isReady && step && phase
+    ? buildProposerNarratives(step, phase, proposerYMap)
+    : [];
+  const rightNarratives = !isReady && step && phase
+    ? buildResponderNarratives(step, phase, responderYMap)
+    : [];
 
   return (
     <Card>
       <CardHeader className="pb-2">
         <div className="flex items-center">
-          {/* Left: round or ready label — fixed width so center doesn't shift */}
           <div className="w-24 shrink-0">
             <CardTitle className="text-sm font-semibold" style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
               {isReady ? 'Ready' : `Round ${step!.round}`}
             </CardTitle>
           </div>
 
-          {/* Center: phase nav — always centered */}
           <div className="flex-1 flex items-center justify-center gap-2">
             {isReady ? (
               <span className="text-xs text-muted-foreground">Press play to begin</span>
@@ -274,7 +255,7 @@ export function SVGMatchingVisualization({
                 <Button size="icon" variant="ghost" className="h-7 w-7" onClick={onStepBack} disabled={!canStepBack} aria-label="Previous phase (h)">
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <Badge variant="outline" className="text-xs font-medium px-3 min-w-[120px] justify-center">
+                <Badge variant="outline" className="text-sm font-semibold px-4 py-1 min-w-[140px] justify-center">
                   {phaseLabel}
                 </Badge>
                 <Button size="icon" variant="ghost" className="h-7 w-7" onClick={onStepForward} disabled={!canStepForward} aria-label="Next phase (l)">
@@ -284,7 +265,6 @@ export function SVGMatchingVisualization({
             )}
           </div>
 
-          {/* Right: matched/unmatched stats — fixed width to balance layout */}
           <div className="w-24 shrink-0 flex justify-end">
             {!isReady && phase === 'matches' && (
               <div className="flex gap-3 text-[11px] text-muted-foreground">
@@ -308,85 +288,112 @@ export function SVGMatchingVisualization({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex gap-3 items-start">
-          {/* Left narrative panel */}
-          <div className="w-44 shrink-0 pt-16">
-            <NarrativePanel lines={leftNarrative} align="left" />
-          </div>
+        <svg
+          viewBox={`0 0 ${VIEW_WIDTH} ${viewHeight}`}
+          preserveAspectRatio="xMidYMid meet"
+          className="w-full h-auto"
+        >
+          {/* Column labels */}
+          <text x={PROPOSER_X} y={LABEL_Y} textAnchor="middle"
+            fontSize={10} fontWeight={600} letterSpacing="0.08em"
+            className="fill-muted-foreground"
+            style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+          >
+            PROPOSERS
+          </text>
+          <text x={RESPONDER_X} y={LABEL_Y} textAnchor="middle"
+            fontSize={10} fontWeight={600} letterSpacing="0.08em"
+            className="fill-muted-foreground"
+            style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+          >
+            RESPONDERS
+          </text>
 
-          {/* SVG visualization */}
-          <div className="flex-1 min-w-0">
-            <svg
-              viewBox={`0 0 ${VIEW_WIDTH} ${viewHeight}`}
-              preserveAspectRatio="xMidYMid meet"
-              className="w-full h-auto"
-            >
-              {/* Column labels */}
-              <text x={PROPOSER_X} y={28} textAnchor="middle"
-                fontSize={10} fontWeight={600} letterSpacing="0.08em"
-                className="fill-muted-foreground"
-                style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
-              >
-                PROPOSERS
-              </text>
-              <text x={RESPONDER_X} y={28} textAnchor="middle"
-                fontSize={10} fontWeight={600} letterSpacing="0.08em"
-                className="fill-muted-foreground"
-                style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
-              >
-                RESPONDERS
-              </text>
+          {/* Vertical guide lines */}
+          <line x1={PROPOSER_X} y1={PADDING_Y - 15} x2={PROPOSER_X} y2={viewHeight - PADDING_Y + 15}
+            className="stroke-border" strokeWidth="1" strokeDasharray="3,6" opacity={0.5} />
+          <line x1={RESPONDER_X} y1={PADDING_Y - 15} x2={RESPONDER_X} y2={viewHeight - PADDING_Y + 15}
+            className="stroke-border" strokeWidth="1" strokeDasharray="3,6" opacity={0.5} />
 
-              {/* Vertical guide lines */}
-              <line x1={PROPOSER_X} y1={PADDING_Y - 15} x2={PROPOSER_X} y2={viewHeight - PADDING_Y + 15}
-                className="stroke-border" strokeWidth="1" strokeDasharray="3,6" opacity={0.5} />
-              <line x1={RESPONDER_X} y1={PADDING_Y - 15} x2={RESPONDER_X} y2={viewHeight - PADDING_Y + 15}
-                className="stroke-border" strokeWidth="1" strokeDasharray="3,6" opacity={0.5} />
+          {/* Arrows */}
+          {arrows.map((a, i) => {
+            const py = proposerYMap.get(a.proposer);
+            const ry = responderYMap.get(a.responder);
+            if (py === undefined || ry === undefined) return null;
+            const { ax1, ay1, ax2, ay2 } = arrowEndpoints(
+              PROPOSER_X, py, RESPONDER_X, ry,
+              proposerLayout.radius, responderLayout.radius,
+            );
+            return (
+              <AnimatedArrow
+                key={a.key}
+                x1={ax1} y1={ay1} x2={ax2} y2={ay2}
+                color={a.color} visible={true} index={i}
+                dashed={phase === 'matches' && !isFinalRound}
+              />
+            );
+          })}
 
-              {/* Arrows */}
-              {arrows.map((a, i) => {
-                const py = proposerYMap.get(a.proposer);
-                const ry = responderYMap.get(a.responder);
-                if (py === undefined || ry === undefined) return null;
-                const { ax1, ay1, ax2, ay2 } = arrowEndpoints(
-                  PROPOSER_X, py, RESPONDER_X, ry,
-                  proposerLayout.radius, responderLayout.radius,
-                );
-                return (
-                  <AnimatedArrow
-                    key={a.key}
-                    x1={ax1} y1={ay1} x2={ax2} y2={ay2}
-                    color={a.color} visible={true} index={i}
-                    dashed={phase === 'matches' && !isFinalRound}
-                  />
-                );
-              })}
+          {/* Proposer nodes */}
+          {proposerLayout.positions.map((p, i) => (
+            <PersonNode
+              key={p.name} name={p.name} cx={PROPOSER_X} cy={p.y}
+              radius={proposerLayout.radius} imageUrl={personImages[p.name]}
+              status={getProposerStatus(p.name)} side="left" index={i}
+            />
+          ))}
 
-              {/* Proposer nodes */}
-              {proposerLayout.positions.map((p, i) => (
-                <PersonNode
-                  key={p.name} name={p.name} cx={PROPOSER_X} cy={p.y}
-                  radius={proposerLayout.radius} imageUrl={personImages[p.name]}
-                  status={getProposerStatus(p.name)} side="left" index={i}
-                />
+          {/* Responder nodes */}
+          {responderLayout.positions.map((p, i) => (
+            <PersonNode
+              key={p.name} name={p.name} cx={RESPONDER_X} cy={p.y}
+              radius={responderLayout.radius} imageUrl={personImages[p.name]}
+              status={getResponderStatus(p.name)} side="right" index={i}
+            />
+          ))}
+
+          {/* Left narrative text — positioned at each proposer's Y */}
+          {leftNarratives.map((n) => (
+            <g key={`left-${n.personName}`}>
+              {n.lines.map((line, li) => (
+                <text
+                  key={li}
+                  x={8}
+                  y={n.y + li * NARRATIVE_LINE_HEIGHT}
+                  textAnchor="start"
+                  dominantBaseline="central"
+                  fontSize={NARRATIVE_FONT}
+                  fill={SVG_NARRATIVE_FILLS[line.color]}
+                  opacity={0.85}
+                  style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                >
+                  {line.text}
+                </text>
               ))}
+            </g>
+          ))}
 
-              {/* Responder nodes */}
-              {responderLayout.positions.map((p, i) => (
-                <PersonNode
-                  key={p.name} name={p.name} cx={RESPONDER_X} cy={p.y}
-                  radius={responderLayout.radius} imageUrl={personImages[p.name]}
-                  status={getResponderStatus(p.name)} side="right" index={i}
-                />
+          {/* Right narrative text — positioned at each responder's Y */}
+          {rightNarratives.map((n) => (
+            <g key={`right-${n.personName}`}>
+              {n.lines.map((line, li) => (
+                <text
+                  key={li}
+                  x={VIEW_WIDTH - 8}
+                  y={n.y + li * NARRATIVE_LINE_HEIGHT}
+                  textAnchor="end"
+                  dominantBaseline="central"
+                  fontSize={NARRATIVE_FONT}
+                  fill={SVG_NARRATIVE_FILLS[line.color]}
+                  opacity={0.85}
+                  style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}
+                >
+                  {line.text}
+                </text>
               ))}
-            </svg>
-          </div>
-
-          {/* Right narrative panel */}
-          <div className="w-44 shrink-0 pt-16">
-            <NarrativePanel lines={rightNarrative} align="right" />
-          </div>
-        </div>
+            </g>
+          ))}
+        </svg>
       </CardContent>
     </Card>
   );

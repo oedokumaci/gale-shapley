@@ -39,7 +39,7 @@ export function AnimationPlayer({
 }: AnimationPlayerProps) {
   const [currentPhase, setCurrentPhase] = useState(0);
   const [playing, setPlaying] = useState(false);
-  const [speed, setSpeed] = useState(2000);
+  const [speed, setSpeed] = useState(1500);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const totalPhases = data.steps.length * 3;
@@ -195,14 +195,14 @@ export function AnimationPlayer({
 
             <div className="flex-1" />
 
-            {/* Speed slider */}
-            <span className="text-xs text-muted-foreground">Speed</span>
+            {/* Time between steps */}
+            <span className="text-xs text-muted-foreground whitespace-nowrap">Time between steps</span>
             <div className="w-24">
               <Slider
-                value={[5000 - speed]}
-                onValueChange={([v]) => setSpeed(5000 - v)}
-                min={0}
-                max={4900}
+                value={[speed]}
+                onValueChange={([v]) => setSpeed(v)}
+                min={100}
+                max={5000}
                 step={100}
               />
             </div>
