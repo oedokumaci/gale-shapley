@@ -41,18 +41,16 @@ This will build the Docker image. After the image is built, the following are so
 
 ```bash
 docker run --rm -it \
--v $(pwd)/config/example_config_custom_input.yaml:/usr/src/app/config/config.yaml \
--v $(pwd)/logs:/usr/src/app/logs \
--e number_of_simulations=$(number_of_simulations) \
+-v $(pwd)/config/example_config_custom_input.yaml:/app/config/config.yaml \
+-v $(pwd)/logs:/app/logs \
 gale-shapley
 ```
 
-These commands will run the project with the specified config file and number of simulations. The output can be seen in the terminal. The `-v` option mounts the specified config file and logs directory to the container. The `-e` option sets the environment variable `number_of_simulations` to the specified value. The `--rm` option removes the container after it exits. The `-it` option is for interactive mode.
+The `-v` option mounts the specified config file and logs directory to the container. The `--rm` option removes the container after it exits. The `-it` option is for interactive mode.
 
-### Install from PyPI
-
+To run the GUI instead:
 ```bash
-pip install gale-shapley
+docker run --rm -p 8000:8000 gale-shapley uv run uvicorn gale_shapley._api.app:app --host 0.0.0.0 --port 8000
 ```
 
 ### Using Git
