@@ -31,6 +31,22 @@ Time complexity is O(n^2), space complexity is O(n).
 
 There are three easy ways to install the package.
 
+### Install from PyPI
+
+```bash
+pip install gale-shapley
+```
+
+For CLI support:
+```bash
+pip install "gale-shapley[cli]"
+```
+
+For the GUI:
+```bash
+pip install "gale-shapley[gui]"
+```
+
 ### Using Docker
 
 An easy way to run the project is to use Docker. First, install [Docker](https://docs.docker.com/get-docker/). Then, run the following command in the project directory.
