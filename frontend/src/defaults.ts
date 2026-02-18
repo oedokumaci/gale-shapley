@@ -15,7 +15,7 @@ export const DEFAULT_PROPOSER_NAMES = [
   'Jacob Elordi',
   'Pete Davidson',
   'Bad Bunny',
-  'Brad Pitt',
+  'Kanye West',
 ];
 
 export const DEFAULT_RESPONDER_NAMES = [
@@ -24,7 +24,7 @@ export const DEFAULT_RESPONDER_NAMES = [
   'Sabrina Carpenter',
   'Kendall Jenner',
   'Margot Robbie',
-  'Angelina Jolie',
+  'Kim Kardashian',
 ];
 
 export function buildRandomPrefs(
@@ -49,8 +49,6 @@ export const DEFAULT_IMAGES: PersonImages = {
     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Pete_Davidson_portrait_%28cropped%29.png/500px-Pete_Davidson_portrait_%28cropped%29.png',
   'Bad Bunny':
     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Bad_Bunny_2019_by_Glenn_Francis_%28cropped%29.jpg/500px-Bad_Bunny_2019_by_Glenn_Francis_%28cropped%29.jpg',
-  'Brad Pitt':
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Brad_Pitt-69858.jpg/500px-Brad_Pitt-69858.jpg',
   'Kylie Jenner':
     'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Kylie_Jenner1_%28cropped%29.png/500px-Kylie_Jenner1_%28cropped%29.png',
   'Zendaya':
@@ -61,6 +59,8 @@ export const DEFAULT_IMAGES: PersonImages = {
     'https://upload.wikimedia.org/wikipedia/commons/5/54/Kendall_Jenner_for_Adanola_2_%28cropped%29.jpg',
   'Margot Robbie':
     'https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/SYDNEY%2C_AUSTRALIA_-_JANUARY_23_Margot_Robbie_arrives_at_the_Australian_Premiere_of_%27I%2C_Tonya%27_on_January_23%2C_2018_in_Sydney%2C_Australia_%2828074883999%29_%28cropped_2%29.jpg/500px-thumbnail.jpg',
-  'Angelina Jolie':
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/Angelina_Jolie_at_the_2024_Toronto_International_Film_Festival_%28cropped%29.jpg/500px-Angelina_Jolie_at_the_2024_Toronto_International_Film_Festival_%28cropped%29.jpg',
+  'Kanye West':
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Kanye_West_at_the_2009_Tribeca_Film_Festival_%28crop_2%29.jpg/500px-Kanye_West_at_the_2009_Tribeca_Film_Festival_%28crop_2%29.jpg',
+  'Kim Kardashian':
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Kim_Kardashian_West_2014.jpg/500px-Kim_Kardashian_West_2014.jpg',
 };

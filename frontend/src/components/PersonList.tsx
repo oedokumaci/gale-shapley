@@ -36,7 +36,6 @@ export function PersonList({ label, persons, onAdd, onRemove, images, onUploadIm
 
   return (
     <div className="space-y-2">
-      <h3 className="text-sm font-semibold">{label}</h3>
       <div className="flex gap-2">
         <Input
           value={name}

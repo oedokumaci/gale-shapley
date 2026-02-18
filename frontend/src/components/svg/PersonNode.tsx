@@ -52,7 +52,7 @@ const STATUS_STYLES: Record<PersonNodeProps['status'], StatusStyle> = {
 export function PersonNode({ name, cx, cy, radius, imageUrl, status, side, index }: PersonNodeProps) {
   const style = STATUS_STYLES[status];
   const clipId = `clip-${side}-${index}`;
-  const textX = side === 'left' ? cx - radius - 6 : cx + radius + 6;
+  const textX = side === 'left' ? cx - radius - 4 : cx + radius + 4;
   const textAnchor = side === 'left' ? 'end' : 'start';
 
   return (
@@ -118,7 +118,7 @@ export function PersonNode({ name, cx, cy, radius, imageUrl, status, side, index
         y={cy + 1}
         textAnchor={textAnchor}
         dominantBaseline="central"
-        fontSize={10}
+        fontSize={9}
         fontWeight={500}
         className={style.textClass}
         style={{
