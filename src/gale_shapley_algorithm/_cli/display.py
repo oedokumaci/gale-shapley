@@ -2,13 +2,12 @@
 
 from typing import TYPE_CHECKING
 
-from rich.console import Console
 from rich.table import Table
+
+from gale_shapley_algorithm._cli import console
 
 if TYPE_CHECKING:
     from gale_shapley_algorithm.result import MatchingResult, StabilityResult
-
-console = Console()
 
 
 def display_preferences(
@@ -22,8 +21,8 @@ def display_preferences(
     Args:
         proposer_side: Proposer side name.
         responder_side: Responder side name.
-        proposer_prefs: Proposer preference dicts.
-        responder_prefs: Responder preference dicts.
+        proposer_prefs: Dict mapping proposer names to their preference lists.
+        responder_prefs: Dict mapping responder names to their preference lists.
     """
     _display_side_preferences(proposer_side, proposer_prefs)
     _display_side_preferences(responder_side, responder_prefs)
@@ -57,8 +56,8 @@ def display_results(
     Args:
         proposer_side: Proposer side name.
         responder_side: Responder side name.
-        result: The matching result.
-        stability: The stability check result.
+        result: The matching result from an executed Algorithm.
+        stability: The stability check result from check_stability().
     """
     table = Table(title="Matching Result")
     table.add_column(proposer_side, style="bold cyan")
@@ -67,13 +66,11 @@ def display_results(
     for proposer, responder in result.matches.items():
         table.add_row(proposer, responder)
 
-    if result.self_matches:
-        for name in result.self_matches:
-            table.add_row(name, "(self)")
+    for name in result.self_matches:
+        table.add_row(name, "(self)")
 
-    if result.unmatched:
-        for name in result.unmatched:
-            table.add_row(name, "(unmatched)")
+    for name in result.unmatched:
+        table.add_row(name, "(unmatched)")
 
     console.print()
     console.print(table)

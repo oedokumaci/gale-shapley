@@ -94,6 +94,30 @@ def test_cli_random_mode_with_swap() -> None:
     assert "Matching Result" in result.output
 
 
+def test_cli_keyboard_interrupt() -> None:
+    """Test CLI handles KeyboardInterrupt gracefully."""
+    with patch(
+        "gale_shapley_algorithm._cli.app.prompt_random_config",
+        side_effect=KeyboardInterrupt,
+    ):
+        result = runner.invoke(app, ["--random"])
+
+    assert result.exit_code == 130
+    assert "Interrupted" in result.output
+
+
+def test_cli_eof_error() -> None:
+    """Test CLI handles EOFError gracefully."""
+    with patch(
+        "gale_shapley_algorithm._cli.app.prompt_random_config",
+        side_effect=EOFError,
+    ):
+        result = runner.invoke(app, ["--random"])
+
+    assert result.exit_code == 1
+    assert "Input stream closed" in result.output
+
+
 def test_cli_stability_reported() -> None:
     """Test that stability is reported in output."""
     with patch(
@@ -118,7 +142,7 @@ class TestPromptSideNames:
         assert result == ("Men", "Women")
 
     def test_same_names_retries(self) -> None:
-        """When same names given, recursively retries."""
+        """When same names given, retries."""
         with patch(
             "gale_shapley_algorithm._cli.prompts.Prompt.ask",
             side_effect=["Men", "Men", "Men", "Women"],
@@ -356,3 +380,14 @@ class TestRunMatching:
         )
         assert result.matches
         assert stability.is_stable
+
+    def test_asymmetric_more_proposers(self) -> None:
+        """With more proposers than responders, some must self-match or go unmatched."""
+        from gale_shapley_algorithm._cli.app import _run_matching
+
+        result, _ = _run_matching(
+            {"A": ["X"], "B": ["X"], "C": ["X"]},
+            {"X": ["A", "B", "C"]},
+        )
+        total = len(result.matches) + len(result.self_matches) + len(result.unmatched)
+        assert total >= 3

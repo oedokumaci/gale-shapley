@@ -4,8 +4,8 @@ import random
 from typing import TYPE_CHECKING
 
 import typer
-from rich.console import Console
 
+from gale_shapley_algorithm._cli import console
 from gale_shapley_algorithm._cli.display import display_preferences, display_results
 from gale_shapley_algorithm._cli.prompts import (
     prompt_names,
@@ -13,14 +13,12 @@ from gale_shapley_algorithm._cli.prompts import (
     prompt_random_config,
     prompt_side_names,
 )
-from gale_shapley_algorithm.algorithm import Algorithm
-from gale_shapley_algorithm.person import Proposer, Responder
+from gale_shapley_algorithm.matching import _build_algorithm
 from gale_shapley_algorithm.stability import check_stability
 
 if TYPE_CHECKING:
     from gale_shapley_algorithm.result import MatchingResult, StabilityResult
 
-console = Console()
 app = typer.Typer(help="Gale-Shapley Algorithm — interactive matching.")
 
 
@@ -30,37 +28,19 @@ def _run_matching(
 ) -> tuple["MatchingResult", "StabilityResult"]:
     """Build an Algorithm from preference dicts, execute, and check stability.
 
+    Incomplete preference lists are padded: self is appended (for self-matching
+    as a fallback), followed by any members of the other side not already listed.
+
     Args:
         proposer_prefs: Mapping of proposer names to ordered list of responder names.
+            Need not be complete — missing responders are appended in arbitrary order.
         responder_prefs: Mapping of responder names to ordered list of proposer names.
+            Need not be complete — missing proposers are appended in arbitrary order.
 
     Returns:
         Tuple of (MatchingResult, StabilityResult).
     """
-    proposers = {name: Proposer(name, "proposer") for name in proposer_prefs}
-    responders = {name: Responder(name, "responder") for name in responder_prefs}
-
-    for name, pref_names in proposer_prefs.items():
-        p = proposers[name]
-        prefs: list[Proposer | Responder] = [responders[r] for r in pref_names if r in responders]
-        if p not in prefs:
-            prefs.append(p)
-        for r in responders.values():
-            if r not in prefs:
-                prefs.append(r)
-        p.preferences = tuple(prefs)
-
-    for name, pref_names in responder_prefs.items():
-        r = responders[name]
-        prefs_r: list[Proposer | Responder] = [proposers[p] for p in pref_names if p in proposers]
-        if r not in prefs_r:
-            prefs_r.append(r)
-        for p in proposers.values():
-            if p not in prefs_r:
-                prefs_r.append(p)
-        r.preferences = tuple(prefs_r)
-
-    algorithm = Algorithm(list(proposers.values()), list(responders.values()))
+    algorithm = _build_algorithm(proposer_prefs, responder_prefs)
     result = algorithm.execute()
     stability = check_stability(algorithm)
     return result, stability
@@ -74,14 +54,20 @@ def _generate_random_preferences(
 ) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
     """Generate random preference dicts for both sides.
 
+    Generated names use the first character of each side name as a prefix
+    (e.g. "m_1", "w_1"). If both sides share the same first character,
+    the full lowercased side name is used instead to avoid collisions.
+
     Args:
-        proposer_side: Proposer side name.
-        responder_side: Responder side name.
-        num_proposers: Number of proposers.
-        num_responders: Number of responders.
+        proposer_side: Proposer side name (used to derive generated names).
+        responder_side: Responder side name (used to derive generated names).
+        num_proposers: Number of proposers to generate.
+        num_responders: Number of responders to generate.
 
     Returns:
-        Tuple of (proposer_preferences, responder_preferences).
+        Tuple of (proposer_preferences, responder_preferences) where each
+        is a dict mapping generated names to a randomly shuffled list of
+        the other side's names.
     """
     p_short = proposer_side[0].lower()
     r_short = responder_side[0].lower()
@@ -92,17 +78,8 @@ def _generate_random_preferences(
     p_names = [f"{p_short}_{i}" for i in range(1, num_proposers + 1)]
     r_names = [f"{r_short}_{i}" for i in range(1, num_responders + 1)]
 
-    proposer_prefs: dict[str, list[str]] = {}
-    for name in p_names:
-        shuffled = r_names.copy()
-        random.shuffle(shuffled)
-        proposer_prefs[name] = shuffled
-
-    responder_prefs: dict[str, list[str]] = {}
-    for name in r_names:
-        shuffled = p_names.copy()
-        random.shuffle(shuffled)
-        responder_prefs[name] = shuffled
+    proposer_prefs = {name: random.sample(r_names, len(r_names)) for name in p_names}
+    responder_prefs = {name: random.sample(p_names, len(p_names)) for name in r_names}
 
     return proposer_prefs, responder_prefs
 
@@ -112,25 +89,36 @@ def main(
     random_mode: bool = typer.Option(False, "--random", help="Generate random preferences"),
     swap_sides: bool = typer.Option(False, "--swap-sides", help="Swap proposers and responders"),
 ) -> None:
-    """Run the Gale-Shapley algorithm interactively."""
-    console.print("\n[bold]Gale-Shapley Algorithm[/bold]\n")
+    """Run the Gale-Shapley algorithm interactively.
 
-    if random_mode:
-        proposer_side, responder_side, num_p, num_r = prompt_random_config()
-        proposer_prefs, responder_prefs = _generate_random_preferences(proposer_side, responder_side, num_p, num_r)
-    else:
-        proposer_side, responder_side = prompt_side_names()
-        p_names = prompt_names(proposer_side)
-        r_names = prompt_names(responder_side)
-        proposer_prefs = prompt_preferences(proposer_side, p_names, r_names)
-        responder_prefs = prompt_preferences(responder_side, r_names, p_names)
+    Supports manual preference entry or random generation (--random).
+    Use --swap-sides to reverse proposer/responder roles before matching.
+    """
+    try:
+        console.print("\n[bold]Gale-Shapley Algorithm[/bold]\n")
 
-    if swap_sides:
-        proposer_side, responder_side = responder_side, proposer_side
-        proposer_prefs, responder_prefs = responder_prefs, proposer_prefs
+        if random_mode:
+            proposer_side, responder_side, num_p, num_r = prompt_random_config()
+            proposer_prefs, responder_prefs = _generate_random_preferences(proposer_side, responder_side, num_p, num_r)
+        else:
+            proposer_side, responder_side = prompt_side_names()
+            p_names = prompt_names(proposer_side)
+            r_names = prompt_names(responder_side)
+            proposer_prefs = prompt_preferences(proposer_side, p_names, r_names)
+            responder_prefs = prompt_preferences(responder_side, r_names, p_names)
 
-    display_preferences(proposer_side, responder_side, proposer_prefs, responder_prefs)
+        if swap_sides:
+            proposer_side, responder_side = responder_side, proposer_side
+            proposer_prefs, responder_prefs = responder_prefs, proposer_prefs
 
-    result, stability = _run_matching(proposer_prefs, responder_prefs)
+        display_preferences(proposer_side, responder_side, proposer_prefs, responder_prefs)
 
-    display_results(proposer_side, responder_side, result, stability)
+        result, stability = _run_matching(proposer_prefs, responder_prefs)
+
+        display_results(proposer_side, responder_side, result, stability)
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Interrupted.[/yellow]")
+        raise typer.Exit(code=130) from None
+    except EOFError:
+        console.print("\n[yellow]Input stream closed.[/yellow]")
+        raise typer.Exit(code=1) from None
