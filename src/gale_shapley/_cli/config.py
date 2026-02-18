@@ -1,4 +1,4 @@
-"""This module parses and validates the config.yaml."""
+"""Config parser for the CLI. Parses and validates config.yaml."""
 
 from pathlib import Path
 from typing import Annotated, TypedDict
@@ -7,12 +7,11 @@ import yaml
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 VALID_PREFERENCE_TYPES: tuple[str, ...] = ("random", "input")
-PATH_TO_YAMLCONFIG: Path = Path(__file__).parents[2] / "config" / "config.yaml"
+PATH_TO_YAMLCONFIG: Path = Path(__file__).parents[3] / "config" / "config.yaml"
 
 
 class YAMLConfig(BaseModel):
     """Parses and validates the config.yaml file.
-    Inherits from pydantic BaseModel.
 
     Raises:
         ValueError
@@ -33,13 +32,8 @@ class YAMLConfig(BaseModel):
     @classmethod
     def side_names_must_be_different(cls, data: dict) -> dict:
         """Validate that side names are different (case-insensitive)."""
-        if (
-            str(data.get("proposer_side_name", "")).casefold()
-            == str(data.get("responder_side_name", "")).casefold()
-        ):
-            raise ValueError(
-                "'proposer_side_name' and 'responder_side_name' must be different, case insensitive"
-            )
+        if str(data.get("proposer_side_name", "")).casefold() == str(data.get("responder_side_name", "")).casefold():
+            raise ValueError("'proposer_side_name' and 'responder_side_name' must be different, case insensitive")
         return data
 
     @field_validator("preference_type")
@@ -57,9 +51,7 @@ class YAMLConfig(BaseModel):
     def log_file_name_must_be_valid(cls, v: str) -> str:
         """Validate that log file name is valid."""
         if v.startswith("/"):
-            raise ValueError(
-                f"log_file_name should not start with /, {v!r} starts with /"
-            )
+            raise ValueError(f"log_file_name should not start with /, {v!r} starts with /")
         if not v.endswith(".log"):
             raise ValueError(f"log_file_name should be a .log file, {v!r} is not")
         return v
@@ -76,12 +68,10 @@ class YAMLConfig(BaseModel):
                 for person, preferences in side_dict.items():
                     for preference in preferences:
                         if preference not in other_side_dict:
-                            raise ValueError(
-                                f"Preference {preference!r} of person {person!r} is not in {side!r}"
-                            )
+                            raise ValueError(f"Preference {preference!r} of person {person!r} is not in {side!r}")
                 if not side_dict:
                     raise ValueError(f"no {side!r} inputted")
-                elif len(side_dict) != getattr(self, f"number_of_{side}"):
+                if len(side_dict) != getattr(self, f"number_of_{side}"):
                     import warnings
 
                     warnings.warn(
@@ -108,9 +98,8 @@ def side_swap(config_input: YAMLConfig) -> None:
     """Swap proposer and responder sides.
 
     Args:
-        config_input (YAMLConfig): config input to swap sides
+        config_input: config input to swap sides
     """
-    # Create a new config with swapped values
     swapped_data = {
         "proposer_side_name": config_input.responder_side_name,
         "responder_side_name": config_input.proposer_side_name,
@@ -122,15 +111,22 @@ def side_swap(config_input: YAMLConfig) -> None:
         "log_file_name": config_input.log_file_name,
     }
 
-    # Create a new instance with swapped values
-    new_config = YAMLConfig.parse_obj(swapped_data)
+    new_config = YAMLConfig.model_validate(swapped_data)
 
-    # Update the original config with the swapped values
-    for key, value in new_config.dict().items():
+    for key, value in new_config.model_dump().items():
         object.__setattr__(config_input, key, value)
 
 
-with PATH_TO_YAMLCONFIG.open() as yaml_config:
-    config_data = yaml.safe_load(yaml_config)
-config_data = {k.casefold(): v for k, v in config_data.items()}
-config_input = YAMLConfig.parse_obj(config_data)
+def load_config() -> YAMLConfig:
+    """Load and parse config.yaml.
+
+    Returns:
+        Parsed and validated YAMLConfig.
+
+    Raises:
+        FileNotFoundError: If config.yaml does not exist.
+    """
+    with PATH_TO_YAMLCONFIG.open() as yaml_config:
+        config_data = yaml.safe_load(yaml_config)
+    config_data = {k.casefold(): v for k, v in config_data.items()}
+    return YAMLConfig.model_validate(config_data)

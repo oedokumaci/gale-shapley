@@ -1,0 +1,63 @@
+target-version = "py312"
+line-length = 120
+
+[lint]
+select = ["ALL"]
+ignore = [
+    # --- Docstring rules ---
+    "D100",   # Missing docstring in public module
+    "D104",   # Missing docstring in public package
+    "D105",   # Missing docstring in magic method (__repr__, etc.)
+    "D107",   # Missing docstring in __init__ (class docstring suffices)
+    "D203",   # 1 blank line before class docstring (conflicts with D211)
+    "D205",   # 1 blank line required between summary and description
+    "D213",   # Multi-line docstring summary on second line (conflicts with D212)
+    "D417",   # Missing argument description (will fix incrementally)
+
+    # --- Conflicts with ruff formatter ---
+    "COM812", # Missing trailing comma
+    "ISC001", # Implicit string concatenation
+
+    # --- Logging (CLI subpackage uses stdlib logging) ---
+    "LOG015", # Root logger calls
+    "G004",   # Logging f-string
+
+    # --- Opinionated ignores ---
+    "ANN",    # Type annotations (already typed, too strict for all cases)
+    "T20",    # print() statements (acceptable in CLI app)
+    "S101",   # assert in code (used in tests)
+    "ERA001", # Commented-out code
+    "FIX002", # TODO comments
+    "TD",     # TODO format
+    "PLR0913",# Too many arguments
+    "PLR2004",# Magic value comparison
+    "TRY003", # Long exception message
+    "EM",     # Exception message formatting
+    "FBT",    # Boolean trap
+    "SLF001", # Private member access (needed in tests)
+    "UP047",  # Generic function type params (Python 3.12+ style, breaks decorators)
+    "PLC0415",# import not at top-level (needed in tests and __main__)
+    "C901",   # Too complex
+    "E501",   # Line too long (ruff format handles most; remaining are in f-strings)
+    "PERF401",# Use list comprehension (minor style preference)
+    "RUF005", # Use unpacking (minor style preference)
+    "PT011",  # pytest.raises too broad (acceptable for validation tests)
+]
+
+[lint.per-file-ignores]
+"examples/**/*.py" = [
+    "INP001", # Implicit namespace package (examples are standalone scripts)
+    "D",      # No docstring enforcement in examples
+    "T20",    # print() in examples
+]
+"tests/**/*.py" = [
+    "D",      # No docstring enforcement in tests
+    "ARG",    # Unused arguments (fixtures)
+    "PLR2004",# Magic values in tests
+    "S101",   # assert in tests
+    "SLF001", # Private member access in tests
+    "PLC0415",# import not at top-level
+]
+
+[lint.pydocstyle]
+convention = "google"

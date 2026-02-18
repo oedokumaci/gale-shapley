@@ -1,29 +1,40 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "gale-shapley"
-version = "0.1.0"
+dynamic = ["version"]
 description = "A Python implementation of the celebrated Gale-Shapley Algorithm."
 authors = [
-    {name = "oedokumaci", email = "oral.ersoy.dokumaci@gmail.com"},
+    { name = "oedokumaci", email = "oral.ersoy.dokumaci@gmail.com" },
 ]
-dependencies = [
-    "pdm>=2.12.3",
-    "pyyaml>=6.0.1",
-    "pydantic>=2.6.1",
-    "typer>=0.9.0",
-]
-requires-python = ">=3.12"
 readme = "README.md"
-license = {text = "MIT"}
+license = { text = "MIT" }
+requires-python = ">=3.12"
+dependencies = []
 
-[tool.pdm]
-[tool.pdm.dev-dependencies]
-workflow = [
-    "pre-commit>=3.0.4",
-]
-test = [
-    "pytest>=7.2.1",
-]
+[project.optional-dependencies]
+cli = ["pyyaml>=6.0.1", "pydantic>=2.6.1", "typer>=0.9.0", "rich>=13.0"]
+gui = []
+test = ["pytest>=7.2", "pytest-cov>=4.0", "pytest-randomly>=3.12"]
+docs = ["mkdocs-material", "mkdocstrings[python]", "markdown-exec"]
+dev = ["gale-shapley[cli,test,docs]", "pre-commit>=3.0", "taskipy>=1.12", "ruff>=0.9"]
 
-[build-system]
-requires = ["pdm-pep517>=1.0"]
-build-backend = "pdm.pep517.api"
+[tool.hatch.version]
+path = "src/gale_shapley/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gale_shapley"]
+
+[tool.taskipy.tasks]
+setup = "uv sync --extra dev && uv run pre-commit install"
+format = "ruff format --config config/ruff.toml ."
+lint = "ruff check --config config/ruff.toml --fix ."
+fix = { cmd = "task format && task lint", help = "Format and fix lint" }
+format_check = "ruff format --config config/ruff.toml --check ."
+lint_check = "ruff check --config config/ruff.toml ."
+test = "pytest -c config/pytest.ini"
+ci = { cmd = "task format_check && task lint_check && task test", help = "Run all CI checks" }
+clean = "rm -rf .pytest_cache .ruff_cache .mypy_cache dist build"
+run = "python -m gale_shapley"
