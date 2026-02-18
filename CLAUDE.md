@@ -9,7 +9,7 @@ This file provides guidance for AI assistants working on this codebase.
 | Attribute | Value |
 |-----------|-------|
 | Package | `gale-shapley` |
-| Import | `gale_shapley` |
+| Import | `gale_shapley_algorithm` |
 | Python | >=3.12 |
 | Runtime deps | None (zero-dep core) |
 | Extras | `cli`, `gui` (user-facing) |
@@ -20,7 +20,7 @@ This file provides guidance for AI assistants working on this codebase.
 uvx --from taskipy task setup        # Install dependencies
 uvx --from taskipy task run          # Run the application
 uvx --from taskipy task fix          # Auto-format + lint fix
-uvx --from taskipy task ci           # Run all CI checks (format, lint, test)
+uvx --from taskipy task ci           # Run all CI checks (format, lint, typecheck, test)
 uvx --from taskipy task test         # Run tests
 uvx --from taskipy task docs         # Serve docs locally
 uvx --from taskipy task changelog    # Update changelog (for releases)
@@ -57,7 +57,7 @@ gh pr create                              # 8. Create pull request
 ```bash
 git checkout main && git pull                           # 1. Update main
 uvx --from taskipy task changelog                       # 2. Update CHANGELOG.md
-# update __version__ in src/gale_shapley/__init__.py (hatch reads version from here)
+# update __version__ in src/gale_shapley_algorithm/__init__.py (hatch reads version from here)
 git add . && git commit -m "chore: Release vX.Y.Z"     # 3. Commit release
 git push && git tag vX.Y.Z && git push --tags           # 4. Tag and push
 gh release create vX.Y.Z --generate-notes               # 5. GitHub release
@@ -84,7 +84,7 @@ if TYPE_CHECKING:
 gale-shapley/
 ├── .claude/skills/       # Claude Code skills (/commit, /fix, /test, etc.)
 ├── .cursor/              # Cursor IDE (rules -> CLAUDE.md, skills -> .claude/skills)
-├── src/gale_shapley/
+├── src/gale_shapley_algorithm/
 │   ├── __init__.py       # Public API
 │   ├── __main__.py       # Module entry point (run via `task run`)
 │   ├── _cli/             # CLI implementation (typer + rich)
@@ -103,7 +103,7 @@ gale-shapley/
 └── pyproject.toml        # Metadata, dependencies, and tasks
 ```
 
-- **Public API**: Exports in `__init__.py` — always import from here (e.g., `from gale_shapley import create_matching`)
+- **Public API**: Exports in `__init__.py` — always import from here (e.g., `from gale_shapley_algorithm import create_matching`)
 - **Internal**: `_cli/`, `_api/` — private implementation, never import from these directly
 - **CLI**: `__main__.py` entry point calls `_cli/`
 - **Logging**: Stdlib logging via `_cli/logging.py` (no loguru)

@@ -1,8 +1,8 @@
 """Tests for the stability module."""
 
-from gale_shapley.algorithm import Algorithm
-from gale_shapley.person import Proposer, Responder
-from gale_shapley.stability import check_stability, find_blocking_pairs, is_individually_rational
+from gale_shapley_algorithm.algorithm import Algorithm
+from gale_shapley_algorithm.person import Proposer, Responder
+from gale_shapley_algorithm.stability import check_stability, find_blocking_pairs, is_individually_rational
 
 
 class TestIsIndividuallyRational:

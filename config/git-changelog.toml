@@ -1,0 +1,2 @@
+[tool.git-changelog]
+convention = "angular"

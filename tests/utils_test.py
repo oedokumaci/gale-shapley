@@ -4,12 +4,12 @@ from pathlib import Path
 from typing import Final
 from unittest.mock import patch
 
-from gale_shapley._cli.config import YAMLConfig
-from gale_shapley._cli.logging import init_logger, log_config_info, timer_decorator
+from gale_shapley_algorithm._cli.config import YAMLConfig
+from gale_shapley_algorithm._cli.logging import init_logger, log_config_info, timer_decorator
 
 
 def test_init_logger(tmp_path: Path) -> None:
-    with patch("gale_shapley._cli.logging.LOG_PATH", tmp_path):
+    with patch("gale_shapley_algorithm._cli.logging.LOG_PATH", tmp_path):
         init_logger("test.log")
 
     import logging
@@ -25,7 +25,7 @@ def test_init_logger(tmp_path: Path) -> None:
 
 
 def test_log_config_info_random(tmp_path: Path, valid_yaml_config_input: dict) -> None:
-    with patch("gale_shapley._cli.logging.LOG_PATH", tmp_path):
+    with patch("gale_shapley_algorithm._cli.logging.LOG_PATH", tmp_path):
         init_logger("test.log")
 
     config = YAMLConfig.model_validate(valid_yaml_config_input)
@@ -40,7 +40,7 @@ def test_log_config_info_random(tmp_path: Path, valid_yaml_config_input: dict) -
 
 def test_log_config_info_input(tmp_path: Path, valid_input_yaml_config: dict) -> None:
     """Test log_config_info with preference_type='input'."""
-    with patch("gale_shapley._cli.logging.LOG_PATH", tmp_path):
+    with patch("gale_shapley_algorithm._cli.logging.LOG_PATH", tmp_path):
         init_logger("test.log")
 
     config = YAMLConfig.model_validate(valid_input_yaml_config)
@@ -53,7 +53,7 @@ def test_log_config_info_input(tmp_path: Path, valid_input_yaml_config: dict) ->
 
 
 def test_timer_decorator(tmp_path: Path) -> None:
-    with patch("gale_shapley._cli.logging.LOG_PATH", tmp_path):
+    with patch("gale_shapley_algorithm._cli.logging.LOG_PATH", tmp_path):
         init_logger("test.log")
 
     @timer_decorator

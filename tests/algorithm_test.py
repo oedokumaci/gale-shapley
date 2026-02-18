@@ -1,8 +1,8 @@
 """Tests for the algorithm module."""
 
-from gale_shapley.algorithm import Algorithm
-from gale_shapley.person import Proposer, Responder
-from gale_shapley.result import MatchingResult
+from gale_shapley_algorithm.algorithm import Algorithm
+from gale_shapley_algorithm.person import Proposer, Responder
+from gale_shapley_algorithm.result import MatchingResult
 
 
 class TestAlgorithmProperties:

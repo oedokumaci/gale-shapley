@@ -112,7 +112,7 @@ class Responder(Person):
     @property
     def acceptable_proposals(self) -> list[Proposer]:
         """Returns a list of acceptable proposals among the current proposals."""
-        return list(filter(self.is_acceptable, self.current_proposals))
+        return [p for p in self.current_proposals if self.is_acceptable(p)]
 
     def _most_preferred(self, proposals: list[Proposer]) -> Proposer:
         """Returns most preferred of the list.

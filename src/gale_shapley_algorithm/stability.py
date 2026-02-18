@@ -1,8 +1,8 @@
 """Stability analysis for matchings."""
 
-from gale_shapley.algorithm import Algorithm
-from gale_shapley.person import Proposer, Responder
-from gale_shapley.result import StabilityResult
+from gale_shapley_algorithm.algorithm import Algorithm
+from gale_shapley_algorithm.person import Proposer, Responder
+from gale_shapley_algorithm.result import StabilityResult
 
 
 def is_individually_rational(proposers: list[Proposer], responders: list[Responder]) -> bool:

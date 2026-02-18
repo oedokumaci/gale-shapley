@@ -3,17 +3,17 @@
 from importlib.metadata import version
 
 
-def test_import_gale_shapley() -> None:
+def test_import_gale_shapley_algorithm() -> None:
     """Importing the package should work without config files or optional deps."""
-    import gale_shapley
+    import gale_shapley_algorithm
 
-    assert hasattr(gale_shapley, "__version__")
-    assert gale_shapley.__version__ == version("gale-shapley-algorithm")
+    assert hasattr(gale_shapley_algorithm, "__version__")
+    assert gale_shapley_algorithm.__version__ == version("gale-shapley-algorithm")
 
 
 def test_public_api_exports() -> None:
     """All documented public API names should be importable."""
-    from gale_shapley import (
+    from gale_shapley_algorithm import (
         Algorithm,
         MatchingResult,
         Person,

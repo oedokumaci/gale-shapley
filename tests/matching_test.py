@@ -1,7 +1,7 @@
 """Tests for the create_matching convenience function."""
 
-from gale_shapley.matching import create_matching
-from gale_shapley.result import MatchingResult
+from gale_shapley_algorithm.matching import create_matching
+from gale_shapley_algorithm.result import MatchingResult
 
 
 class TestCreateMatching:

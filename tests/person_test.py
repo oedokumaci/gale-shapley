@@ -2,7 +2,7 @@
 
 import pytest
 
-from gale_shapley.person import Person, Proposer, Responder
+from gale_shapley_algorithm.person import Person, Proposer, Responder
 
 
 class TestPerson:

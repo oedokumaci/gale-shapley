@@ -5,11 +5,11 @@ import random
 from dataclasses import dataclass, field
 from typing import Final
 
-from gale_shapley._cli.config import YAMLConfig
-from gale_shapley._cli.logging import timer_decorator
-from gale_shapley.algorithm import Algorithm
-from gale_shapley.person import Proposer, Responder
-from gale_shapley.stability import check_stability
+from gale_shapley_algorithm._cli.config import YAMLConfig
+from gale_shapley_algorithm._cli.logging import timer_decorator
+from gale_shapley_algorithm.algorithm import Algorithm
+from gale_shapley_algorithm.person import Proposer, Responder
+from gale_shapley_algorithm.stability import check_stability
 
 
 @dataclass

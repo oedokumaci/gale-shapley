@@ -1,5 +1,6 @@
 """Logging utilities for the CLI."""
 
+import functools
 import logging
 from collections.abc import Callable
 from pathlib import Path
@@ -8,7 +9,7 @@ from typing import Final, ParamSpec, TypeVar
 
 from rich.logging import RichHandler
 
-from gale_shapley._cli.config import YAMLConfig
+from gale_shapley_algorithm._cli.config import YAMLConfig
 
 R = TypeVar("R")
 P = ParamSpec("P")
@@ -72,12 +73,13 @@ def log_config_info(config_input: YAMLConfig) -> None:
 def timer_decorator(func: Callable[P, R]) -> Callable[P, R]:
     """Decorator that logs the time it took to execute a function."""
 
+    @functools.wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
         t1: Final[float] = time()
         result: R = func(*args, **kwargs)
         t2: Final[float] = time()
         elapsed_time: Final[float] = t2 - t1
-        logging.info(f"Method {func.__name__!r} of module {func.__module__!r} executed in {elapsed_time:.4f} seconds")
+        logging.info(f"Method {func.__name__!r} of module {func.__module__!r} executed in {elapsed_time:.4f} seconds")  # type: ignore[union-attr]
         return result
 
     return wrapper

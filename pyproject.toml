@@ -11,7 +11,21 @@ authors = [
 ]
 readme = "README.md"
 license = { text = "MIT" }
+license-files = ["LICENSE"]
 requires-python = ">=3.12"
+keywords = ["gale-shapley", "deferred-acceptance", "matching", "algorithm", "stable-matching"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Typing :: Typed",
+]
 dependencies = []
 
 [project.optional-dependencies]
@@ -25,12 +39,13 @@ Documentation = "https://oedokumaci.github.io/gale-shapley-algorithm"
 Changelog = "https://oedokumaci.github.io/gale-shapley-algorithm/changelog"
 Repository = "https://github.com/oedokumaci/gale-shapley-algorithm"
 Issues = "https://github.com/oedokumaci/gale-shapley-algorithm/issues"
+Discussions = "https://github.com/oedokumaci/gale-shapley-algorithm/discussions"
 
 [tool.hatch.version]
-path = "src/gale_shapley/__init__.py"
+path = "src/gale_shapley_algorithm/__init__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/gale_shapley"]
+packages = ["src/gale_shapley_algorithm"]
 
 [dependency-groups]
 test = [
@@ -62,14 +77,14 @@ use_vars = true
 src = "src"
 tests = "tests"
 all = "src tests"
-module = "gale_shapley"
+module = "gale_shapley_algorithm"
 
 [tool.taskipy.tasks]
 # Module runner
 run = { cmd = "uv run python -m {module}", help = "Run module entrypoint" }
 
 # GUI
-gui = { cmd = "uv run uvicorn gale_shapley._api.app:app --reload --port 8000", help = "Run GUI dev server" }
+gui = { cmd = "uv run uvicorn gale_shapley_algorithm._api.app:app --reload --port 8000", help = "Run GUI dev server" }
 
 # Setup
 setup = { cmd = "uv sync --extra cli --extra gui", help = "Install dependencies" }
@@ -81,6 +96,9 @@ lint = { cmd = "uvx ruff check --config=config/ruff.toml --fix {all}", help = "L
 # Convenience: run both
 fix = { cmd = "task format && task lint", help = "Format + lint auto-fix" }
 
+# Type checking
+typecheck = { cmd = "uvx ty check --config-file=config/ty.toml {src}", help = "Run type checking" }
+
 # Quality checks (read-only, for CI)
 format_check = { cmd = "uvx ruff format --config=config/ruff.toml --check {all}", help = "Check code formatting (CI)" }
 lint_check = { cmd = "uvx ruff check --config=config/ruff.toml {all}", help = "Check linting (CI)" }
@@ -88,14 +106,14 @@ test = { cmd = "uv run pytest -c config/pytest.ini {tests} --cov={src} --cov-rep
 test_no_cov = { cmd = "uv run pytest -c config/pytest.ini {tests}", help = "Run test suite" }
 
 # CI: all checks in one command (read-only)
-ci = { cmd = "task format_check && task lint_check && task test", help = "Run all CI checks (format, lint, test)" }
+ci = { cmd = "task format_check && task lint_check && task typecheck && task test", help = "Run all CI checks (format, lint, typecheck, test)" }
 
 # Documentation
 docs = { cmd = "uv run zensical serve", help = "Serve documentation locally" }
 docs_build = { cmd = "uv run zensical build --clean --strict", help = "Build documentation (strict)" }
 
 # Release
-changelog = { cmd = "uvx --with 'packaging<26' git-changelog --bump auto -c angular && echo '\nRemember to update __version__ in src/gale_shapley/__init__.py'", help = "Update changelog" }
+changelog = { cmd = "uvx --with 'packaging<26' git-changelog --bump auto --config-file=config/git-changelog.toml && echo '\nRemember to update __version__ in src/gale_shapley/__init__.py'", help = "Update changelog" }
 release = { cmd = "bash -c 'VERSION=$1; if [ -z \"$VERSION\" ]; then echo \"Usage: task release -- X.Y.Z\" && exit 1; fi; if [ -n \"$(git status --porcelain)\" ]; then echo \"Error: Working directory not clean\" && exit 1; fi; git tag v$VERSION && git push origin v$VERSION && gh release create v$VERSION --generate-notes' _", help = "Create a release (usage: task release -- X.Y.Z)" }
 
 # Utilities

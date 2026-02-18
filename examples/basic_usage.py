@@ -1,9 +1,9 @@
 """Basic usage of the gale-shapley library using the convenience function."""
 
-from gale_shapley import create_matching
+import gale_shapley_algorithm as gsa
 
 # Define preferences for each side
-result = create_matching(
+result = gsa.create_matching(
     proposer_preferences={
         "alice": ["xavier", "yuri", "zeus"],
         "beth": ["yuri", "xavier", "zeus"],

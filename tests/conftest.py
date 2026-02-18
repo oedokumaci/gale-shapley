@@ -6,8 +6,8 @@ from typing import Final
 
 import pytest
 
-from gale_shapley.algorithm import Algorithm
-from gale_shapley.person import Proposer, Responder
+from gale_shapley_algorithm.algorithm import Algorithm
+from gale_shapley_algorithm.person import Proposer, Responder
 
 
 @pytest.fixture(autouse=True)
@@ -147,8 +147,8 @@ def ran_algorithm_fix(
 @pytest.fixture
 def sim_random_test_input_fix(request: pytest.FixtureRequest):
     """Create CLI Simulator objects with various random configs."""
-    from gale_shapley._cli.config import YAMLConfig
-    from gale_shapley._cli.simulator import Simulator
+    from gale_shapley_algorithm._cli.config import YAMLConfig
+    from gale_shapley_algorithm._cli.simulator import Simulator
 
     num_proposers, num_responders = request.param
     mock_config: Final[dict] = {
@@ -167,8 +167,8 @@ def sim_random_test_input_fix(request: pytest.FixtureRequest):
 @pytest.fixture
 def sim_input_mode_fix(valid_input_yaml_config: dict):
     """CLI Simulator with input preference config."""
-    from gale_shapley._cli.config import YAMLConfig
-    from gale_shapley._cli.simulator import Simulator
+    from gale_shapley_algorithm._cli.config import YAMLConfig
+    from gale_shapley_algorithm._cli.simulator import Simulator
 
     return Simulator(YAMLConfig.model_validate(valid_input_yaml_config))
 
@@ -178,7 +178,7 @@ def sim_input_mode_fix(valid_input_yaml_config: dict):
 
 @pytest.fixture
 def logger_fixture() -> Generator[None, None, None]:
-    from gale_shapley._cli.logging import LOG_PATH, init_logger
+    from gale_shapley_algorithm._cli.logging import LOG_PATH, init_logger
 
     log_file_path = LOG_PATH / "pytest_test.log"
     init_logger(log_file_path.name)
