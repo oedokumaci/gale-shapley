@@ -20,20 +20,20 @@ export function SortableItem({ id, rank }: SortableItemProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-center gap-2 rounded-md border bg-card px-3 py-2 text-sm ${
+      className={`flex items-center gap-1 rounded border bg-card px-1.5 py-1 text-xs ${
         isDragging ? 'opacity-50 shadow-lg' : ''
       }`}
     >
       <button
         {...attributes}
         {...listeners}
-        className="cursor-grab text-muted-foreground hover:text-foreground active:cursor-grabbing"
+        className="cursor-grab text-muted-foreground hover:text-foreground active:cursor-grabbing shrink-0"
         aria-label={`Drag to reorder ${id}`}
       >
-        <GripVertical className="h-4 w-4" />
+        <GripVertical className="h-3 w-3" />
       </button>
-      <span className="text-muted-foreground text-xs w-5">{rank}.</span>
-      <span className="font-medium">{id}</span>
+      <span className="text-muted-foreground text-[10px] w-3 shrink-0">{rank}.</span>
+      <span className="font-medium truncate">{id}</span>
     </div>
   );
 }

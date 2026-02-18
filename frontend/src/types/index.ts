@@ -31,3 +31,7 @@ export interface StepsResponse {
   steps: RoundStep[];
   final_result: MatchingResponse;
 }
+
+export type AnimationPhase = 'proposals' | 'responses' | 'matches';
+
+export type PersonImages = Record<string, string>;
