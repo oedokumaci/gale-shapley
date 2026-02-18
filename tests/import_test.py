@@ -1,12 +1,14 @@
 """Tests that verify the library can be imported cleanly."""
 
+from importlib.metadata import version
+
 
 def test_import_gale_shapley() -> None:
     """Importing the package should work without config files or optional deps."""
     import gale_shapley
 
     assert hasattr(gale_shapley, "__version__")
-    assert gale_shapley.__version__ == "0.2.0"
+    assert gale_shapley.__version__ == version("gale-shapley")
 
 
 def test_public_api_exports() -> None:

@@ -126,7 +126,7 @@ def load_config() -> YAMLConfig:
     Raises:
         FileNotFoundError: If config.yaml does not exist.
     """
-    with PATH_TO_YAMLCONFIG.open() as yaml_config:
+    with PATH_TO_YAMLCONFIG.open(encoding="utf-8") as yaml_config:
         config_data = yaml.safe_load(yaml_config)
     config_data = {k.casefold(): v for k, v in config_data.items()}
     return YAMLConfig.model_validate(config_data)

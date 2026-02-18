@@ -33,7 +33,7 @@ def test_log_config_info_random(valid_yaml_config_input: dict) -> None:
     log_config_info(config)
 
     log_file = LOG_PATH / test_log_file
-    log_contents = log_file.read_text()
+    log_contents = log_file.read_text(encoding="utf-8")
     assert "Parsing config.yaml is complete" in log_contents
     assert "Proposer side name: men" in log_contents
     assert "Number of proposers: 4" in log_contents
@@ -51,7 +51,7 @@ def test_log_config_info_input(valid_input_yaml_config: dict) -> None:
     log_config_info(config)
 
     log_file = LOG_PATH / test_log_file
-    log_contents = log_file.read_text()
+    log_contents = log_file.read_text(encoding="utf-8")
     assert "Parsing config.yaml is complete" in log_contents
     assert "Number of proposers: 2" in log_contents
     assert "Preference type: input" in log_contents
@@ -71,7 +71,7 @@ def test_timer_decorator() -> None:
     assert result == "test"
 
     log_file = LOG_PATH / test_log_file
-    log_contents = log_file.read_text()
+    log_contents = log_file.read_text(encoding="utf-8")
     assert "Method 'test_func'" in log_contents
     assert "executed in" in log_contents
 
