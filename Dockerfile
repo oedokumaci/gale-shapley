@@ -1,13 +1,16 @@
-FROM python:3.12-slim
+FROM python:3.13-slim
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-COPY . .
+COPY pyproject.toml uv.lock* ./
+COPY src/ src/
+COPY frontend/ frontend/
+COPY config/ config/
 
-RUN uv sync --extra test
+RUN uv sync --extra cli --extra gui --no-dev
 
-ENV number_of_simulations=1
+EXPOSE 8000
 
 CMD ["uv", "run", "python", "-m", "gale_shapley"]
