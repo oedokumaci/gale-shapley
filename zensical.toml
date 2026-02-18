@@ -2,9 +2,9 @@
 site_name = "gale-shapley"
 site_description = "A Python implementation of the celebrated Gale-Shapley Algorithm."
 site_author = "Oral Ersoy"
-site_url = "https://oedokumaci.github.io/gale-shapley"
-repo_url = "https://github.com/oedokumaci/gale-shapley"
-repo_name = "oedokumaci/gale-shapley"
+site_url = "https://oedokumaci.github.io/gale-shapley-algorithm"
+repo_url = "https://github.com/oedokumaci/gale-shapley-algorithm"
+repo_name = "oedokumaci/gale-shapley-algorithm"
 edit_uri = "edit/main/docs/"
 copyright = "Copyright &copy; 2026 Oral Ersoy Dokumaci"
 extra_css = ["css/apidocs.css"]
@@ -79,7 +79,7 @@ link = "https://github.com/oedokumaci"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/python"
-link = "https://pypi.org/project/gale-shapley/"
+link = "https://pypi.org/project/gale-shapley-algorithm/"
 
 [project.extra.analytics.feedback]
 title = "Was this page helpful?"

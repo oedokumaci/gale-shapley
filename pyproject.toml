@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "gale-shapley"
+name = "gale-shapley-algorithm"
 dynamic = ["version"]
 description = "A Python implementation of the celebrated Gale-Shapley Algorithm."
 authors = [
@@ -17,14 +17,14 @@ dependencies = []
 [project.optional-dependencies]
 cli = ["pyyaml>=6.0.1", "pydantic>=2.6.1", "typer>=0.9.0", "rich>=13.0"]
 gui = ["fastapi>=0.115", "uvicorn[standard]>=0.30"]
-dev = ["gale-shapley[cli]", "pre-commit>=3.0", "ruff>=0.9"]
+dev = ["gale-shapley-algorithm[cli]", "pre-commit>=3.0", "ruff>=0.9"]
 
 [project.urls]
-Homepage = "https://oedokumaci.github.io/gale-shapley"
-Documentation = "https://oedokumaci.github.io/gale-shapley"
-Changelog = "https://oedokumaci.github.io/gale-shapley/changelog"
-Repository = "https://github.com/oedokumaci/gale-shapley"
-Issues = "https://github.com/oedokumaci/gale-shapley/issues"
+Homepage = "https://oedokumaci.github.io/gale-shapley-algorithm"
+Documentation = "https://oedokumaci.github.io/gale-shapley-algorithm"
+Changelog = "https://oedokumaci.github.io/gale-shapley-algorithm/changelog"
+Repository = "https://github.com/oedokumaci/gale-shapley-algorithm"
+Issues = "https://github.com/oedokumaci/gale-shapley-algorithm/issues"
 
 [tool.hatch.version]
 path = "src/gale_shapley/__init__.py"

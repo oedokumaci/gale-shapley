@@ -8,7 +8,7 @@ def test_import_gale_shapley() -> None:
     import gale_shapley
 
     assert hasattr(gale_shapley, "__version__")
-    assert gale_shapley.__version__ == version("gale-shapley")
+    assert gale_shapley.__version__ == version("gale-shapley-algorithm")
 
 
 def test_public_api_exports() -> None:

@@ -200,7 +200,7 @@ wheels = [
 ]
 
 [[package]]
-name = "gale-shapley"
+name = "gale-shapley-algorithm"
 source = { editable = "." }
 
 [package.optional-dependencies]

@@ -114,8 +114,8 @@ If you write a body, please add trailers at the end (for example issues and PR r
 ```
 Body.
 
-Issue #10: https://github.com/oedokumaci/gale-shapley/issues/10
-Related to PR oedokumaci/gale-shapley#15: https://github.com/oedokumaci/gale-shapley/pull/15
+Issue #10: https://github.com/oedokumaci/gale-shapley-algorithm/issues/10
+Related to PR oedokumaci/gale-shapley-algorithm#15: https://github.com/oedokumaci/gale-shapley-algorithm/pull/15
 ```
 
 These "trailers" must appear at the end of the body, without any blank lines between them. The trailer title can contain any character except colons `:`. We expect a full URI for each trailer, not just GitHub autolinks (for example, full GitHub URLs for commits and issues, not the hash or the #issue-number).

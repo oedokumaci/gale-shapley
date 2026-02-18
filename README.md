@@ -10,8 +10,8 @@ Time complexity is O(n^2), space complexity is O(n).
 
 &nbsp;
 
-![CI](https://github.com/oedokumaci/gale-shapley/actions/workflows/ci.yml/badge.svg)
-![Docs](https://github.com/oedokumaci/gale-shapley/actions/workflows/docs.yml/badge.svg)
+![CI](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/ci.yml/badge.svg)
+![Docs](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/docs.yml/badge.svg)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 ![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)
@@ -34,17 +34,17 @@ There are three easy ways to install the package.
 ### Install from PyPI
 
 ```bash
-pip install gale-shapley
+pip install gale-shapley-algorithm
 ```
 
 For CLI support:
 ```bash
-pip install "gale-shapley[cli]"
+pip install "gale-shapley-algorithm[cli]"
 ```
 
 For the GUI:
 ```bash
-pip install "gale-shapley[gui]"
+pip install "gale-shapley-algorithm[gui]"
 ```
 
 ### Using Docker
@@ -73,7 +73,7 @@ docker run --rm -p 8000:8000 gale-shapley uv run uvicorn gale_shapley._api.app:a
 
 If you have git installed, simply run
 ```bash
-git clone https://github.com/oedokumaci/gale-shapley
+git clone https://github.com/oedokumaci/gale-shapley-algorithm
 ```
 to clone the repository locally. After cloning, install the dependencies using [uv](https://github.com/astral-sh/uv):
 
