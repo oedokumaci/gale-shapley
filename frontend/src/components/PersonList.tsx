@@ -15,14 +15,19 @@ interface PersonListProps {
 
 export function PersonList({ label, persons, onAdd, onRemove, images, onUploadImage }: PersonListProps) {
   const [name, setName] = useState('');
+  const [warning, setWarning] = useState('');
   const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   function handleAdd() {
     const trimmed = name.trim();
-    if (trimmed && !persons.includes(trimmed)) {
-      onAdd(trimmed);
-      setName('');
+    if (!trimmed) return;
+    if (persons.includes(trimmed)) {
+      setWarning('Name already exists on this side');
+      return;
     }
+    onAdd(trimmed);
+    setName('');
+    setWarning('');
   }
 
   function handleFileChange(personName: string, e: React.ChangeEvent<HTMLInputElement>) {
@@ -39,7 +44,10 @@ export function PersonList({ label, persons, onAdd, onRemove, images, onUploadIm
       <div className="flex gap-2">
         <Input
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value);
+            setWarning('');
+          }}
           onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
           placeholder={`Add ${label.toLowerCase().slice(0, -1)}...`}
           className="h-8 text-sm"
@@ -48,6 +56,7 @@ export function PersonList({ label, persons, onAdd, onRemove, images, onUploadIm
           Add
         </Button>
       </div>
+      {warning && <p className="text-xs text-red-500">{warning}</p>}
       <div className="flex flex-wrap gap-1">
         {persons.map((p) => (
           <span
