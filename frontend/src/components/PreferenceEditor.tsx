@@ -4,7 +4,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { PersonList } from './PersonList';
 import { CompactPreferenceGrid } from './CompactPreferenceGrid';
-import { Shuffle } from 'lucide-react';
+import { Shuffle, Trash2 } from 'lucide-react';
 import type { PersonImages } from '@/types';
 
 interface PreferenceEditorProps {
@@ -19,6 +19,7 @@ interface PreferenceEditorProps {
   onReorderProposerPref: (person: string, newOrder: string[]) => void;
   onReorderResponderPref: (person: string, newOrder: string[]) => void;
   onRandomizePrefs: () => void;
+  onClearAll: () => void;
   personImages: PersonImages;
   onUploadImage: (name: string, file: File) => void;
 }
@@ -35,19 +36,29 @@ export function PreferenceEditor({
   onReorderProposerPref,
   onReorderResponderPref,
   onRandomizePrefs,
+  onClearAll,
   personImages,
   onUploadImage,
 }: PreferenceEditorProps) {
   const canRandomize = proposerNames.length > 0 && responderNames.length > 0;
+  const canClear = proposerNames.length > 0 || responderNames.length > 0;
 
   return (
     <div className="space-y-3">
-      {canRandomize && (
-        <div className="flex justify-center">
-          <Button variant="outline" size="sm" onClick={onRandomizePrefs}>
-            <Shuffle className="h-3.5 w-3.5 mr-1.5" />
-            Randomize Preferences
-          </Button>
+      {(canRandomize || canClear) && (
+        <div className="flex justify-center gap-2">
+          {canRandomize && (
+            <Button variant="outline" size="sm" onClick={onRandomizePrefs}>
+              <Shuffle className="h-3.5 w-3.5 mr-1.5" />
+              Randomize Preferences
+            </Button>
+          )}
+          {canClear && (
+            <Button variant="outline" size="sm" onClick={onClearAll}>
+              <Trash2 className="h-3.5 w-3.5 mr-1.5" />
+              Clear All
+            </Button>
+          )}
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
