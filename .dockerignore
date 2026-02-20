@@ -3,6 +3,7 @@
 .venv
 .claude
 .cursor
+openspec
 __pycache__
 *.pyc
 .pytest_cache
