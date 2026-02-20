@@ -1,4 +1,4 @@
-"""Basic usage of the gale-shapley library using the convenience function."""
+"""Basic usage of the gale-shapley-algorithm library using the convenience function."""
 
 import gale_shapley_algorithm as gsa
 
