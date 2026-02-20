@@ -58,7 +58,7 @@ def test_cli_random_mode() -> None:
 
 
 def test_cli_swap_sides() -> None:
-    """Test CLI with --swap-sides flag."""
+    """Test CLI with --swap-sides runs algorithm twice and shows both results."""
     with (
         patch(
             "gale_shapley_algorithm._cli.app.prompt_side_names",
@@ -79,11 +79,13 @@ def test_cli_swap_sides() -> None:
         result = runner.invoke(app, ["--swap-sides"])
 
     assert result.exit_code == 0
-    assert "Matching Result" in result.output
+    assert "Men proposing" in result.output
+    assert "Women proposing" in result.output
+    assert result.output.count("Matching Result") == 2
 
 
 def test_cli_random_mode_with_swap() -> None:
-    """Test CLI in random mode with --swap-sides."""
+    """Test CLI in random mode with --swap-sides runs twice."""
     with patch(
         "gale_shapley_algorithm._cli.app.prompt_random_config",
         return_value=("Men", "Women", 2, 2),
@@ -91,7 +93,9 @@ def test_cli_random_mode_with_swap() -> None:
         result = runner.invoke(app, ["--random", "--swap-sides"])
 
     assert result.exit_code == 0
-    assert "Matching Result" in result.output
+    assert "Men proposing" in result.output
+    assert "Women proposing" in result.output
+    assert result.output.count("Matching Result") == 2
 
 
 def test_cli_keyboard_interrupt() -> None:
