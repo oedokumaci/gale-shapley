@@ -87,12 +87,12 @@ def _generate_random_preferences(
 @app.command()
 def main(
     random_mode: bool = typer.Option(False, "--random", help="Generate random preferences"),
-    swap_sides: bool = typer.Option(False, "--swap-sides", help="Swap proposers and responders"),
+    swap_sides: bool = typer.Option(False, "--swap-sides", help="Run twice with swapped proposer/responder roles"),
 ) -> None:
     """Run the Gale-Shapley algorithm interactively.
 
     Supports manual preference entry or random generation (--random).
-    Use --swap-sides to reverse proposer/responder roles before matching.
+    Use --swap-sides to run the algorithm twice — once with each side proposing — and display both results.
     """
     try:
         console.print("\n[bold]Gale-Shapley Algorithm[/bold]\n")
@@ -108,14 +108,21 @@ def main(
             responder_prefs = prompt_preferences(responder_side, r_names, p_names)
 
         if swap_sides:
-            proposer_side, responder_side = responder_side, proposer_side
-            proposer_prefs, responder_prefs = responder_prefs, proposer_prefs
+            # Run 1: original sides
+            console.print(f"\n[bold]Result 1: {proposer_side} proposing[/bold]")
+            display_preferences(proposer_side, responder_side, proposer_prefs, responder_prefs)
+            result, stability = _run_matching(proposer_prefs, responder_prefs)
+            display_results(proposer_side, responder_side, result, stability)
 
-        display_preferences(proposer_side, responder_side, proposer_prefs, responder_prefs)
-
-        result, stability = _run_matching(proposer_prefs, responder_prefs)
-
-        display_results(proposer_side, responder_side, result, stability)
+            # Run 2: swapped sides
+            console.print(f"\n[bold]Result 2: {responder_side} proposing[/bold]")
+            display_preferences(responder_side, proposer_side, responder_prefs, proposer_prefs)
+            result, stability = _run_matching(responder_prefs, proposer_prefs)
+            display_results(responder_side, proposer_side, result, stability)
+        else:
+            display_preferences(proposer_side, responder_side, proposer_prefs, responder_prefs)
+            result, stability = _run_matching(proposer_prefs, responder_prefs)
+            display_results(proposer_side, responder_side, result, stability)
     except KeyboardInterrupt:
         console.print("\n[yellow]Interrupted.[/yellow]")
         raise typer.Exit(code=130) from None
