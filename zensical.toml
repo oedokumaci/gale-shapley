@@ -1,5 +1,5 @@
 [project]
-site_name = "gale-shapley"
+site_name = "gale-shapley-algorithm"
 site_description = "A Python implementation of the celebrated Gale-Shapley Algorithm."
 site_author = "Oral Ersoy"
 site_url = "https://oedokumaci.github.io/gale-shapley-algorithm"

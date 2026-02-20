@@ -4,11 +4,11 @@ This file provides guidance for AI assistants working on this codebase.
 
 ## Project Overview
 
-**gale-shapley** - A Python implementation of the Gale-Shapley (Deferred Acceptance) Algorithm, managed with [uv](https://github.com/astral-sh/uv).
+**gale-shapley-algorithm** - A Python implementation of the Gale-Shapley (Deferred Acceptance) Algorithm, managed with [uv](https://github.com/astral-sh/uv).
 
 | Attribute | Value |
 |-----------|-------|
-| Package | `gale-shapley` |
+| Package | `gale-shapley-algorithm` |
 | Import | `gale_shapley_algorithm` |
 | Python | >=3.12 |
 | Runtime deps | None (zero-dep core) |
@@ -81,7 +81,7 @@ if TYPE_CHECKING:
 ## Project Structure
 
 ```
-gale-shapley/
+gale-shapley-algorithm/
 ├── .claude/skills/       # Claude Code skills (/commit, /fix, /test, etc.)
 ├── .cursor/              # Cursor IDE (rules -> CLAUDE.md, skills -> .claude/skills)
 ├── src/gale_shapley_algorithm/

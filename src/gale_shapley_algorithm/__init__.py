@@ -1,4 +1,4 @@
-"""gale-shapley: A Python implementation of the Gale-Shapley algorithm."""
+"""gale-shapley-algorithm: A Python implementation of the Gale-Shapley algorithm."""
 
 from gale_shapley_algorithm.algorithm import Algorithm
 from gale_shapley_algorithm.matching import create_matching

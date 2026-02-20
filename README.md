@@ -1,4 +1,4 @@
-# gale-shapley
+# gale-shapley-algorithm
 
 A Python implementation of the celebrated Gale-Shapley (a.k.a. the Deferred Acceptance) Algorithm.
 
@@ -27,8 +27,8 @@ Then open [http://localhost:8000](http://localhost:8000) in your browser.
 Or build locally for development:
 
 ```bash
-docker build -t gale-shapley .
-docker run --rm -p 8000:8000 gale-shapley
+docker build -t gale-shapley-algorithm .
+docker run --rm -p 8000:8000 gale-shapley-algorithm
 ```
 
 The GUI lets you:
@@ -150,7 +150,7 @@ This project is managed with [uv](https://github.com/astral-sh/uv) and uses [tas
 
 ```bash
 git clone https://github.com/oedokumaci/gale-shapley-algorithm
-cd gale-shapley
+cd gale-shapley-algorithm
 uvx --from taskipy task setup   # Install dependencies
 uvx --from taskipy task run     # Run the application
 uvx --from taskipy task fix     # Auto-format + lint fix

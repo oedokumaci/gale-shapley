@@ -9,7 +9,7 @@ Nothing easier!
 Fork and clone the repository, then:
 
 ```bash
-cd gale-shapley
+cd gale-shapley-algorithm
 uvx --from taskipy task setup
 ```
 

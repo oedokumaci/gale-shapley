@@ -13,7 +13,7 @@ readme = "README.md"
 license = { text = "MIT" }
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
-keywords = ["gale-shapley", "deferred-acceptance", "matching", "algorithm", "stable-matching"]
+keywords = ["gale-shapley-algorithm", "deferred-acceptance", "matching", "algorithm", "stable-matching"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Education",
