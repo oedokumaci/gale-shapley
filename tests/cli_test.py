@@ -196,13 +196,11 @@ class TestPromptRanking:
             result = _prompt_ranking("Alice", ["Bob", "Charlie"])
         assert result == ["Bob", "Charlie"]
 
-    def test_empty_retries(self) -> None:
-        with patch(
-            "gale_shapley_algorithm._cli.prompts.Prompt.ask",
-            side_effect=["", "1"],
-        ):
-            result = _prompt_ranking("Alice", ["Bob"])
-        assert result == ["Bob"]
+    def test_empty_returns_empty_list(self) -> None:
+        """Empty input returns an empty list (user prefers being unmatched)."""
+        with patch("gale_shapley_algorithm._cli.prompts.Prompt.ask", return_value=""):
+            result = _prompt_ranking("Alice", ["Bob", "Charlie"])
+        assert result == []
 
     def test_out_of_range_retries(self) -> None:
         with patch(
