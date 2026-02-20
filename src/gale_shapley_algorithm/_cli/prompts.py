@@ -65,7 +65,7 @@ def prompt_preferences(side_name: str, names: list[str], other_names: list[str])
 
         ranking = _prompt_ranking(name, other_names)
         preferences[name] = ranking
-        console.print(f"  → {name}: {' > '.join(ranking)}")
+        console.print(f"  → {name}: {' > '.join(ranking) if ranking else '(none)'}")
 
     return preferences
 
@@ -85,17 +85,18 @@ def _prompt_ranking(name: str, other_names: list[str]) -> list[str]:
     """
     example = ",".join(str(i) for i in range(1, len(other_names) + 1))
     while True:
-        raw = Prompt.ask(f"  Enter ranking for {name} (e.g. {example})")
+        raw = Prompt.ask(
+            f"  Enter ranking for {name} — only list acceptable matches (e.g. {example}), or press Enter for none"
+        )
         parts = [p.strip() for p in raw.split(",") if p.strip()]
+
+        if not parts:
+            return []
 
         try:
             indices = [int(p) for p in parts]
         except ValueError:
             console.print("  [red]Please enter comma-separated numbers.[/red]")
-            continue
-
-        if not indices:
-            console.print("  [red]Please enter at least one number.[/red]")
             continue
 
         if any(i < 1 or i > len(other_names) for i in indices):
