@@ -6,6 +6,7 @@ Time complexity is O(n^2), space complexity is O(n).
 
 [![CI](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/ci.yml/badge.svg)](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/ci.yml)
 [![Docs](https://github.com/oedokumaci/gale-shapley-algorithm/actions/workflows/docs.yml/badge.svg)](https://oedokumaci.github.io/gale-shapley-algorithm)
+[![Docker](https://img.shields.io/docker/v/oedokumaci/gale-shapley-algorithm?sort=semver&label=Docker)](https://hub.docker.com/r/oedokumaci/gale-shapley-algorithm)
 [![PyPI](https://img.shields.io/pypi/v/gale-shapley-algorithm)](https://pypi.org/project/gale-shapley-algorithm/)
 [![Python](https://img.shields.io/pypi/pyversions/gale-shapley-algorithm)](https://pypi.org/project/gale-shapley-algorithm/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
@@ -17,11 +18,18 @@ Time complexity is O(n^2), space complexity is O(n).
 The easiest way to try the algorithm is with the interactive web GUI:
 
 ```bash
-docker build -t gale-shapley .
-docker run --rm -p 8000:8000 gale-shapley
+docker pull oedokumaci/gale-shapley-algorithm
+docker run --rm -p 8000:8000 oedokumaci/gale-shapley-algorithm
 ```
 
 Then open [http://localhost:8000](http://localhost:8000) in your browser.
+
+Or build locally for development:
+
+```bash
+docker build -t gale-shapley .
+docker run --rm -p 8000:8000 gale-shapley
+```
 
 The GUI lets you:
 
