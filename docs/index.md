@@ -15,11 +15,18 @@ Time complexity is O(n^2), space complexity is O(n).
 The easiest way to try the algorithm is with the interactive web GUI:
 
 ```bash
-docker build -t gale-shapley .
-docker run --rm -p 8000:8000 gale-shapley
+docker pull oedokumaci/gale-shapley-algorithm
+docker run --rm -p 8000:8000 oedokumaci/gale-shapley-algorithm
 ```
 
 Then open [http://localhost:8000](http://localhost:8000) in your browser.
+
+Or build locally for development:
+
+```bash
+docker build -t gale-shapley .
+docker run --rm -p 8000:8000 gale-shapley
+```
 
 The GUI lets you:
 
