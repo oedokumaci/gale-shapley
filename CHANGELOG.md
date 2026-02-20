@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 <!-- insertion marker -->
+## [v1.2.2](https://github.com/oedokumaci/gale-shapley-algorithm/releases/tag/v1.2.2) - 2026-02-20
+
+<small>[Compare with v1.2.1](https://github.com/oedokumaci/gale-shapley-algorithm/compare/v1.2.1...v1.2.2)</small>
+
+### Bug Fixes
+
+- add explicit permissions to docker-publish workflow ([537580e](https://github.com/oedokumaci/gale-shapley-algorithm/commit/537580ebb32449a028ac549c252cee209a226fb3) by oedokumaci).
+
+### Code Refactoring
+
+- rename gale-shapley to gale-shapley-algorithm everywhere ([bbdb4d7](https://github.com/oedokumaci/gale-shapley-algorithm/commit/bbdb4d77b95b84b68ca2ccc9f8c2eb6e63015e09) by oedokumaci).
+
 ## [v1.2.1](https://github.com/oedokumaci/gale-shapley-algorithm/releases/tag/v1.2.1) - 2026-02-18
 
 <small>[Compare with v1.2.0](https://github.com/oedokumaci/gale-shapley-algorithm/compare/v1.2.0...v1.2.1)</small>
