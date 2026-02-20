@@ -138,6 +138,13 @@ function App() {
     setResponderPrefs(buildRandomPrefs(responderNames, proposerNames));
   }, [proposerNames, responderNames]);
 
+  const clearAll = useCallback(() => {
+    setProposerNames([]);
+    setResponderNames([]);
+    setProposerPrefs({});
+    setResponderPrefs({});
+  }, []);
+
   function buildRequest(): MatchingRequest {
     return {
       proposer_preferences: { ...proposerPrefs },
@@ -235,6 +242,7 @@ function App() {
               onReorderProposerPref={reorderProposerPref}
               onReorderResponderPref={reorderResponderPref}
               onRandomizePrefs={randomizePrefs}
+              onClearAll={clearAll}
               personImages={personImages}
               onUploadImage={uploadImage}
             />
